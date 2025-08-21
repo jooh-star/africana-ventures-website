@@ -1,0 +1,175 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Dashboard - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6"> {# Replaced container-fluid with container mx-auto px-4 py-6 #}
+    <div class="flex justify-between items-center mb-6"> {# Replaced row col-12 d-flex justify-content-between align-items-center mb-4 #}
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1> {# Replaced h3 mb-0 #}
+        <div class="text-gray-600"> {# Replaced text-muted #}
+            Welcome back, {{ current_user.username }}!
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="flex flex-wrap -mx-2 mb-4"> {# Replaced row mb-4 #}
+        <div class="w-full lg:w-1/4 md:w-1/2 px-2 mb-4"> {# Replaced col-xl-3 col-md-6 mb-4 #}
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-primary-green"> {# Replaced card border-left-primary shadow h-100 py-2 #}
+                <div class="flex items-center"> {# Replaced card-body row no-gutters align-items-center #}
+                    <div class="flex-grow mr-2"> {# Replaced col mr-2 #}
+                        <div class="text-xs font-bold text-primary-green uppercase mb-1"> {# Replaced text-xs font-weight-bold text-primary text-uppercase mb-1 #}
+                            Total Contacts
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">{{ total_contacts }}</div> {# Replaced h5 mb-0 font-weight-bold text-gray-800 #}
+                    </div>
+                    <div class="flex-shrink-0"> {# Replaced col-auto #}
+                        <i class="fas fa-envelope text-3xl text-gray-300"></i> {# Replaced fa-2x #}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/4 md:w-1/2 px-2 mb-4"> {# Replaced col-xl-3 col-md-6 mb-4 #}
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-cta-orange"> {# Replaced card border-left-warning shadow h-100 py-2 #}
+                <div class="flex items-center"> {# Replaced card-body row no-gutters align-items-center #}
+                    <div class="flex-grow mr-2"> {# Replaced col mr-2 #}
+                        <div class="text-xs font-bold text-cta-orange uppercase mb-1"> {# Replaced text-xs font-weight-bold text-warning text-uppercase mb-1 #}
+                            Unread Messages
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">{{ unread_contacts }}</div> {# Replaced h5 mb-0 font-weight-bold text-gray-800 #}
+                    </div>
+                    <div class="flex-shrink-0"> {# Replaced col-auto #}
+                        <i class="fas fa-bell text-3xl text-gray-300"></i> {# Replaced fa-2x #}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/4 md:w-1/2 px-2 mb-4"> {# Replaced col-xl-3 col-md-6 mb-4 #}
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-secondary-green"> {# Replaced card border-left-success shadow h-100 py-2 #}
+                <div class="flex items-center"> {# Replaced card-body row no-gutters align-items-center #}
+                    <div class="flex-grow mr-2"> {# Replaced col mr-2 #}
+                        <div class="text-xs font-bold text-secondary-green uppercase mb-1"> {# Replaced text-xs font-weight-bold text-success text-uppercase mb-1 #}
+                            Total Testimonials
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">{{ total_testimonials }}</div> {# Replaced h5 mb-0 font-weight-bold text-gray-800 #}
+                    </div>
+                    <div class="flex-shrink-0"> {# Replaced col-auto #}
+                        <i class="fas fa-star text-3xl text-gray-300"></i> {# Replaced fa-2x #}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-1/4 md:w-1/2 px-2 mb-4"> {# Replaced col-xl-3 col-md-6 mb-4 #}
+            <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500"> {# Replaced card border-left-info shadow h-100 py-2 #}
+                <div class="flex items-center"> {# Replaced card-body row no-gutters align-items-center #}
+                    <div class="flex-grow mr-2"> {# Replaced col mr-2 #}
+                        <div class="text-xs font-bold text-blue-500 uppercase mb-1"> {# Replaced text-xs font-weight-bold text-info text-uppercase mb-1 #}
+                            Pending Testimonials
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">{{ pending_testimonials }}</div> {# Replaced h5 mb-0 font-weight-bold text-gray-800 #}
+                    </div>
+                    <div class="flex-shrink-0"> {# Replaced col-auto #}
+                        <i class="fas fa-clock text-3xl text-gray-300"></i> {# Replaced fa-2x #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mb-6"> {# Replaced row mb-4 #}
+        <div class="w-full"> {# Replaced col-12 #}
+            <div class="bg-white rounded-lg shadow-md"> {# Replaced card shadow #}
+                <div class="p-4 border-b border-gray-200"> {# Replaced card-header py-3 #}
+                    <h6 class="text-lg font-semibold text-primary-green">Quick Actions</h6> {# Replaced m-0 font-weight-bold text-primary #}
+                </div>
+                <div class="p-4"> {# Replaced card-body #}
+                    <div class="flex flex-wrap -mx-2"> {# Replaced row #}
+                        <div class="w-full md:w-1/4 px-2 mb-4"> {# Replaced col-md-3 mb-3 #}
+                            <a href="{{ url_for('admin.admin_contacts') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-green hover:bg-accent-dark-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-green"> {# Replaced btn btn-primary btn-block #}
+                                <i class="fas fa-envelope mr-2"></i> View Messages
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4"> {# Replaced col-md-3 mb-3 #}
+                            <a href="{{ url_for('admin.admin_testimonials') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-secondary-green hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-green"> {# Replaced btn btn-success btn-block #}
+                                <i class="fas fa-star mr-2"></i> Manage Testimonials
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4"> {# Replaced col-md-3 mb-3 #}
+                            <a href="{{ url_for('admin.admin_images') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"> {# Replaced btn btn-info btn-block #}
+                                <i class="fas fa-images mr-2"></i> Manage Images
+                            </a>
+                        </div>
+                        <div class="w-full md:w-1/4 px-2 mb-4"> {# Replaced col-md-3 mb-3 #}
+                            <a href="{{ url_for('main.index') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"> {# Replaced btn btn-secondary btn-block #}
+                                <i class="fas fa-external-link-alt mr-2"></i> View Website
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Contacts -->
+    <div class="mb-6"> {# Replaced row #}
+        <div class="w-full"> {# Replaced col-12 #}
+            <div class="bg-white rounded-lg shadow-md"> {# Replaced card shadow #}
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center"> {# Replaced card-header py-3 d-flex justify-content-between align-items-center #}
+                    <h6 class="text-lg font-semibold text-primary-green">Recent Messages</h6> {# Replaced m-0 font-weight-bold text-primary #}
+                    <a href="{{ url_for('admin.admin_contacts') }}" class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-green hover:bg-accent-dark-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-green">View All</a> {# Replaced btn btn-sm btn-primary #}
+                </div>
+                <div class="p-4"> {# Replaced card-body #}
+                    {% if recent_contacts %}
+                        <div class="overflow-x-auto"> {# Replaced table-responsive #}
+                            <table class="min-w-full divide-y divide-gray-200"> {# Replaced table table-bordered #}
+                                <thead class="bg-gray-50"> {# Replaced thead #}
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200"> {# Replaced tbody #}
+                                    {% for contact in recent_contacts %}
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ contact.first_name }} {{ contact.last_name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ contact.email }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ contact.service }}</span> {# Replaced badge badge-info #}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ contact.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {% if contact.is_read %}
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Read</span> {# Replaced badge badge-success #}
+                                            {% else %}
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Unread</span> {# Replaced badge badge-warning #}
+                                            {% endif %}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="{{ url_for('admin.admin_contacts') }}" class="text-primary-green hover:text-accent-dark-green"> {# Replaced btn btn-sm btn-primary #}
+                                                <i class="fas fa-eye mr-1"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8"> {# Replaced text-center py-4 #}
+                            <i class="fas fa-inbox text-5xl text-gray-300 mb-4"></i> {# Replaced fa-3x #}
+                            <p class="text-gray-500 text-lg">No messages yet</p> {# Added text-lg #}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

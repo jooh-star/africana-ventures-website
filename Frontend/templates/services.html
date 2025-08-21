@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Services - Africana Ventures{% endblock %}
+
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+{% endblock %}
+
+{% block content %}
+<div class="services-page">
+
+    <!-- Hero Section: Cinematic Intro -->
+    <section id="hero-services" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
+        <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover z-0">
+            <source src="{{ url_for('static', filename='videos/hero-bg.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="absolute inset-0 bg-dark-green opacity-70 z-10"></div>
+        <div class="relative z-20 text-center px-4">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6 text-gold font-poppins hero-title-3d">
+                Our Services, Your Growth
+            </h1>
+            <p class="text-xl md:text-2xl font-light max-w-4xl mx-auto mb-10 font-montserrat animate-fade-in-up animation-delay-200">
+                Innovating sustainable solutions for East Africa’s farmers and entrepreneurs.
+            </p>
+            <a href="#timeline-services" class="inline-block bg-gold text-dark-green font-bold py-4 px-10 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg cta-button-glow animate-fade-in-up animation-delay-400">
+                Explore Our Solutions
+            </a>
+        </div>
+    </section>
+
+    <!-- Vertical Timeline Scroll -->
+    <section id="timeline-services" class="py-24 bg-cream text-dark-green overflow-hidden">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Our Comprehensive Approach</h2>
+            <div class="timeline-container relative max-w-5xl mx-auto">
+                <div class="timeline-line"></div>
+
+                {% set image_files = ['113898.jpg', '416760.jpg', 'our-team-1.jpg', '240173.jpg', '53396.jpg', '53401.jpg', '416767.jpg'] %}
+                {% for service in preset_services %}
+                <div class="timeline-item-wrapper flex items-center justify-between w-full mb-8">
+                    {% if loop.index0 % 2 == 0 %} {# Odd index (0, 2, 4...) -> Image/Short Desc on Left, Full Desc on Right #}
+                    <!-- Content for the left side (image, title, short description) -->
+                    <div class="timeline-item w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism">
+                        <img src="{{ url_for('static', filename='images/' + image_files[loop.index0]) }}" alt="{{ service.title }}" class="w-full h-64 object-cover rounded-lg mb-4" data-tilt>
+                        <h3 class="text-3xl font-bold text-gold mb-2 font-montserrat">{{ service.title }}</h3>
+                        <p class="text-lg font-lora text-dark-green">{{ service.short_description }}</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                    <!-- Content for the right side (detailed description) -->
+                    <div class="w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism text-cream ml-auto" data-aos="fade-left">
+                        <p class="text-lg font-lora">{{ service.description }}</p>
+                    </div>
+                    {% else %} {# Even index (1, 3, 5...) -> Full Desc on Left, Image/Short Desc on Right #}
+                    <!-- Content for the left side (detailed description) -->
+                    <div class="w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism text-cream mr-auto" data-aos="fade-right">
+                        <p class="text-lg font-lora">{{ service.description }}</p>
+                    </div>
+                    <div class="timeline-dot"></div>
+                    <!-- Content for the right side (image, title, short description) -->
+                    <div class="timeline-item w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism">
+                        <img src="{{ url_for('static', filename='images/' + image_files[loop.index0]) }}" alt="{{ service.title }}" class="w-full h-64 object-cover rounded-lg mb-4" data-tilt>
+                        <h3 class="text-3xl font-bold text-gold mb-2 font-montserrat">{{ service.title }}</h3>
+                        <p class="text-lg font-lora text-dark-green">{{ service.short_description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive 3D Service Globe (Placeholder) -->
+    <section id="service-globe" class="py-24 bg-dark-green text-cream text-center overflow-hidden">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-extrabold text-gold mb-16 font-poppins" data-aos="fade-up">Global Reach, Local Impact</h2>
+            <p class="text-xl font-lora max-w-3xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+                Imagine an interactive 3D globe showcasing our service hotspots and impact areas worldwide. Click on a region to explore detailed case studies and local success stories.
+            </p>
+            <div class="w-full h-96 bg-gray-800 rounded-lg flex items-center justify-center text-gray-400 text-2xl font-bold" data-aos="zoom-in" data-aos-delay="200">
+                [Placeholder for Interactive 3D Globe - Requires Three.js/WebGL Implementation]
+            </div>
+            <p class="text-sm text-gray-500 mt-4">*Full 3D globe functionality requires advanced JavaScript libraries like Three.js and WebGL, which are beyond the scope of direct HTML/CSS/JS generation in this environment. This section serves as a conceptual placeholder.</p>
+        </div>
+    </section>
+
+    <!-- Morphing Expertise Ecosystem -->
+    <section id="expertise-ecosystem" class="py-24 bg-cream text-dark-green overflow-hidden">
+        <div class="container mx-auto px-4">
+            <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Explore Our Expertise</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for node in expertise_nodes %}
+                <div class="expertise-cell relative rounded-lg shadow-lg overflow-hidden cursor-pointer">
+                    <div class="cell-content p-6">
+                        <img src="{{ url_for('static', filename='images/' + node.image_filename) }}" alt="{{ node.title }}" class="w-full h-48 object-cover rounded-lg mb-4">
+                        <h3 class="text-2xl font-bold mb-2 font-montserrat">{{ node.title }}</h3>
+                        <p class="text-sm font-lora">{{ node.description }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Split-Screen Interactive Section -->
+    <section id="split-screen" class="relative flex flex-col lg:flex-row bg-dark-green text-cream split-screen-section overflow-hidden">
+        <div class="split-screen-left w-full lg:w-1/2 relative" style="background-image: url('{{ url_for('static', filename='images/101678.jpg') }}');">
+            <!-- Image/Video Slideshow - Swiper.js will be used here -->
+            <div class="swiper-container split-screen-slider h-full">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/101678.jpg') }}" alt="Slide 1" class="w-full h-full object-cover"></div>
+                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/14494.jpg') }}" alt="Slide 2" class="w-full h-full object-cover"></div>
+                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/20250606_062331.jpg') }}" alt="Slide 3" class="w-full h-full object-cover"></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="split-screen-right w-full lg:w-1/2 p-12 flex items-center justify-center">
+            <div class="max-w-xl" data-aos="fade-left">
+                <h2 class="text-5xl font-extrabold text-gold mb-6 font-poppins">Tailored Solutions for Every Need</h2>
+                <p class="text-lg font-lora mb-8">We understand that every agricultural challenge is unique. Our team works closely with you to develop customized strategies that deliver measurable results, from optimizing crop yields to establishing robust market linkages.</p>
+                <a href="#contact-cta-bottom" class="inline-block bg-gold text-dark-green font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Get a Custom Quote
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA / Shared Contact Section -->
+    <section id="contact-cta-bottom" class="relative py-24 text-white text-center cta-bg-mouse-effect overflow-hidden">
+        <div class="absolute inset-0 bg-dark-green opacity-70 z-10 glassmorphism"></div>
+        <div class="relative z-20 container mx-auto px-4" data-aos="fade-up">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4 font-poppins">Ready to Transform Your Agricultural Venture?</h2>
+            <p class="text-lg md:text-xl text-cream opacity-90 mx-auto max-w-3xl mb-10 font-lora">Connect with our experts today to discuss your specific needs and discover how Africana Ventures can help you achieve sustainable growth.</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg cta-button-glow">
+                    Contact Our Team
+                </a>
+                <a href="#" class="inline-block bg-cream text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg cta-button-glow">
+                    Request a Callback
+                </a>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/services.js') }}"></script>
+{% endblock %}

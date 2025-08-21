@@ -1,0 +1,611 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+.custom-btn {
+    @apply px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105;
+}
+
+.navbar-scrolled {
+    @apply bg-green-800 shadow-lg;
+}
+
+.diagonal-bg {
+    position: relative;
+    background-color: #012d18; /* Dark green color */
+    overflow: hidden;
+}
+
+.diagonal-bg::before {
+    content: '';
+    position: absolute;
+    top: 40%; /* Starts 40% from the top */
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transform: skewY(-15deg); /* Increased skew angle for a more dramatic diagonal */
+    transform-origin: top right;
+    z-index: 0;
+}
+
+.diagonal-bg > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+/* Custom hover animation for service cards */
+.service-card-hover-effect .initial-content {
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.service-card-hover-effect:hover .initial-content {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.service-card-hover-effect .hover-content {
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.service-card-hover-effect:hover .hover-content {
+    transform: translateY(0); /* Changed from 100% to 0 for smoother reveal */
+    opacity: 1;
+}
+
+/* Custom CSS for Core Focus Areas Section */
+
+/* Poppins Font Import (handled by Tailwind config now, but keeping for clarity if not using Tailwind font utilities) */
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap'); */
+
+/* Custom Properties/Variables (can be used with Tailwind's arbitrary values or @apply) */
+:root {
+    --color-forest-green: #012d18;
+    --color-wheat-gold: #DAA520;
+    --color-dark-overlay: rgba(0, 0, 0, 0.3);
+    --color-glass-bg: rgba(255, 255, 255, 0.08);
+    --color-glass-border: rgba(255, 255, 255, 0.15);
+    --color-text-light: #e0e0e0;
+    /* --font-poppins: 'Poppins', sans-serif; */ /* Handled by Tailwind config */
+}
+
+/* Apply Poppins font to elements within this section */
+.font-poppins {
+    font-family: var(--font-poppins);
+}
+
+/* Textured Background for the section */
+.custom-textured-bg {
+    background-image: url('data:image/svg+xml,%3Csvg width="6" height="6" viewBox="0 0 6 6" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23014421" fill-opacity="0.4" fill-rule="evenodd"%3E%3Cpath d="M5 0h1L0 6V5zM6 5v1H5z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E'); /* Subtle texture */
+}
+
+/* Core Focus Block Styling */
+.core-focus-block {
+    /* Tailwind classes handle flex, margin, etc. */
+}
+
+.core-focus-block-image {
+    /* Tailwind handles width, height, bg-cover, bg-center, rounded, shadow, overflow */
+    /* Custom styles for hover zoom and parallax handled by JS/GSAP */
+    transition: transform 0.5s ease-out; /* For hover zoom */
+}
+
+.core-focus-block-image:hover {
+    transform: scale(1.03); /* Gentle zoom on hover */
+}
+
+.core-focus-block-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-dark-overlay);
+}
+
+/* Content Card Styling (Glassmorphism) */
+.core-focus-card {
+    /* Tailwind handles max-width, padding, text color */
+    /* Custom styles for glass effect, border, shadow, and hover */
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--color-glass-border);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.core-focus-card:hover {
+    transform: translateY(-15px) scale(1.01); /* Lift effect */
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); /* Glow effect */
+}
+
+/* Icon Tag Styling */
+.icon-tag {
+    /* Tailwind handles position, top, left, translate, width, height, bg, rounded, flex, items, justify, text-size, font-bold, text-color, shadow, border */
+}
+
+/* Responsive adjustments (already in core_focus_areas.css, but included here for completeness) */
+@media (max-width: 1024px) {
+    .core-focus-block-image {
+        margin-bottom: -50px; /* Overlap content below */
+    }
+    .core-focus-card {
+        margin-top: -50px; /* Overlap image above */
+    }
+}
+
+/* Products Section Custom Styles */
+.product-card-overlay {
+    background: rgba(255, 255, 255, 0.1); /* Initial glassy white overlay */
+    backdrop-filter: blur(5px);
+}
+
+.product-card:hover .product-card-image {
+    transform: scale(1.03); /* Image zoom on hover */
+}
+
+.product-card:hover .product-card-overlay {
+    background: rgba(255, 255, 255, 0.3); /* Overlay fades brighter on hover */
+}
+
+/* Products Hero Card Section Custom Styles */
+.product-hero-card {
+    background-size: cover;
+    background-position: center;
+}
+
+.product-hero-overlay:hover {
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay fades darker on hover */
+}
+
+/* Custom styles for glassmorphism and other effects */
+.glassmorphism {
+    background-color: rgba(0, 0, 0, 0.3); /* Darker for better text readability */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.diagonal-bg {
+    background: linear-gradient(135deg, #012d18 0%, #024d2a 100%);
+}
+
+.text-gold { color: #DAA520; }
+.bg-gold { background-color: #DAA520; }
+.text-cream { color: #F5F5DC; }
+.bg-cream { background-color: #F5F5DC; }
+.text-dark-green { color: #012d18; }
+.bg-dark-green { background-color: #012d18; }
+
+/* Hero Section specific styles */
+.hero-title-3d {
+    text-shadow: 0 0 20px rgba(218, 165, 32, 0.8);
+}
+
+/* Vertical Timeline specific styles */
+.timeline-container {
+    position: relative;
+}
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: #DAA520;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+.timeline-item-wrapper {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 80px;
+}
+/* Removed specific margin rules as flexbox on wrapper handles layout */
+/* .timeline-item-wrapper:nth-child(odd) .timeline-item { margin-right: 50%; text-align: right; } */
+/* .timeline-item-wrapper:nth-child(even) .timeline-item { margin-left: 50%; text-align: left; } */
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: #012d18;
+    border: 3px solid #DAA520;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+
+
+/* Split Screen specific styles */
+.split-screen-section {
+    min-height: 70vh;
+}
+.split-screen-left {
+    background-size: cover;
+    background-position: center;
+}
+
+/* Bottom CTA specific styles */
+/* Removed dynamic background-image from here, will be set in HTML */
+.cta-button-glow {
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.7);
+    transition: box-shadow 0.3s ease-in-out;
+}
+.cta-button-glow:hover {
+    box-shadow: 0 0 30px rgba(218, 165, 32, 1);
+}
+
+/* Swiper custom styles */
+.swiper-pagination-bullet {
+    background-color: #DAA520 !important; /* Gold */
+}
+.swiper-button-next, .swiper-button-prev {
+    color: #DAA520 !important; /* Gold */
+}
+
+/* Morphing Expertise Ecosystem styles */
+.expertise-cell {
+  position: relative;
+  overflow: hidden; /* Important for clip-path */
+  cursor: pointer;
+  /* Initial hexagonal shape */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: clip-path 1.5s ease-in-out, transform 0.5s ease-out, box-shadow 0.5s ease-out;
+  filter: blur(0.5px) contrast(1.2);
+  backdrop-filter: brightness(1.1);
+  animation: cellular-breath 10s infinite alternate ease-in-out; /* Continuous breathing */
+}
+
+.expertise-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(218, 165, 32, 0.8); /* Gold glow on hover */
+}
+
+.cell-content {
+  position: relative; /* For z-index and positioning */
+  z-index: 1;
+  overflow: visible; /* Allow content to bleed */
+  transform-style: preserve-3d; /* For potential 3D transforms on children */
+}
+
+/* Keyframe animation for cellular breathing */
+@keyframes cellular-breath {
+  0%, 100% { clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); } /* Hexagon */
+  25% { clip-path: polygon(60% 5%, 95% 30%, 90% 70%, 40% 95%, 10% 65%, 15% 35%); } /* Slightly morphed */
+  50% { clip-path: polygon(45% 10%, 85% 20%, 100% 60%, 55% 90%, 15% 80%, 0% 40%); } /* More morphed */
+  75% { clip-path: polygon(55% 0%, 100% 30%, 90% 80%, 45% 100%, 5% 70%, 10% 20%); } /* Another morph */
+}
+
+
+/* Continuous Horizontal Scroll styles */
+.logo-marquee-container {
+    /* width: 100%; */ /* Already set in HTML */
+    /* overflow: hidden; */ /* Already set in HTML */
+}
+
+.logo-marquee {
+    animation: marquee-scroll 30s linear infinite; /* Adjust duration for speed */
+}
+
+.logo-marquee:hover {
+    animation-play-state: paused; /* Pause on hover */
+}
+
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* Scroll half the width to loop seamlessly */
+}
+
+/* Custom CSS for the layered-stack slider and background */
+.testimonial-section {
+    background-color: #f5f5dc; /* Soft-cream */
+    background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23d2b48c" fill-opacity="0.1"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6H4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+}
+
+.testimonial-stack {
+    perspective: 1000px;
+}
+
+.testimonial-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-card.active {
+    transform: translateZ(0);
+    opacity: 1;
+    z-index: 20;
+}
+
+.testimonial-card.prev {
+    transform: translateX(-100%) rotateY(-45deg) scale(0.8);
+    opacity: 0;
+    z-index: 10;
+}
+
+.testimonial-card.next {
+    transform: translateX(100%) rotateY(45deg) scale(0.8);
+    opacity: 0;
+    z-index: 10;
+}
+
+/* Living Ecosystem of Principles */
+#principles-background {
+    background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, rgba(1, 45, 24, 0) 70%);
+    animation: pulse-background 10s infinite alternate;
+}
+
+@keyframes pulse-background {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.5);
+    }
+}
+
+#principles-core {
+    transition: transform 0.3s ease;
+}
+
+#principles-core:hover {
+    transform: scale(1.1);
+}
+
+.principle-node {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.principle-node:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.7);
+}
+
+.principle-node .icon {
+    font-size: 2rem;
+    color: #DAA520;
+}
+
+.principle-node .title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.principle-description {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    width: 200px;
+}
+
+.principle-node:hover .principle-description {
+    opacity: 1;
+}
+
+/* Interactive Honeycomb Grid */
+.honeycomb-grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.honeycomb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.honeycomb-cell {
+    position: relative;
+    width: 150px;
+    height: 173.2px; /* height = width * sqrt(3) / 2 * 2 */
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background-color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.honeycomb-cell:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.7);
+}
+
+.honeycomb-cell-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #012d18;
+}
+
+.honeycomb-icon {
+    font-size: 2.5rem;
+    color: #DAA520;
+    transition: transform 0.3s ease;
+}
+
+.honeycomb-cell:hover .honeycomb-icon {
+    transform: scale(1.2);
+}
+
+.honeycomb-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+#principle-description-container {
+    transition: opacity 0.5s ease;
+}
+
+/* Custom styles for solutions.html */
+
+/* Define custom colors from your project for consistency */
+.text-gold { color: #DAA520; }
+.bg-gold { background-color: #DAA520; }
+.text-cream { color: #F5F5DC; }
+.bg-cream { background-color: #F5F5DC; }
+.text-dark-green { color: #012d18; }
+.bg-dark-green { background-color: #012d18; }
+
+/* Custom animations for premium feel */
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeInScale {
+    animation: fadeInScale 0.8s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.animate-slideInLeft {
+    animation: slideInLeft 0.8s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.animate-slideInRight {
+    animation: slideInRight 0.8s ease-out forwards;
+}
+
+/* Figma-inspired background for Agri-Marketplace */
+.bg-marketplace-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Smart Logistics */
+.bg-logistics-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Advisory & Consulting */
+.bg-advisory-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Input Access & Agri-Finance */
+.bg-finance-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Training & Capacity Building */
+.bg-training-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Data, IoT & Traceability */
+.bg-data-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Figma-inspired background for Value Addition & Processing */
+.bg-value-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23024d2a' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zm0-30V0H4v4H0v2h4v4h2V6H4V4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-size: 30px 30px; /* Adjust size for subtlety */
+    background-repeat: repeat;
+}
+
+/* Custom button hover effect */
+.btn-gold-glow {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.btn-gold-glow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, #DAA520 0%, transparent 70%);
+    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+.btn-gold-glow:hover::before {
+    width: 200%;
+    height: 200%;
+    opacity: 0.6;
+}
+.btn-gold-glow:hover {
+    box-shadow: 0 0 20px rgba(218, 165, 32, 0.6);
+}
+
+/* Custom icon hover effect */
+.icon-hover-gold {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.icon-hover-gold:hover {
+    color: #DAA520;
+    transform: translateY(-3px);
+}
+
+/* (reverted custom Solutions page overrides removed) */

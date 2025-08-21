@@ -1,0 +1,153 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Edit Image{% endblock %}
+{% block page_title %}Edit Image{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-edit"></i> Edit Image</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
+                         alt="{{ image.alt_text or image.description or 'Website image' }}"
+                         class="img-fluid rounded" style="max-height: 300px;">
+                </div>
+                
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="section" class="form-label">Section *</label>
+                                <select class="form-select" id="section" name="section" required>
+                                    <option value="">Select Section</option>
+                                    <option value="hero" {% if image.section == 'hero' %}selected{% endif %}>Hero Section</option>
+                                    <option value="about" {% if image.section == 'about' %}selected{% endif %}>About Page</option>
+                                    <option value="services" {% if image.section == 'services' %}selected{% endif %}>Services Page</option>
+                                    <option value="team" {% if image.section == 'team' %}selected{% endif %}>Team Section</option>
+                                    <option value="contact" {% if image.section == 'contact' %}selected{% endif %}>Contact Page</option>
+                                    <option value="gallery" {% if image.section == 'gallery' %}selected{% endif %}>Gallery</option>
+                                    <option value="background" {% if image.section == 'background' %}selected{% endif %}>Background Images</option>
+                                    <option value="logo" {% if image.section == 'logo' %}selected{% endif %}>Logo & Branding</option>
+                                </select>
+                                <div id="section-recommendation" class="form-text mt-2">
+                                    <!-- Section recommendation will be displayed here via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" 
+                               value="{{ image.description or '' }}" placeholder="Brief description of the image">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="alt_text" class="form-label">Alt Text</label>
+                        <input type="text" class="form-control" id="alt_text" name="alt_text" 
+                               value="{{ image.alt_text or '' }}" placeholder="Alternative text for accessibility">
+                        <div class="form-text">Important for SEO and accessibility</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="display_order" class="form-label">Display Order</label>
+                                <input type="number" class="form-control" id="display_order" name="display_order" 
+                                       value="{{ image.display_order }}" min="0">
+                                <div class="form-text">Lower numbers appear first</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if image.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        Active
+                                    </label>
+                                    <div class="form-text">Show this image on the website</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" {% if image.is_featured %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_featured">
+                                        Featured Image
+                                    </label>
+                                    <div class="form-text">Mark as featured/hero image</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.admin_images') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Images
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Display recommendations based on selected section
+    document.addEventListener('DOMContentLoaded', function() {
+        const sectionSelect = document.getElementById('section');
+        const recommendationDiv = document.getElementById('section-recommendation');
+        
+        function updateRecommendation() {
+            const section = sectionSelect.value;
+            let recommendation = '';
+            
+            switch(section) {
+                case 'hero':
+                    recommendation = '<strong>Recommendation:</strong> Use high-quality, wide landscape images (1920×1080px). These images appear at the top of the homepage and should represent your brand identity.';
+                    break;
+                case 'about':
+                    recommendation = '<strong>Recommendation:</strong> Use images that tell your company story or show your team in action (800×600px). These appear on the About page.';
+                    break;
+                case 'services':
+                    recommendation = '<strong>Recommendation:</strong> Use images that represent your services or show results (800×600px). These appear on the Services page.';
+                    break;
+                case 'team':
+                    recommendation = '<strong>Recommendation:</strong> Use professional headshots or team photos (400×400px, square). These appear in the team section.';
+                    break;
+                case 'contact':
+                    recommendation = '<strong>Recommendation:</strong> Use images of your office or contact-related visuals (800×600px). These appear on the Contact page.';
+                    break;
+                case 'gallery':
+                    recommendation = '<strong>Recommendation:</strong> Use high-quality project photos or portfolio items (800×600px). These appear in the gallery section.';
+                    break;
+                case 'background':
+                    recommendation = '<strong>Recommendation:</strong> Use subtle patterns or textures that don\'t distract from content (1920×1080px). These are used as section backgrounds.';
+                    break;
+                case 'logo':
+                    recommendation = '<strong>Recommendation:</strong> Use transparent PNG files for logos (at least 200×200px). These appear in the header, footer, and favicon.';
+                    break;
+                default:
+                    recommendation = 'Select a section to see recommendations.';
+            }
+            
+            recommendationDiv.innerHTML = recommendation;
+        }
+        
+        // Initial update
+        updateRecommendation();
+        
+        // Update on change
+        sectionSelect.addEventListener('change', updateRecommendation);
+    });
+</script>
+{% endblock %}

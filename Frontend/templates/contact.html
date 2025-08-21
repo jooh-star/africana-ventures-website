@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - Africana Ventures{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="contact-page-modern">
+	<!-- Hero (parallax, admin image) -->
+	<section class="contact-hero"
+		{% if contact_images and contact_images|length > 0 %}
+			style="--hero-image: url('{{ url_for('static', filename='uploads/' + contact_images[0].filename) }}');"
+		{% endif %}
+	>
+		<div class="hero-texture"></div>
+		<div class="hero-gradient"></div>
+		<div class="container position-relative" data-aos="fade-up">
+			<div class="row min-vh-60 align-items-end pb-4">
+				<div class="col-lg-8">
+					<h1 class="display-5 fw-900 text-gold mb-2">Let’s Grow Together</h1>
+					<p class="lead text-light-80">Reach out for partnerships, service inquiries, or consultations.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Floating form over darkened blurred photo -->
+	<section class="contact-form-wrap"
+		{% if contact_images and contact_images|length > 1 %}
+			style="--bg-image: url('{{ url_for('static', filename='uploads/' + contact_images[1].filename) }}');"
+		{% endif %}
+	>
+		<div class="bg-photo"></div>
+		<div class="bg-blur"></div>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xl-8" data-aos="zoom-in">
+					<form class="contact-form glass" method="POST" action="{{ url_for('main.contact_page') }}">
+						<div class="row g-3">
+							<div class="col-md-6">
+								<label class="form-label text-light-80">First Name</label>
+								<input type="text" name="first_name" class="form-control form-dark" required>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label text-light-80">Last Name</label>
+								<input type="text" name="last_name" class="form-control form-dark" required>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label text-light-80">Email</label>
+								<input type="email" name="email" class="form-control form-dark" required>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label text-light-80">Phone</label>
+								<input type="text" name="phone" class="form-control form-dark">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label text-light-80">Company</label>
+								<input type="text" name="company" class="form-control form-dark">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label text-light-80">Service</label>
+								<select name="service" class="form-select form-dark" required>
+									{% if services and services|length > 0 %}
+										{% for s in services %}
+										<option value="{{ s.title }}">{{ s.title }}</option>
+										{% endfor %}
+									{% else %}
+										<option value="General Inquiry">General Inquiry</option>
+									{% endif %}
+								</select>
+							</div>
+							<div class="col-12">
+								<label class="form-label text-light-80">Message</label>
+								<textarea name="message" rows="5" class="form-control form-dark" required></textarea>
+							</div>
+						</div>
+						<div class="d-flex justify-content-end mt-4">
+							<button type="submit" class="btn btn-send">
+								<span>Send Message</span> <i class="fas fa-paper-plane ms-2"></i>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Montage / Gallery below the form -->
+	<section class="contact-montage">
+		<div class="container">
+			<div class="section-head text-center mb-4" data-aos="fade-up">
+				<h2 class="text-gold fw-800">Where We Operate</h2>
+				<p class="text-light-70">From rural collection points to export terminals — a connected chain.</p>
+			</div>
+			<div class="montage-grid" data-aos="fade-up">
+				{% if contact_images and contact_images|length > 0 %}
+					{% for img in contact_images %}
+					<div class="m-item">
+						<img src="{{ url_for('static', filename='uploads/' + img.filename) }}" alt="{{ img.alt_text or img.description or 'Contact image' }}">
+						<div class="m-overlay"></div>
+					</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</section>
+</div>
+{% endblock %}

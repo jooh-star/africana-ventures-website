@@ -1,0 +1,158 @@
+/* Solutions Page - Scoped Styles (no Tailwind rebuild required) */
+
+/* Hero readability */
+#solutions-hero h1,
+#solutions-hero p {
+	text-shadow: 2px 2px 8px rgba(0,0,0,0.85);
+}
+
+/* Hero diagonal layers for premium look */
+#solutions-hero {
+  position: relative;
+  overflow: hidden;
+}
+#solutions-hero::before,
+#solutions-hero::after {
+  content: '';
+  position: absolute;
+  inset: 55% -10% -25% -10%;
+  background: rgba(255,255,255,0.06);
+  transform: skewY(-12deg);
+  pointer-events: none;
+}
+#solutions-hero::after {
+  inset: 35% -20% auto -20%;
+  background: rgba(218,165,32,0.08);
+}
+
+/* Solution card lift + glow */
+.solution-card {
+	position: relative;
+	transition: transform .5s ease, box-shadow .5s ease;
+	will-change: transform;
+}
+.solution-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 25px 55px rgba(0,0,0,0.35);
+}
+
+/* Image zoom on hover (no HTML change required) */
+.solution-card img {
+	transition: transform .6s ease;
+}
+.solution-card:hover img {
+	transform: scale(1.05);
+}
+
+/* Hover overlay reveal */
+.solution-card-hover-overlay {
+	opacity: 0;
+	transition: opacity .45s ease, transform .45s ease;
+	transform: scale(1.02);
+	pointer-events: none;
+}
+.solution-card:hover .solution-card-hover-overlay {
+	opacity: 1;
+	transform: scale(1.0);
+	pointer-events: auto;
+}
+
+/* Glassmorphism refinement inside core services only */
+#core-services-deep-dive .glassmorphism {
+	background: rgba(1,45,24,0.9);
+	color: #fff;
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255,255,255,0.12);
+	box-shadow: 0 18px 55px rgba(0,0,0,0.45);
+}
+#core-services-deep-dive .glassmorphism h3,
+#core-services-deep-dive .glassmorphism p,
+#core-services-deep-dive .glassmorphism li,
+#core-services-deep-dive .glassmorphism span,
+#core-services-deep-dive .glassmorphism a {
+	color: inherit;
+	text-shadow: 1px 1px 3px rgba(0,0,0,0.65);
+}
+
+/* Reveal on scroll utility (JS toggles .is-visible) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease;
+  will-change: opacity, transform;
+}
+.is-visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Swiper controls - products section */
+#product-categories-showcase .swiper-button-next,
+#product-categories-showcase .swiper-button-prev {
+	width: 3.25rem;
+	height: 3.25rem;
+	border-radius: 9999px;
+	background: rgba(218,165,32,0.96);
+	color: #012d18 !important; /* dark-green */
+	box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+	top: 50% !important;
+	transform: translateY(-50%);
+}
+#product-categories-showcase .swiper-button-next::after,
+#product-categories-showcase .swiper-button-prev::after {
+	font-size: 1rem !important;
+	font-weight: 800;
+}
+#product-categories-showcase .swiper-button-prev { left: 1rem !important; }
+#product-categories-showcase .swiper-button-next { right: 1rem !important; }
+#product-categories-showcase .swiper-pagination-bullet {
+	background-color: #DAA520 !important;
+	opacity: .7;
+}
+#product-categories-showcase .swiper-pagination-bullet-active { opacity: 1; }
+
+/* Fraction pagination styling */
+#product-categories-showcase .swiper-pagination-fraction {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #DAA520;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* CTA button sparkle (re-uses existing class in HTML) */
+.btn-gold-glow { position: relative; overflow: hidden; z-index: 1; }
+.btn-gold-glow::before {
+	content: '';
+	position: absolute;
+	top: 50%; left: 50%; width: 0; height: 0;
+	background: radial-gradient(circle, #DAA520 0%, transparent 70%);
+	transition: width .4s ease-out, height .4s ease-out, opacity .4s ease-out;
+	opacity: 0; transform: translate(-50%, -50%); z-index: -1;
+}
+.btn-gold-glow:hover::before { width: 200%; height: 200%; opacity: .55; }
+
+/* Minor utility for text glow */
+.text-glow-strong { text-shadow: 0 2px 12px rgba(0,0,0,0.85); }
+
+/* ===== TEMP PROOF STYLES (will remove after verification) ===== */
+@keyframes proof-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(218,165,32,0.8); transform: translateY(-50%) scale(1); }
+  50% { box-shadow: 0 0 35px 10px rgba(218,165,32,0.6); transform: translateY(-50%) scale(1.07); }
+}
+
+#product-categories-showcase .swiper-button-next,
+#product-categories-showcase .swiper-button-prev {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 3px solid #ffffff;
+  animation: proof-pulse 1.5s ease-in-out infinite;
+}
+
+#solutions-hero a {
+  outline: 3px solid #DAA520;
+  box-shadow: 0 0 24px rgba(218,165,32,0.9);
+}

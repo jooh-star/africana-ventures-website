@@ -1,0 +1,137 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Messages - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">Contact Messages</h1>
+                <div class="text-muted">
+                    Manage all contact form submissions
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">All Messages</h6>
+                </div>
+                <div class="card-body">
+                    {% if contacts %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Company</th>
+                                        <th>Service</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contact in contacts %}
+                                    <tr class="{% if not contact.is_read %}table-warning{% endif %}">
+                                        <td>
+                                            <strong>{{ contact.first_name }} {{ contact.last_name }}</strong>
+                                        </td>
+                                        <td>
+                                            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                                        </td>
+                                        <td>{{ contact.phone or 'N/A' }}</td>
+                                        <td>{{ contact.company or 'N/A' }}</td>
+                                        <td>
+                                            <span class="badge badge-info">{{ contact.service }}</span>
+                                        </td>
+                                        <td>{{ contact.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            {% if contact.is_read %}
+                                                <span class="badge badge-success">Read</span>
+                                            {% else %}
+                                                <span class="badge badge-warning">Unread</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#messageModal{{ contact.id }}">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                            {% if not contact.is_read %}
+                                                <a href="{{ url_for('admin.mark_contact_read', contact_id=contact.id) }}" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i> Mark Read
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Message Modal -->
+                                    <div class="modal fade" id="messageModal{{ contact.id }}" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel{{ contact.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="messageModalLabel{{ contact.id }}">
+                                                        Message from {{ contact.first_name }} {{ contact.last_name }}
+                                                    </h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <h6>Contact Information</h6>
+                                                            <p><strong>Name:</strong> {{ contact.first_name }} {{ contact.last_name }}</p>
+                                                            <p><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+                                                            <p><strong>Phone:</strong> {{ contact.phone or 'N/A' }}</p>
+                                                            <p><strong>Company:</strong> {{ contact.company or 'N/A' }}</p>
+                                                            <p><strong>Service:</strong> {{ contact.service }}</p>
+                                                            <p><strong>Date:</strong> {{ contact.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6>Message</h6>
+                                                            <div class="border p-3 bg-light">
+                                                                {{ contact.message|nl2br }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <a href="mailto:{{ contact.email }}?subject=Re: Your inquiry about {{ contact.service }}" class="btn btn-primary">
+                                                        <i class="fas fa-reply"></i> Reply
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-gray-300 mb-3"></i>
+                            <p class="text-gray-500">No messages yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-mark as read when modal is opened
+    $('.modal').on('shown.bs.modal', function () {
+        var contactId = $(this).attr('id').replace('messageModal', '');
+        // You can add AJAX call here to mark as read automatically
+    });
+</script>
+{% endblock %}

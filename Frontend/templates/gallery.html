@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+
+{% block title %}Image Gallery - Africana Ventures{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="gallery-hero-section">
+    <div class="hero-background">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <div class="row align-items-center min-vh-50">
+                    <div class="col-lg-12 text-center" data-aos="fade-up">
+                        <h1 class="hero-title">Image Gallery</h1>
+                        <p class="hero-subtitle">Explore our visual journey through African agriculture</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="gallery-section section-padding">
+    <div class="container">
+        <div class="section-header text-center mb-5" data-aos="fade-up">
+            <h2>Our Visual Story</h2>
+            <p>Images that showcase our work, team, and impact across East Africa</p>
+        </div>
+
+        <!-- Gallery Filter -->
+        <div class="gallery-filter text-center mb-4" data-aos="fade-up">
+            <button class="btn btn-outline-primary active" data-filter="all">All</button>
+            <button class="btn btn-outline-primary" data-filter="hero">Hero</button>
+            <button class="btn btn-outline-primary" data-filter="about">About</button>
+            <button class="btn btn-outline-primary" data-filter="services">Services</button>
+            <button class="btn btn-outline-primary" data-filter="team">Team</button>
+            <button class="btn btn-outline-primary" data-filter="gallery">Gallery</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="row g-4 gallery-grid">
+            {% for section, images in images_by_section.items() %}
+                {% for img in images %}
+                <div class="col-lg-4 col-md-6 gallery-item" data-category="{{ img.section }}">
+                    <div class="gallery-card" data-aos="fade-up" data-aos-delay="{{ loop.index * 50 }}">
+                        <div class="gallery-image">
+                            <img src="{{ url_for('static', filename='uploads/' + img.filename) }}" 
+                                 alt="{{ img.alt_text or img.description or 'Gallery image' }}" 
+                                 class="img-fluid">
+                            <div class="gallery-overlay" onclick="viewGalleryImage('{{ url_for('static', filename='uploads/' + img.filename) }}', '{{ img.description or img.original_filename }}', '{{ img.section|title }}', '{{ img.alt_text or '' }}')">
+                                <i class="fas fa-search-plus"></i>
+                            </div>
+                        </div>
+                        <div class="gallery-info">
+                            <h5>{{ img.description or img.original_filename }}</h5>
+                            <p class="section-badge">{{ img.section|title }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No images available at the moment.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Image View Modal -->
+<div class="modal fade" id="galleryImageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="galleryImageTitle">Image Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <img id="galleryImageSrc" src="" alt="" class="img-fluid mb-3">
+                <div class="image-details">
+                    <p><strong>Section:</strong> <span id="galleryImageSection"></span></p>
+                    <p id="galleryImageAlt"><strong>Alt Text:</strong> <span></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gallery filtering
+    const filterButtons = document.querySelectorAll('.gallery-filter button');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Get filter value
+            const filterValue = this.getAttribute('data-filter');
+            
+            // Filter gallery items
+            galleryItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+function viewGalleryImage(src, title, section, altText) {
+    document.getElementById('galleryImageSrc').src = src;
+    document.getElementById('galleryImageTitle').textContent = title;
+    document.getElementById('galleryImageSection').textContent = section;
+    
+    const altTextElement = document.getElementById('galleryImageAlt');
+    if (altText && altText.trim() !== '') {
+        altTextElement.querySelector('span').textContent = altText;
+        altTextElement.style.display = 'block';
+    } else {
+        altTextElement.style.display = 'none';
+    }
+    
+    new bootstrap.Modal(document.getElementById('galleryImageModal')).show();
+}
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+.gallery-section {
+    padding: 80px 0;
+}
+
+.gallery-filter {
+    margin-bottom: 30px;
+}
+
+.gallery-filter button {
+    margin: 0 5px;
+    border-radius: 30px;
+    padding: 8px 20px;
+    transition: all 0.3s ease;
+}
+
+.gallery-filter button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.gallery-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.gallery-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.gallery-image {
+    position: relative;
+    overflow: hidden;
+    height: 250px;
+}
+
+.gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-card:hover .gallery-image img {
+    transform: scale(1.1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.gallery-overlay i {
+    color: white;
+    font-size: 2rem;
+}
+
+.gallery-card:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-info {
+    padding: 20px;
+    background-color: white;
+}
+
+.gallery-info h5 {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+.image-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Hero section styling */
+.gallery-hero-section {
+    position: relative;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+}
+
+.gallery-hero-section .hero-background {
+    background-image: url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1500&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 50vh;
+    position: relative;
+}
+
+.gallery-hero-section .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.gallery-hero-section .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-hero-section .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-hero-section .hero-subtitle {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .gallery-hero-section .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .gallery-filter button {
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}

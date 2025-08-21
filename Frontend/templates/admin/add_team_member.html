@@ -1,0 +1,101 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Add Team Member{% endblock %}
+{% block page_title %}Add Team Member{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user-plus"></i> Add New Team Member</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="position" class="form-label">Position *</label>
+                                <input type="text" class="form-control" id="position" name="position" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="4" 
+                                  placeholder="Tell us about this team member..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="linkedin" class="form-label">LinkedIn Profile</label>
+                                <input type="url" class="form-control" id="linkedin" name="linkedin" 
+                                       placeholder="https://linkedin.com/in/...">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="twitter" class="form-label">Twitter Profile</label>
+                                <input type="url" class="form-control" id="twitter" name="twitter" 
+                                       placeholder="https://twitter.com/...">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="photo" class="form-label">Profile Photo</label>
+                                <input type="file" class="form-control" id="photo" name="photo" 
+                                       accept="image/*">
+                                <div class="form-text">Recommended size: 400x400 pixels</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="display_order" class="form-label">Display Order</label>
+                                <input type="number" class="form-control" id="display_order" name="display_order" 
+                                       value="0" min="0">
+                                <div class="form-text">Lower numbers appear first</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin_team') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Team
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Add Team Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

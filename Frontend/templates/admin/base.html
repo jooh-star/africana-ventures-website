@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - Africana Ventures</title>
+    {# Removed Bootstrap CSS link #}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dist/output.css') }}"> {# Tailwind CSS link #}
+    <style>
+        /* Custom styles that cannot be easily converted to Tailwind utilities */
+        /* These will be converted to Tailwind classes or removed later */
+        /* For now, keeping them to avoid breaking layout immediately */
+        .admin-sidebar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        /* ... rest of the custom styles ... */
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-gray-800"> {# Converted body styles #}
+    <div class="flex min-h-screen"> {# Replaced container-fluid and row with flex min-h-screen #}
+        <!-- Sidebar -->
+        <div class="w-64 bg-primary-green text-white shadow-lg flex-shrink-0"> {# Replaced col-md-3 col-lg-2 px-0 and admin-sidebar #}
+            <div class="p-4 border-b border-white border-opacity-10 mb-4"> {# Replaced sidebar-header #}
+                <h4 class="text-xl font-semibold mb-1"><i class="fas fa-shield-alt mr-2"></i> Admin Panel</h4>
+                <p class="text-sm text-white opacity-70">Africana Ventures</p>
+            </div>
+            
+            <nav class="flex flex-col p-2"> {# Replaced nav flex-column #}
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_dashboard' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt w-5 mr-3"></i> Dashboard
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_contacts' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_contacts') }}">
+                    <i class="fas fa-envelope w-5 mr-3"></i> Messages
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_testimonials' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_testimonials') }}">
+                    <i class="fas fa-star w-5 mr-3"></i> Testimonials
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_images' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_images') }}">
+                    <i class="fas fa-images w-5 mr-3"></i> Images
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_team' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_team') }}">
+                    <i class="fas fa-users w-5 mr-3"></i> Team Members
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_services' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_services') }}">
+                    <i class="fas fa-cogs w-5 mr-3"></i> Services
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_content' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_content') }}">
+                    <i class="fas fa-edit w-5 mr-3"></i> Website Content
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_faqs' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_faqs') }}">
+                    <i class="fas fa-question-circle w-5 mr-3"></i> FAQs
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 {% if request.endpoint == 'admin.admin_company_info' %}bg-white bg-opacity-10 text-white{% else %}text-white text-opacity-80{% endif %}" href="{{ url_for('admin.admin_company_info') }}">
+                    <i class="fas fa-building w-5 mr-3"></i> Company Info
+                </a>
+                <hr class="border-t border-white border-opacity-20 my-4"> {# Replaced hr style #}
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 text-white text-opacity-80" href="/" target="_blank">
+                    <i class="fas fa-external-link-alt w-5 mr-3"></i> View Website
+                </a>
+                <a class="flex items-center p-3 rounded-lg my-1 transition-all duration-300 hover:bg-white hover:bg-opacity-10 text-white text-opacity-80" href="{{ url_for('admin.admin_logout') }}">
+                    <i class="fas fa-sign-out-alt w-5 mr-3"></i> Exit System
+                </a>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col"> {# Replaced col-md-9 col-lg-10 with flex-1 flex flex-col #}
+            <!-- Header -->
+            <div class="bg-white shadow-md p-4 flex justify-between items-center"> {# Replaced admin-header #}
+                <h4 class="text-xl font-semibold">{% block page_title %}Dashboard{% endblock %}</h4>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-4">Welcome, {{ current_user.username }}</span>
+                    <div class="relative"> {# For dropdown #}
+                        <button class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none" type="button" id="userDropdown">
+                            <i class="fas fa-user-circle text-2xl"></i>
+                        </button>
+                        {# Dropdown menu content will be added here, likely using Flowbite or custom JS #}
+                        <ul class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden" id="userDropdownMenu">
+                            <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{{ url_for('admin.admin_company_info') }}">Company Settings</a></li>
+                            <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{{ url_for('admin.change_admin_password') }}">Change Password</a></li>
+                            <li><hr class="border-t border-gray-200 my-1"></li>
+                            <li><a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{{ url_for('admin.admin_logout') }}">Exit System</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="p-6 flex-1"> {# Replaced admin-content #}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="p-4 mb-4 rounded-lg {% if category == 'message' %}bg-green-100 text-green-800{% elif category == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %} relative" role="alert"> {# Converted alert classes #}
+                                {{ message }}
+                                <button type="button" class="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-700 focus:outline-none" data-dismiss="alert" aria-label="Close">
+                                    <span class="text-xl">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    {# Removed Bootstrap JS links #}
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> {# Assuming main.js might have some admin-specific JS #}
+    <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script> {# Flowbite JS for interactive components #}
+    {% block scripts %}{% endblock %}
+</body>
+</html>
