@@ -1,0 +1,210 @@
+/* Services Page Styles */
+
+/* 3D Card Carousel Styles */
+.expertise-showcase {
+    position: relative;
+    padding: 4rem 0;
+    overflow: hidden;
+}
+
+.expertise-stage {
+    position: relative;
+    height: 600px;
+    perspective: 1500px;
+    transform-style: preserve-3d;
+}
+
+/* Utility classes for 3D transforms */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.transform-style-3d {
+    transform-style: preserve-3d;
+}
+
+.expertise-cards-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.expertise-card {
+    position: absolute;
+    width: 80%;
+    max-width: 1000px;
+    height: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Card positions */
+.expertise-card.active {
+    z-index: 10;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.expertise-card.prev {
+    z-index: 5;
+    transform: translate(-80%, -50%) scale(0.8) rotateY(10deg);
+    filter: brightness(0.7);
+}
+
+.expertise-card.next {
+    z-index: 5;
+    transform: translate(-20%, -50%) scale(0.8) rotateY(-10deg);
+    filter: brightness(0.7);
+}
+
+/* Card inner structure */
+.expertise-card-inner {
+    display: flex;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.expertise-card-media {
+    width: 40%;
+    position: relative;
+    overflow: hidden;
+}
+
+.expertise-parallax-image {
+    width: 110%;
+    height: 110%;
+    object-fit: cover;
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    transition: transform 0.1s ease-out;
+}
+
+.expertise-card-content {
+    width: 60%;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Navigation controls */
+.expertise-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.expertise-prev,
+.expertise-next {
+    background: rgba(212, 175, 55, 0.2);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 1rem;
+    transition: all 0.3s ease;
+}
+
+.expertise-prev:hover,
+.expertise-next:hover {
+    background: rgba(212, 175, 55, 0.4);
+    transform: scale(1.1);
+}
+
+/* Indicators */
+.expertise-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.expertise-indicator {
+    height: 3px;
+    background: rgba(26, 60, 52, 0.3);
+    margin: 0 5px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.expertise-indicator.active {
+    background: #d4af37;
+}
+
+/* Text animations */
+.expertise-title,
+.expertise-description,
+.expertise-feature {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Floating animations */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-reverse {
+    animation: float-reverse 7s ease-in-out infinite;
+}
+
+.floating-element-slow {
+    animation: float 10s ease-in-out infinite;
+}
+
+.floating-element-slow-reverse {
+    animation: float-reverse 12s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes float-reverse {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(20px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .expertise-card-inner {
+        flex-direction: column;
+    }
+    
+    .expertise-card-media,
+    .expertise-card-content {
+        width: 100%;
+    }
+    
+    .expertise-stage {
+        height: 800px;
+    }
+    
+    .expertise-card.prev {
+        transform: translate(-50%, -70%) scale(0.8);
+    }
+    
+    .expertise-card.next {
+        transform: translate(-50%, -30%) scale(0.8);
+    }
+}

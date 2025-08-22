@@ -4,67 +4,154 @@
 
 {% block head %}
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}" />
 {% endblock %}
 
 {% block content %}
 <div class="services-page">
 
-    <!-- Hero Section: Cinematic Intro -->
-    <section id="hero-services" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
-        <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover z-0">
-            <source src="{{ url_for('static', filename='videos/hero-bg.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <div class="absolute inset-0 bg-dark-green opacity-70 z-10"></div>
-        <div class="relative z-20 text-center px-4">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6 text-gold font-poppins hero-title-3d">
-                Our Services, Your Growth
-            </h1>
-            <p class="text-xl md:text-2xl font-light max-w-4xl mx-auto mb-10 font-montserrat animate-fade-in-up animation-delay-200">
-                Innovating sustainable solutions for East Africa’s farmers and entrepreneurs.
-            </p>
-            <a href="#timeline-services" class="inline-block bg-gold text-dark-green font-bold py-4 px-10 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg cta-button-glow animate-fade-in-up animation-delay-400">
-                Explore Our Solutions
-            </a>
+    <!-- Hero Section -->
+    <section id="hero-section" class="relative h-screen w-full overflow-hidden">
+        <!-- Slides -->
+        <div id="slider" class="absolute top-0 left-0 w-full h-full">
+            <!-- Slide 1 -->
+            <div class="slide absolute top-0 left-0 w-full h-full">
+                <div class="bg-cover bg-center absolute top-0 left-0 w-full h-full transition-transform duration-200 ease-out" style="background-image: url({{ url_for('static', filename='images/101678.jpg') }})"></div>
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+                <div class="relative z-10 flex flex-col items-start justify-center h-full text-white p-8 md:p-16">
+                    <div class="max-w-4xl">
+                        <p class="text-lg md:text-xl mb-2">Innovative Agricultural Solutions</p>
+                        <h1 class="text-4xl md:text-6xl font-bold mb-4">EMPOWERING FARMERS, TRANSFORMING AGRICULTURE.</h1>
+                        <p class="text-base md:text-lg max-w-xl mb-8">
+                            We provide comprehensive services to support farmers and agribusinesses in East Africa, from market access to sustainable practices.
+                        </p>
+                        <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full flex items-center space-x-2">
+                            <span>Our Services</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide absolute top-0 left-0 w-full h-full">
+                <div class="bg-cover bg-center absolute top-0 left-0 w-full h-full transition-transform duration-200 ease-out" style="background-image: url({{ url_for('static', filename='images/113898.jpg') }})"></div>
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+                <div class="relative z-10 flex flex-col items-start justify-center h-full text-white p-8 md:p-16">
+                    <div class="max-w-4xl">
+                        <p class="text-lg md:text-xl mb-2">Connecting Farmers to Markets</p>
+                        <h1 class="text-4xl md:text-6xl font-bold mb-4">BUILDING A STRONGER, MORE CONNECTED AGRI-ECOSYSTEM.</h1>
+                        <p class="text-base md:text-lg max-w-xl mb-8">
+                            Our Agri-Marketplace platform provides a direct link between farmers and buyers, ensuring fair prices and sustainable growth.
+                        </p>
+                        <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full flex items-center space-x-2">
+                            <span>Explore the Marketplace</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide absolute top-0 left-0 w-full h-full">
+                <div class="bg-cover bg-center absolute top-0 left-0 w-full h-full transition-transform duration-200 ease-out" style="background-image: url({{ url_for('static', filename='images/141689.jpg') }})"></div>
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+                <div class="relative z-10 flex flex-col items-start justify-center h-full text-white p-8 md:p-16">
+                    <div class="max-w-4xl">
+                        <p class="text-lg md:text-xl mb-2">Data-Driven Advisory Services</p>
+                        <h1 class="text-4xl md:text-6xl font-bold mb-4">UNLOCKING POTENTIAL WITH DATA AND INSIGHTS.</h1>
+                        <p class="text-base md:text-lg max-w-xl mb-8">
+                            We leverage technology and data to provide farmers with the knowledge and insights they need to improve their yields and profitability.
+                        </p>
+                        <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-full flex items-center space-x-2">
+                            <span>Learn More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Floating Donate Button -->
+        <a href="#" class="absolute top-1/2 left-0 -translate-y-1/2 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-4 px-2 rounded-r-full z-20 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span class="hidden md:inline">Donate</span>
+        </a>
+
+        <!-- Slider Controls -->
+        <button id="prev-slide" class="absolute top-1/2 left-4 -translate-y-1/2 text-white z-20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <button id="next-slide" class="absolute top-1/2 right-4 -translate-y-1/2 text-white z-20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
     </section>
 
-    <!-- Vertical Timeline Scroll -->
-    <section id="timeline-services" class="py-24 bg-cream text-dark-green overflow-hidden">
-        <div class="container mx-auto px-4">
-            <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Our Comprehensive Approach</h2>
-            <div class="timeline-container relative max-w-5xl mx-auto">
-                <div class="timeline-line"></div>
-
+    <!-- Premium Approach Cards Section -->
+    <section id="approach-services" class="py-24 bg-dark-green text-white overflow-hidden relative [scrollbar-width:thin] [scrollbar-color:#4a7c59_#1a2e22] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-[#1a2e22] [&::-webkit-scrollbar-thumb]:bg-[#4a7c59] [&::-webkit-scrollbar-thumb]:rounded-full">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-10 left-10 opacity-10 w-[300px] h-[300px] bg-[url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cpath fill="%23ffffff" d="M30,50 C30,30 50,10 50,10 C50,10 70,30 70,50 C70,70 50,90 50,90 C50,90 30,70 30,50 Z"%3E%3C/path%3E%3C/svg%3E')] bg-[length:50px_50px] animate-spin-slow"></div>
+            <div class="absolute bottom-10 right-10 opacity-10 w-[400px] h-[400px] bg-[url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cpath fill="%23ffffff" d="M20,50 C20,20 50,20 50,20 C50,20 80,20 80,50 C80,80 50,80 50,80 C50,80 20,80 20,50 Z"%3E%3C/path%3E%3C/svg%3E')] bg-[length:60px_60px] animate-spin-slower"></div>
+            <div class="gradient-overlay absolute inset-0 bg-gradient-to-b from-transparent to-dark-green/30"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span class="inline-block px-4 py-1 bg-gold/20 text-gold rounded-full text-sm font-semibold tracking-wider mb-4">OUR METHODOLOGY</span>
+                <h2 class="text-5xl font-extrabold mb-6 font-poppins bg-gradient-text bg-clip-text text-transparent">Our Comprehensive Approach</h2>
+                <div class="w-24 h-1 bg-gold mx-auto"></div>
+            </div>
+            
+            <div class="approach-cards-container">
                 {% set image_files = ['113898.jpg', '416760.jpg', 'our-team-1.jpg', '240173.jpg', '53396.jpg', '53401.jpg', '416767.jpg'] %}
                 {% for service in preset_services %}
-                <div class="timeline-item-wrapper flex items-center justify-between w-full mb-8">
-                    {% if loop.index0 % 2 == 0 %} {# Odd index (0, 2, 4...) -> Image/Short Desc on Left, Full Desc on Right #}
-                    <!-- Content for the left side (image, title, short description) -->
-                    <div class="timeline-item w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism">
-                        <img src="{{ url_for('static', filename='images/' + image_files[loop.index0]) }}" alt="{{ service.title }}" class="w-full h-64 object-cover rounded-lg mb-4" data-tilt>
-                        <h3 class="text-3xl font-bold text-gold mb-2 font-montserrat">{{ service.title }}</h3>
-                        <p class="text-lg font-lora text-dark-green">{{ service.short_description }}</p>
+                <div class="mb-24" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="bg-dark-green/40 backdrop-blur-lg border border-white/10 rounded-xl overflow-hidden transform transition-all duration-500 hover:shadow-[0_0_30px_rgba(173,255,173,0.2)] group hover:-translate-y-2.5">
+                        <div class="flex flex-col lg:flex-row {% if loop.index0 % 2 == 0 %}lg:flex-row{% else %}lg:flex-row-reverse{% endif %}">
+                            <!-- Image Section -->
+                            <div class="w-full lg:w-1/2 relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-r from-dark-green/80 to-transparent z-10"></div>
+                                <img 
+                                    src="{{ url_for('static', filename='images/' + image_files[loop.index0]) }}" 
+                                    alt="{{ service.title }}" 
+                                    class="w-full h-full object-cover transition-all duration-700 ease-in-out group-hover:scale-110 filter brightness-75 group-hover:brightness-100"
+                                >
+                                <div class="absolute bottom-0 left-0 w-full p-6 z-20 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out bg-gradient-to-t from-dark-green to-transparent">
+                                    <p class="text-white/90 font-lora italic">"{{ service.short_description }}"</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Content Section -->
+                            <div class="w-full lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center relative">
+                                <div class="text-[120px] font-bold text-white/5 absolute top-[-20px] right-5 font-black leading-none transition-all duration-500 group-hover:text-white/10 group-hover:scale-110">{{ loop.index }}</div>
+                                <h3 class="text-3xl font-bold text-gold mb-6 font-montserrat relative inline-block group/title">
+                                    {{ service.title }}
+                                    <span class="absolute bottom-0 left-0 w-0 h-1 bg-gold transition-all duration-500 group-hover/title:w-full"></span>
+                                </h3>
+                                <div class="relative overflow-hidden">
+                                    <p class="text-lg font-lora text-white/80 mb-6 leading-relaxed">{{ service.description }}</p>
+                                    <a href="#" class="inline-flex items-center text-gold hover:text-white transition-colors duration-300 group-hover:translate-x-2 transform transition-transform duration-300">
+                                        <span>Learn more</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="timeline-dot"></div>
-                    <!-- Content for the right side (detailed description) -->
-                    <div class="w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism text-cream ml-auto" data-aos="fade-left">
-                        <p class="text-lg font-lora">{{ service.description }}</p>
-                    </div>
-                    {% else %} {# Even index (1, 3, 5...) -> Full Desc on Left, Image/Short Desc on Right #}
-                    <!-- Content for the left side (detailed description) -->
-                    <div class="w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism text-cream mr-auto" data-aos="fade-right">
-                        <p class="text-lg font-lora">{{ service.description }}</p>
-                    </div>
-                    <div class="timeline-dot"></div>
-                    <!-- Content for the right side (image, title, short description) -->
-                    <div class="timeline-item w-full md:w-1/2 p-6 rounded-lg shadow-lg glassmorphism">
-                        <img src="{{ url_for('static', filename='images/' + image_files[loop.index0]) }}" alt="{{ service.title }}" class="w-full h-64 object-cover rounded-lg mb-4" data-tilt>
-                        <h3 class="text-3xl font-bold text-gold mb-2 font-montserrat">{{ service.title }}</h3>
-                        <p class="text-lg font-lora text-dark-green">{{ service.short_description }}</p>
-                    </div>
-                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -85,19 +172,194 @@
         </div>
     </section>
 
-    <!-- Morphing Expertise Ecosystem -->
-    <section id="expertise-ecosystem" class="py-24 bg-cream text-dark-green overflow-hidden">
-        <div class="container mx-auto px-4">
-            <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Explore Our Expertise</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {% for node in expertise_nodes %}
-                <div class="expertise-cell relative rounded-lg shadow-lg overflow-hidden cursor-pointer">
-                    <div class="cell-content p-6">
-                        <img src="{{ url_for('static', filename='images/' + node.image_filename) }}" alt="{{ node.title }}" class="w-full h-48 object-cover rounded-lg mb-4">
-                        <h3 class="text-2xl font-bold mb-2 font-montserrat">{{ node.title }}</h3>
-                        <p class="text-sm font-lora">{{ node.description }}</p>
+    <!-- Premium Interactive Expertise Showcase -->
+    <section id="expertise-showcase" class="py-24 bg-cream text-dark-green overflow-hidden relative">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-20 right-10 w-64 h-64 bg-gold/5 rounded-full blur-3xl floating-element"></div>
+            <div class="absolute bottom-20 left-10 w-96 h-96 bg-dark-green/5 rounded-full blur-3xl floating-element-reverse"></div>
+            <div class="absolute top-1/2 left-1/4 w-20 h-20 bg-gold/10 rounded-full blur-xl floating-element-slow"></div>
+            <div class="absolute bottom-1/3 right-1/4 w-32 h-32 bg-dark-green/10 rounded-full blur-xl floating-element-slow-reverse"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <span class="inline-block px-4 py-1 bg-dark-green/10 text-dark-green rounded-full text-sm font-semibold tracking-wider mb-4">OUR JOURNEY OF EXCELLENCE</span>
+                <h2 class="text-5xl font-extrabold mb-6 font-poppins bg-gradient-to-r from-dark-green to-gold bg-clip-text text-transparent">Explore Our Expertise</h2>
+                <div class="w-24 h-1 bg-gold mx-auto"></div>
+            </div>
+            
+            <!-- 3D Card Carousel -->
+            <div class="expertise-carousel relative">
+                <!-- Navigation Controls -->
+                <div class="expertise-nav flex justify-center items-center mb-8">
+                    <button class="expertise-prev bg-dark-green/10 hover:bg-dark-green/20 text-dark-green p-3 rounded-full mr-4 transition-all duration-300 transform hover:scale-110" aria-label="Previous expertise">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Indicator Dots -->
+                    <div class="expertise-indicators flex space-x-2">
+                        {% for node in expertise_nodes %}
+                        <button class="expertise-indicator w-3 h-3 rounded-full bg-dark-green/30 transition-all duration-300 {% if loop.index0 == 0 %}active bg-gold w-12{% endif %}" data-index="{{ loop.index0 }}" aria-label="Go to expertise {{ loop.index }}"></button>
+                        {% endfor %}
+                    </div>
+                    
+                    <button class="expertise-next bg-dark-green/10 hover:bg-dark-green/20 text-dark-green p-3 rounded-full ml-4 transition-all duration-300 transform hover:scale-110" aria-label="Next expertise">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- 3D Card Stage -->
+                <div class="expertise-stage relative h-[600px] perspective-1000 overflow-visible">
+                    <div class="expertise-cards-wrapper relative w-full h-full transform-style-3d transition-transform duration-1000">
+                        {% for node in expertise_nodes %}
+                        <!-- Expertise Card -->
+                        <div class="expertise-card absolute inset-0 w-full h-full transform-style-3d transition-all duration-1000 opacity-0 invisible
+                                    {% if loop.index0 == 0 %}active opacity-100 visible{% endif %}" 
+                             data-index="{{ loop.index0 }}">
+                            
+                            <div class="expertise-card-inner flex flex-col md:flex-row h-full bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden transform transition-transform duration-700 hover:scale-[1.02]">
+                                <!-- Image Side -->
+                                <div class="expertise-card-media w-full md:w-1/2 h-64 md:h-full relative overflow-hidden">
+                                    <!-- Parallax Image Effect -->
+                                    <div class="expertise-parallax-wrapper absolute inset-0 h-[120%] w-[120%] -top-[10%] -left-[10%]">
+                                        <img src="{{ url_for('static', filename='images/' + node.image_filename) }}" 
+                                             alt="{{ node.title }}" 
+                                             class="expertise-parallax-image w-full h-full object-cover">
+                                    </div>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-dark-green/60 to-transparent z-10"></div>
+                                    <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-dark-green/90 to-transparent z-20">
+                                        <span class="text-white font-bold text-xl md:text-2xl">{{ node.title }}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Content Side -->
+                                <div class="expertise-card-content w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                                    <div class="expertise-number inline-block mb-4 bg-dark-green/10 px-4 py-1 rounded-full text-sm font-semibold tracking-wider">
+                                        <span class="text-gold font-bold">0{{ loop.index }}</span> / <span class="text-dark-green">EXPERTISE</span>
+                                    </div>
+                                    
+                                    <h3 class="text-3xl md:text-4xl font-bold mb-6 font-montserrat text-dark-green expertise-title">{{ node.title }}</h3>
+                                    
+                                    <p class="text-base md:text-lg font-lora text-dark-green/80 leading-relaxed mb-8 expertise-description">{{ node.description }}</p>
+                                    
+                                    <div class="expertise-features space-y-4 mb-8">
+                                        <div class="expertise-feature flex items-center">
+                                            <div class="feature-icon w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mr-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-dark-green/90">Sustainable Implementation</span>
+                                        </div>
+                                        <div class="expertise-feature flex items-center">
+                                            <div class="feature-icon w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mr-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <span class="text-dark-green/90">Proven Results</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <a href="#" class="expertise-link inline-flex items-center text-gold hover:text-dark-green transition-colors duration-300 group">
+                                        <span>Learn more</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- 3D Card Carousel Section -->
+        <div id="expertise-showcase" class="expertise-showcase relative py-16">
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div class="floating-element absolute top-20 right-10 w-64 h-64 bg-gold/5 rounded-full blur-3xl"></div>
+                <div class="floating-element-reverse absolute bottom-20 left-10 w-96 h-96 bg-dark-green/5 rounded-full blur-3xl"></div>
+                <div class="floating-element-slow absolute top-1/2 left-1/4 w-20 h-20 bg-gold/10 rounded-full blur-xl"></div>
+                <div class="floating-element-slow-reverse absolute bottom-1/3 right-1/4 w-32 h-32 bg-dark-green/10 rounded-full blur-xl"></div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="expertise-nav flex justify-center items-center mb-8">
+                <button class="expertise-prev bg-gold/20 hover:bg-gold/40 text-dark-green w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <div class="mx-4 text-2xl font-bold text-dark-green">Explore Our Expertise</div>
+                <button class="expertise-next bg-gold/20 hover:bg-gold/40 text-dark-green w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- 3D Card Stage -->
+            <div class="expertise-stage relative h-[600px] perspective-1000 mx-auto max-w-7xl px-4">
+                <div class="expertise-cards-wrapper transform-style-3d relative w-full h-full">
+                    {% for node in expertise_nodes %}
+                    <div class="expertise-card invisible opacity-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden">
+                        <div class="expertise-card-inner flex h-full">
+                            <!-- Card Media -->
+                            <div class="expertise-card-media w-2/5 relative overflow-hidden">
+                                <img src="{{ url_for('static', filename='images/' + node.image_filename) }}" 
+                                     alt="{{ node.title }}" 
+                                     class="expertise-parallax-image w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-r from-dark-green/50 to-transparent"></div>
+                            </div>
+                            
+                            <!-- Card Content -->
+                            <div class="expertise-card-content w-3/5 p-10 flex flex-col justify-center">
+                                <h3 class="expertise-title text-3xl font-bold text-gold mb-4">{{ node.title }}</h3>
+                                <p class="expertise-description text-dark-green/80 mb-6">{{ node.description }}</p>
+                                
+                                <div class="expertise-features space-y-4 mb-8">
+                                    <div class="expertise-feature flex items-center">
+                                        <div class="feature-icon w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-dark-green/90">Expert Implementation</span>
+                                    </div>
+                                    <div class="expertise-feature flex items-center">
+                                        <div class="feature-icon w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gold" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <span class="text-dark-green/90">Proven Results</span>
+                                    </div>
+                                </div>
+                                
+                                <a href="#" class="expertise-link inline-flex items-center text-gold hover:text-dark-green transition-colors duration-300 group">
+                                    <span>Learn more</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Indicators -->
+            <div class="expertise-indicators flex justify-center items-center mt-8">
+                {% for node in expertise_nodes %}
+                <div class="expertise-indicator h-3 w-3 bg-dark-green/30 mx-1 rounded-full transition-all duration-300 {% if loop.first %}bg-gold w-12{% endif %}"></div>
                 {% endfor %}
             </div>
         </div>
@@ -105,11 +367,11 @@
 
     <!-- Split-Screen Interactive Section -->
     <section id="split-screen" class="relative flex flex-col lg:flex-row bg-dark-green text-cream split-screen-section overflow-hidden">
-        <div class="split-screen-left w-full lg:w-1/2 relative" style="background-image: url('{{ url_for('static', filename='images/101678.jpg') }}');">
+        <div class="split-screen-left w-full lg:w-1/2 relative" style="background-image: url({{ url_for('static', filename='images/101678.jpg') }});">
             <!-- Image/Video Slideshow - Swiper.js will be used here -->
             <div class="swiper-container split-screen-slider h-full">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/101678.jpg') }}" alt="Slide 1" class="w-full h-full object-cover"></div>
+                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/101678.jpg') }}" alt="Slide 1" class="w-full h-full object-.cover"></div>
                     <div class="swiper-slide"><img src="{{ url_for('static', filename='images/14494.jpg') }}" alt="Slide 2" class="w-full h-full object-cover"></div>
                     <div class="swiper-slide"><img src="{{ url_for('static', filename='images/20250606_062331.jpg') }}" alt="Slide 3" class="w-full h-full object-cover"></div>
                 </div>
@@ -148,10 +410,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="{{ url_for('static', filename='js/services.js') }}"></script>
 {% endblock %}

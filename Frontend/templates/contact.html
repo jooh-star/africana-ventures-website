@@ -2,107 +2,298 @@
 
 {% block title %}Contact - Africana Ventures{% endblock %}
 
-{% block head %}{% endblock %}
+{% block head %}
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-20px) rotate(2deg); }
+        50% { transform: translateY(-10px) rotate(-1deg); }
+        75% { transform: translateY(-15px) rotate(1deg); }
+    }
+    
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(218, 165, 32, 0.5); }
+        50% { box-shadow: 0 0 40px rgba(218, 165, 32, 0.8), 0 0 60px rgba(218, 165, 32, 0.3); }
+    }
+    
+    @keyframes slide-in-left {
+        from { transform: translateX(-100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slide-in-right {
+        from { transform: translateX(100px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes bounce-in {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes rotate-3d {
+        0% { transform: perspective(1000px) rotateY(0deg); }
+        100% { transform: perspective(1000px) rotateY(360deg); }
+    }
+    
+    .floating-element {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+    
+    .slide-in-left {
+        animation: slide-in-left 1s ease-out forwards;
+    }
+    
+    .slide-in-right {
+        animation: slide-in-right 1s ease-out forwards;
+    }
+    
+    .bounce-in {
+        animation: bounce-in 1s ease-out forwards;
+    }
+    
+    .rotate-3d {
+        animation: rotate-3d 20s linear infinite;
+    }
+    
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-input-animated {
+        transition: all 0.3s ease;
+        transform-origin: left;
+    }
+    
+    .form-input-animated:focus {
+        transform: scale(1.02) translateX(10px);
+        box-shadow: 0 0 30px rgba(218, 165, 32, 0.5);
+    }
+    
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="contact-page-modern">
-	<!-- Hero (parallax, admin image) -->
-	<section class="contact-hero"
-		{% if contact_images and contact_images|length > 0 %}
-			style="--hero-image: url('{{ url_for('static', filename='uploads/' + contact_images[0].filename) }}');"
-		{% endif %}
-	>
-		<div class="hero-texture"></div>
-		<div class="hero-gradient"></div>
-		<div class="container position-relative" data-aos="fade-up">
-			<div class="row min-vh-60 align-items-end pb-4">
-				<div class="col-lg-8">
-					<h1 class="display-5 fw-900 text-gold mb-2">Let’s Grow Together</h1>
-					<p class="lead text-light-80">Reach out for partnerships, service inquiries, or consultations.</p>
-				</div>
-			</div>
-		</div>
-	</section>
+<div class="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-700 relative overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <!-- Floating geometric shapes -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-yellow-400 opacity-20 rounded-full floating-element"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-yellow-300 opacity-30 transform rotate-45 floating-element" style="animation-delay: -2s;"></div>
+        <div class="absolute bottom-40 left-20 w-24 h-24 bg-yellow-500 opacity-25 rounded-lg floating-element" style="animation-delay: -4s;"></div>
+        <div class="absolute bottom-20 right-40 w-12 h-12 bg-yellow-400 opacity-35 transform rotate-12 floating-element" style="animation-delay: -1s;"></div>
+        
+        <!-- Animated grid pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(218, 165, 32, 0.3) 1px, transparent 0); background-size: 50px 50px;"></div>
+        </div>
+    </div>
 
-	<!-- Floating form over darkened blurred photo -->
-	<section class="contact-form-wrap"
-		{% if contact_images and contact_images|length > 1 %}
-			style="--bg-image: url('{{ url_for('static', filename='uploads/' + contact_images[1].filename) }}');"
-		{% endif %}
-	>
-		<div class="bg-photo"></div>
-		<div class="bg-blur"></div>
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-xl-8" data-aos="zoom-in">
-					<form class="contact-form glass" method="POST" action="{{ url_for('main.contact_page') }}">
-						<div class="row g-3">
-							<div class="col-md-6">
-								<label class="form-label text-light-80">First Name</label>
-								<input type="text" name="first_name" class="form-control form-dark" required>
-							</div>
-							<div class="col-md-6">
-								<label class="form-label text-light-80">Last Name</label>
-								<input type="text" name="last_name" class="form-control form-dark" required>
-							</div>
-							<div class="col-md-6">
-								<label class="form-label text-light-80">Email</label>
-								<input type="email" name="email" class="form-control form-dark" required>
-							</div>
-							<div class="col-md-6">
-								<label class="form-label text-light-80">Phone</label>
-								<input type="text" name="phone" class="form-control form-dark">
-							</div>
-							<div class="col-md-6">
-								<label class="form-label text-light-80">Company</label>
-								<input type="text" name="company" class="form-control form-dark">
-							</div>
-							<div class="col-md-6">
-								<label class="form-label text-light-80">Service</label>
-								<select name="service" class="form-select form-dark" required>
-									{% if services and services|length > 0 %}
-										{% for s in services %}
-										<option value="{{ s.title }}">{{ s.title }}</option>
-										{% endfor %}
-									{% else %}
-										<option value="General Inquiry">General Inquiry</option>
-									{% endif %}
-								</select>
-							</div>
-							<div class="col-12">
-								<label class="form-label text-light-80">Message</label>
-								<textarea name="message" rows="5" class="form-control form-dark" required></textarea>
-							</div>
-						</div>
-						<div class="d-flex justify-content-end mt-4">
-							<button type="submit" class="btn btn-send">
-								<span>Send Message</span> <i class="fas fa-paper-plane ms-2"></i>
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</section>
+    <!-- Hero Section with Crazy Effects -->
+    <section class="relative z-10 pt-32 pb-20 px-4">
+        <div class="container mx-auto text-center">
+            <!-- Main Title with 3D Effect -->
+            <h1 class="text-6xl md:text-8xl font-black text-white mb-8 slide-in-left" 
+                style="text-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 60px rgba(218, 165, 32, 0.3);">
+                Let's <span class="text-yellow-400 pulse-glow">Connect</span>
+            </h1>
+            
+            <!-- Subtitle with staggered animation -->
+            <p class="text-xl md:text-2xl text-yellow-100 mb-12 slide-in-right opacity-0" 
+               style="animation-delay: 0.5s; animation-fill-mode: forwards;">
+                Ready to transform agriculture together? Let's create something amazing! 🌱✨
+            </p>
+            
+            <!-- Floating CTA Button -->
+            <div class="bounce-in opacity-0" style="animation-delay: 1s; animation-fill-mode: forwards;">
+                <button class="bg-yellow-400 text-green-900 px-12 py-6 rounded-full text-2xl font-bold hover-lift pulse-glow">
+                    Start Your Journey 🚀
+                </button>
+            </div>
+        </div>
+    </section>
 
-	<!-- Montage / Gallery below the form -->
-	<section class="contact-montage">
-		<div class="container">
-			<div class="section-head text-center mb-4" data-aos="fade-up">
-				<h2 class="text-gold fw-800">Where We Operate</h2>
-				<p class="text-light-70">From rural collection points to export terminals — a connected chain.</p>
-			</div>
-			<div class="montage-grid" data-aos="fade-up">
-				{% if contact_images and contact_images|length > 0 %}
-					{% for img in contact_images %}
-					<div class="m-item">
-						<img src="{{ url_for('static', filename='uploads/' + img.filename) }}" alt="{{ img.alt_text or img.description or 'Contact image' }}">
-						<div class="m-overlay"></div>
-					</div>
-					{% endfor %}
-				{% endif %}
-			</div>
-		</div>
-	</section>
+    <!-- Animated Contact Form Section -->
+    <section class="relative z-10 pb-20 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <!-- Form Container with Glass Effect -->
+            <div class="glass-effect rounded-3xl p-8 md:p-12 hover-lift">
+                <h2 class="text-4xl md:text-5xl font-bold text-center text-yellow-400 mb-12 slide-in-left opacity-0" 
+                    style="animation-delay: 1.5s; animation-fill-mode: forwards;">
+                    Send Us a Message 💌
+                </h2>
+                
+                <form method="POST" action="{{ url_for('main.contact_page') }}" class="space-y-8">
+                    <!-- Name Row with Staggered Animation -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="slide-in-left opacity-0" style="animation-delay: 2s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">First Name</label>
+                            <input type="text" name="first_name" required 
+                                   class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900"
+                                   placeholder="Your first name">
+                        </div>
+                        <div class="slide-in-right opacity-0" style="animation-delay: 2.2s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">Last Name</label>
+                            <input type="text" name="last_name" required 
+                                   class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900"
+                                   placeholder="Your last name">
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="slide-in-left opacity-0" style="animation-delay: 2.4s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">Email</label>
+                            <input type="email" name="email" required 
+                                   class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900"
+                                   placeholder="your.email@example.com">
+                        </div>
+                        <div class="slide-in-right opacity-0" style="animation-delay: 2.6s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">Phone</label>
+                            <input type="tel" name="phone" 
+                                   class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900"
+                                   placeholder="+254 712 345 678">
+                        </div>
+                    </div>
+                    
+                    <!-- Company & Service Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="slide-in-left opacity-0" style="animation-delay: 2.8s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">Company</label>
+                            <input type="text" name="company" 
+                                   class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900"
+                                   placeholder="Your company name">
+                        </div>
+                        <div class="slide-in-right opacity-0" style="animation-delay: 3s; animation-fill-mode: forwards;">
+                            <label class="block text-yellow-200 text-lg font-semibold mb-3">Service</label>
+                            <select name="service" required 
+                                    class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900">
+                                {% if services and services|length > 0 %}
+                                    {% for s in services %}
+                                    <option value="{{ s.title }}" class="text-green-900">{{ s.title }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="General Inquiry" class="text-green-900">General Inquiry</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Row -->
+                    <div class="slide-in-left opacity-0" style="animation-delay: 3.2s; animation-fill-mode: forwards;">
+                        <label class="block text-yellow-200 text-lg font-semibold mb-3">Message</label>
+                        <textarea name="message" rows="6" required 
+                                  class="w-full px-6 py-4 bg-white bg-opacity-20 border-2 border-yellow-300 rounded-xl text-white placeholder-yellow-200 form-input-animated focus:border-yellow-400 focus:bg-white focus:bg-opacity-30 focus:text-green-900 resize-none"
+                                  placeholder="Tell us about your project, ideas, or how we can help you..."></textarea>
+                    </div>
+                    
+                    <!-- Submit Button with Crazy Effects -->
+                    <div class="text-center pt-8">
+                        <button type="submit" 
+                                class="group relative px-16 py-6 bg-gradient-to-r from-yellow-400 to-yellow-500 text-green-900 rounded-full text-2xl font-bold hover-lift overflow-hidden">
+                            <span class="relative z-10 flex items-center justify-center">
+                                Send Message 
+                                <i class="fas fa-paper-plane ml-3 group-hover:animate-bounce"></i>
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Gallery Section -->
+    {% if contact_images and contact_images|length > 0 %}
+    <section class="relative z-10 pb-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center text-yellow-400 mb-16 slide-in-left opacity-0" 
+                style="animation-delay: 3.5s; animation-fill-mode: forwards;">
+                Where We Operate 🌍
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for img in contact_images %}
+                <div class="group hover-lift slide-in-left opacity-0" 
+                     style="animation-delay: {{ 3.8 + loop.index0 * 0.2 }}s; animation-fill-mode: forwards;">
+                    <div class="relative overflow-hidden rounded-2xl">
+                        <img src="{{ url_for('static', filename='uploads/' + img.filename) }}" 
+                             alt="{{ img.alt_text or img.description or 'Contact image' }}"
+                             class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-green-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                            <h3 class="text-xl font-bold">{{ img.description or 'Our Operations' }}</h3>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Floating Contact Info Cards -->
+    <section class="relative z-10 pb-20 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Phone Card -->
+                <div class="text-center hover-lift slide-in-left opacity-0" style="animation-delay: 4.5s; animation-fill-mode: forwards;">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 rotate-3d">
+                            <i class="fas fa-phone text-3xl text-green-900"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-4">Call Us</h3>
+                        <p class="text-white text-lg">+254 712 345 678</p>
+                    </div>
+                </div>
+                
+                <!-- Email Card -->
+                <div class="text-center hover-lift slide-in-left opacity-0" style="animation-delay: 4.7s; animation-fill-mode: forwards;">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 rotate-3d">
+                            <i class="fas fa-envelope text-3xl text-green-900"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-4">Email Us</h3>
+                        <p class="text-white text-lg">info@africanaventures.com</p>
+                    </div>
+                </div>
+                
+                <!-- Location Card -->
+                <div class="text-center hover-lift slide-in-left opacity-0" style="animation-delay: 4.9s; animation-fill-mode: forwards;">
+                    <div class="glass-effect rounded-2xl p-8">
+                        <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 rotate-3d">
+                            <i class="fas fa-map-marker-alt text-3xl text-green-900"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-4">Visit Us</h3>
+                        <p class="text-white text-lg">123 Agri-Lane, Nairobi, Kenya</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Crazy Interactive Background -->
+<div class="fixed inset-0 pointer-events-none z-0">
+    <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-400 rounded-full animate-ping"></div>
+    <div class="absolute top-3/4 right-1/4 w-3 h-3 bg-yellow-300 rounded-full animate-ping" style="animation-delay: 1s;"></div>
+    <div class="absolute bottom-1/4 left-1/3 w-1 h-1 bg-yellow-500 rounded-full animate-ping" style="animation-delay: 2s;"></div>
 </div>
 {% endblock %}

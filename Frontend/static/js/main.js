@@ -1,21 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Navbar scroll effect
+    // Navbar scroll effect (transparent -> dark green)
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('navbar-scrolled');
-        } else {
-            navbar.classList.remove('navbar-scrolled');
-        }
-    });
+    if (navbar) {
+        const applyNavbarState = () => {
+            const scrolled = window.scrollY > 50;
+            navbar.classList.toggle('bg-dark-green', scrolled);
+            navbar.classList.toggle('shadow-lg', scrolled);
+            navbar.classList.toggle('bg-transparent', !scrolled);
+        };
+        // Set initial state and listen to scroll
+        applyNavbarState();
+        window.addEventListener('scroll', applyNavbarState, { passive: true });
+    }
 
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
 
     // Core Focus Area Image Overlay Effect
     const coreFocusSection = document.getElementById('core-focus-area');

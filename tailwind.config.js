@@ -26,6 +26,14 @@ module.exports = {
         'sans': ['Montserrat', 'sans-serif'],
         'body': ['Lato', 'sans-serif'],
         'poppins': ['Poppins', 'sans-serif'], // New custom font
+        'dancing-script': ['Dancing Script', 'cursive'],
+      },
+      animation: {
+        'spin-slow': 'spin 120s linear infinite',
+        'spin-slower': 'spin 180s linear infinite reverse',
+      },
+      backgroundImage: {
+        'gradient-text': 'linear-gradient(90deg, #d4af37, #f5f5f5)',
       }
     }
   },
