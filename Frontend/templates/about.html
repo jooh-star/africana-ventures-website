@@ -25,7 +25,181 @@
         .text-dark-green { color: #012d18; }
         .bg-dark-green { background-color: #012d18; }
 
-        /* Custom styles for timeline */
+        /* Overlapping Cards Design for Principles */
+        .principles-container {
+            position: relative;
+            height: 600px;
+            perspective: 1000px;
+        }
+        
+        .principle-card {
+            position: absolute;
+            width: 280px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,220,0.98) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.08);
+            padding: 30px 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        
+        .principle-card:hover {
+            transform: translateY(-15px) rotateY(5deg) scale(1.05);
+            box-shadow: 0 25px 50px rgba(218, 165, 32, 0.2), 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 100 !important;
+        }
+        
+        .principle-card.active {
+            transform: translateY(-20px) scale(1.08);
+            box-shadow: 0 30px 60px rgba(218, 165, 32, 0.3);
+            z-index: 100 !important;
+            border-color: #DAA520;
+        }
+        
+        .principle-card:hover .principle-icon {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+        }
+        
+        /* Ensure hovered card is always on top */
+        .principle-card:hover,
+        .principle-card.active {
+            position: relative;
+            z-index: 100 !important;
+        }
+        
+        /* Stacking positions */
+        .principle-card:nth-child(1) {
+            top: 0;
+            left: 0;
+            z-index: 6;
+            transform: rotate(-2deg);
+        }
+        
+        .principle-card:nth-child(2) {
+            top: 40px;
+            left: 200px;
+            z-index: 5;
+            transform: rotate(3deg);
+        }
+        
+        .principle-card:nth-child(3) {
+            top: 80px;
+            left: 400px;
+            z-index: 4;
+            transform: rotate(-1deg);
+        }
+        
+        .principle-card:nth-child(4) {
+            top: 180px;
+            left: 50px;
+            z-index: 3;
+            transform: rotate(2deg);
+        }
+        
+        .principle-card:nth-child(5) {
+            top: 220px;
+            left: 250px;
+            z-index: 2;
+            transform: rotate(-3deg);
+        }
+        
+        .principle-card:nth-child(6) {
+            top: 260px;
+            left: 450px;
+            z-index: 1;
+            transform: rotate(1deg);
+        }
+        
+        /* Mobile responsive stacking */
+        @media (max-width: 768px) {
+            .principles-container {
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .principle-card {
+                position: relative;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+                transform: none !important;
+                top: auto !important;
+                left: auto !important;
+            }
+            
+            .principle-card:hover {
+                transform: translateY(-5px) scale(1.02) !important;
+            }
+        }
+        
+        .principle-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #DAA520, #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .principle-icon i {
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .principle-card:hover .principle-icon {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+        }
+        
+        .principle-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #012d18;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .principle-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+            font-family: 'Lora', serif;
+        }
+        
+        /* Enhanced description container */
+        .principle-description-enhanced {
+            background: linear-gradient(135deg, rgba(1, 45, 24, 0.95), rgba(2, 77, 42, 0.98));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            color: #F5F5DC;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .principle-description-enhanced h3 {
+            color: #DAA520;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        /* Timeline styles for Impact section */
         .timeline-item {
             position: relative;
             padding-left: 40px;
@@ -38,7 +212,7 @@
             left: 10px;
             width: 2px;
             height: 100%;
-            background-color: #DAA520; /* Gold line */
+            background-color: #DAA520;
             transform: scaleY(0);
             transform-origin: top;
             transition: transform 0.8s ease-out;
@@ -52,13 +226,13 @@
             left: 0;
             width: 30px;
             height: 30px;
-            background-color: #012d18; /* Dark green circle */
-            border: 2px solid #DAA520; /* Gold border */
+            background-color: #012d18;
+            border: 2px solid #DAA520;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #DAA520; /* Gold icon */
+            color: #DAA520;
             font-size: 1.2rem;
             transform: scale(0);
             transition: transform 0.5s ease-out;
@@ -75,6 +249,24 @@
             opacity: 1;
             transform: translateY(0);
         }
+        
+        /* Animation keyframes for subtle movements */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(var(--rotation, 0deg)); }
+            50% { transform: translateY(-5px) rotate(var(--rotation, 0deg)); }
+        }
+        
+        .principle-card {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+        }
+        
+        .principle-card:nth-child(1) { --rotation: -2deg; --delay: 0s; }
+        .principle-card:nth-child(2) { --rotation: 3deg; --delay: 1s; }
+        .principle-card:nth-child(3) { --rotation: -1deg; --delay: 2s; }
+        .principle-card:nth-child(4) { --rotation: 2deg; --delay: 3s; }
+        .principle-card:nth-child(5) { --rotation: -3deg; --delay: 4s; }
+        .principle-card:nth-child(6) { --rotation: 1deg; --delay: 5s; }
 
         /* Swiper custom styles */
         .swiper-pagination-bullet {
@@ -111,17 +303,15 @@
             pointer-events: none;
             transition: all 0.3s ease;
         }
-        .form-group input:focus ~ label,
-        .form-group input:not(:placeholder-shown) ~ label,
-        .form-group textarea:focus ~ label,
-        .form-group textarea:not(:placeholder-shown) ~ label {
-            top: -1rem;
-            left: 0.5rem;
-            font-size: 0.75rem;
-            color: #DAA520;
-            background-color: #012d18;
-            padding: 0 0.25rem;
-            border-radius: 0.25rem;
+        /* Additional background image classes */
+        .hero-bg {
+            background-image: var(--hero-bg-image);
+        }
+        .join-us-bg {
+            background-image: var(--join-us-bg-image);
+        }
+        .contact-bg {
+            background-image: var(--contact-bg-image);
         }
     </style>
 {% endblock %}
@@ -130,7 +320,7 @@
 <div class="about-page">
     <!-- Hero / Banner Section -->
     <section id="hero-about" class="relative h-[60vh] flex items-center justify-center text-white overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='images/our-team-2.jpg') }}')"></div>
+        <div class="absolute inset-0 bg-cover bg-center hero-bg" style="--hero-bg-image: url('{{ url_for('static', filename='images/our-team-2.jpg') }}')"></div>
         <div class="absolute inset-0 bg-black opacity-40"></div>
         <div class="relative z-10 text-center lg:text-left px-4">
             <p class="text-green-300 text-lg md:text-xl mb-4 font-montserrat">Sowing Seeds of Sustainability.</p>
@@ -157,54 +347,70 @@
         </div>
     </section>
 
-    <!-- Our Guiding Principles -->
-    <section id="honeycomb-principles" class="py-24 bg-cream">
+    <!-- Our Guiding Principles - Overlapping Cards Design -->
+    <section id="overlapping-principles" class="py-24 bg-cream overflow-hidden">
         <div class="container mx-auto px-4">
             <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Our Guiding Principles</h2>
-            <div class="flex flex-col lg:flex-row items-center justify-center gap-8">
-                <div class="honeycomb-grid-container lg:w-2/3">
-                    <div class="honeycomb-grid">
-                        <div class="honeycomb-cell" data-principle="integrity">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-handshake"></i></div>
-                                <div class="honeycomb-title">Integrity</div>
+            <div class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
+                <!-- Overlapping Cards Container -->
+                <div class="lg:w-2/3 relative">
+                    <div class="principles-container">
+                        <div class="principle-card" data-principle="integrity">
+                            <div class="principle-icon">
+                                <i class="fas fa-handshake"></i>
                             </div>
+                            <div class="principle-title">Integrity</div>
+                            <div class="principle-subtitle">Building trust through honest, transparent relationships.</div>
                         </div>
-                        <div class="honeycomb-cell" data-principle="sustainability">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-leaf"></i></div>
-                                <div class="honeycomb-title">Sustainability</div>
+                        
+                        <div class="principle-card" data-principle="sustainability">
+                            <div class="principle-icon">
+                                <i class="fas fa-leaf"></i>
                             </div>
+                            <div class="principle-title">Sustainability</div>
+                            <div class="principle-subtitle">Creating long-term environmental and economic value.</div>
                         </div>
-                        <div class="honeycomb-cell" data-principle="inclusivity">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-users"></i></div>
-                                <div class="honeycomb-title">Inclusivity</div>
+                        
+                        <div class="principle-card" data-principle="inclusivity">
+                            <div class="principle-icon">
+                                <i class="fas fa-users"></i>
                             </div>
+                            <div class="principle-title">Inclusivity</div>
+                            <div class="principle-subtitle">Embracing diversity and ensuring equal opportunities.</div>
                         </div>
-                        <div class="honeycomb-cell" data-principle="innovation">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-lightbulb"></i></div>
-                                <div class="honeycomb-title">Innovation</div>
+                        
+                        <div class="principle-card" data-principle="innovation">
+                            <div class="principle-icon">
+                                <i class="fas fa-lightbulb"></i>
                             </div>
+                            <div class="principle-title">Innovation</div>
+                            <div class="principle-subtitle">Pioneering creative solutions for agricultural challenges.</div>
                         </div>
-                        <div class="honeycomb-cell" data-principle="passion">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-heart"></i></div>
-                                <div class="honeycomb-title">Passion</div>
+                        
+                        <div class="principle-card" data-principle="passion">
+                            <div class="principle-icon">
+                                <i class="fas fa-heart"></i>
                             </div>
+                            <div class="principle-title">Passion</div>
+                            <div class="principle-subtitle">Driven by deep commitment to transforming lives.</div>
                         </div>
-                        <div class="honeycomb-cell" data-principle="empowerment">
-                            <div class="honeycomb-cell-inner">
-                                <div class="honeycomb-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                                <div class="honeycomb-title">Empowerment</div>
+                        
+                        <div class="principle-card" data-principle="empowerment">
+                            <div class="principle-icon">
+                                <i class="fas fa-hand-holding-heart"></i>
                             </div>
+                            <div class="principle-title">Empowerment</div>
+                            <div class="principle-subtitle">Enabling communities to achieve self-sufficiency.</div>
                         </div>
                     </div>
                 </div>
-                <div id="principle-description-container" class="lg:w-1/3 p-8 bg-white rounded-2xl shadow-2xl">
-                    <h3 id="principle-title" class="text-3xl font-bold text-dark-green mb-4"></h3>
-                    <p id="principle-description" class="text-gray-700"></p>
+                
+                <!-- Enhanced Description Container -->
+                <div class="lg:w-1/3">
+                    <div id="principle-description-enhanced" class="principle-description-enhanced">
+                        <h3 id="principle-title-enhanced" class="font-bold mb-4">Explore Our Values</h3>
+                        <p id="principle-description-text" class="text-cream opacity-90">Hover over our principle cards to discover the core values that drive our mission to transform agricultural communities across East Africa.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -220,7 +426,7 @@
                 <!-- Achievement 1 -->
                 <div class="timeline-item flex flex-col md:flex-row items-center md:justify-start w-full mb-12" data-aos="fade-right">
                     <div class="timeline-item-icon"><i class="fas fa-seedling"></i></div>
-                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12 {% if loop.index % 2 == 0 %}md:order-2{% endif %}">
+                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12">
                         <h3 class="text-2xl font-bold text-gold mb-2 font-montserrat">2015: Founding & Initial Pilot</h3>
                         <p class="text-cream font-lora">Established Africana Ventures with a pilot program empowering 50 smallholder farmers in rural Kenya, focusing on sustainable practices.</p>
                     </div>
@@ -229,7 +435,7 @@
                 <!-- Achievement 2 -->
                 <div class="timeline-item flex flex-col md:flex-row-reverse items-center md:justify-start w-full mb-12" data-aos="fade-left">
                     <div class="timeline-item-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:mr-12 w-full md:w-5/12 text-left md:text-right {% if loop.index % 2 != 0 %}md:order-2{% endif %}">
+                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:mr-12 w-full md:w-5/12 text-left md:text-right md:order-2">
                         <h3 class="text-2xl font-bold text-gold mb-2 font-montserrat">2018: Market Linkage Expansion</h3>
                         <p class="text-cream font-lora">Successfully connected over 1,000 farmers to urban markets, increasing their income by an average of 30% through fair trade practices.</p>
                     </div>
@@ -238,7 +444,7 @@
                 <!-- Achievement 3 -->
                 <div class="timeline-item flex flex-col md:flex-row items-center md:justify-start w-full mb-12" data-aos="fade-right">
                     <div class="timeline-item-icon"><i class="fas fa-globe-africa"></i></div>
-                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12 {% if loop.index % 2 == 0 %}md:order-2{% endif %}">
+                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12">
                         <h3 class="text-2xl font-bold text-gold mb-2 font-montserrat">2020: Regional Growth & Tech Integration</h3>
                         <p class="text-cream font-lora">Expanded operations into Uganda and Tanzania, reaching over 2,000 new farmers and integrating mobile technology for agricultural extension services.</p>
                     </div>
@@ -247,7 +453,7 @@
                 <!-- Achievement 4 -->
                 <div class="timeline-item flex flex-col md:flex-row-reverse items-center md:justify-start w-full mb-12" data-aos="fade-left">
                     <div class="timeline-item-icon"><i class="fas fa-award"></i></div>
-                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:mr-12 w-full md:w-5/12 text-left md:text-right {% if loop.index % 2 != 0 %}md:order-2{% endif %}">
+                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:mr-12 w-full md:w-5/12 text-left md:text-right md:order-2">
                         <h3 class="text-2xl font-bold text-gold mb-2 font-montserrat">2022: Innovation & Community Resilience</h3>
                         <p class="text-cream font-lora">Recognized for innovative climate-smart agriculture programs, building resilience against climate change impacts in vulnerable communities.</p>
                     </div>
@@ -256,7 +462,7 @@
                 <!-- Achievement 5 -->
                 <div class="timeline-item flex flex-col md:flex-row items-center md:justify-start w-full mb-12" data-aos="fade-right">
                     <div class="timeline-item-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12 {% if loop.index % 2 == 0 %}md:order-2{% endif %}">
+                    <div class="timeline-item-content glassmorphism p-6 rounded-lg shadow-lg md:ml-12 w-full md:w-5/12">
                         <h3 class="text-2xl font-bold text-gold mb-2 font-montserrat">2024: Strategic Partnerships & Scaling Impact</h3>
                         <p class="text-cream font-lora">Secured significant impact investment and forged strategic partnerships to scale our Agri-Marketplace platform, reaching 5,000+ farmers.</p>
                     </div>
@@ -339,8 +545,7 @@
     </section>
 
     <!-- Call-to-Action / Join Us -->
-    <section id="join-us" class="relative py-24 text-white text-center overflow-hidden bg-cover bg-center bg-fixed"
-        style="background-image: url('{{ url_for('static', filename='images/53397.jpg') }}')">
+    <section id="join-us" class="relative py-24 text-white text-center overflow-hidden bg-cover bg-center bg-fixed join-us-bg" style="--join-us-bg-image: url('{{ url_for('static', filename='images/53397.jpg') }}')">
         <div class="absolute inset-0 bg-dark-green opacity-70 z-10"></div>
         <div class="relative z-20 container mx-auto px-4" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-extrabold mb-4 font-poppins animate-pulse-glow">Join Us in Transforming Agriculture</h2>
@@ -412,8 +617,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact-section" class="relative py-24 text-white overflow-hidden bg-cover bg-center"
-        style="background-image: url('{{ url_for('static', filename='images/contact-bg.jpg') }}')">
+    <section id="contact-section" class="relative py-24 text-white overflow-hidden bg-cover bg-center contact-bg" style="--contact-bg-image: url('{{ url_for('static', filename='images/contact-bg.jpg') }}')">
         <div class="absolute inset-0 bg-dark-green opacity-80 z-10"></div>
         <div class="relative z-20 container mx-auto px-4" data-aos="fade-up">
             <h2 class="text-5xl font-extrabold text-center text-gold mb-16 font-poppins">Get In Touch</h2>

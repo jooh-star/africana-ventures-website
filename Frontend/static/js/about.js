@@ -607,59 +607,119 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the testimonial slider
     initSlider();
 
-    // Core Principles Honeycomb
+    // Overlapping Principle Cards Interaction
     const principles = {
         integrity: {
             title: 'Integrity',
-            description: 'Upholding the highest ethical standards in all our interactions, fostering trust and transparency.'
+            description: 'Upholding the highest ethical standards in all our interactions, fostering trust and transparency with every partner, farmer, and community member we serve.'
         },
         sustainability: {
             title: 'Sustainability',
-            description: 'Committed to environmentally sound and economically viable practices for long-term impact.'
+            description: 'Committed to environmentally sound and economically viable practices that create lasting positive impact for both our planet and future generations.'
         },
         inclusivity: {
             title: 'Inclusivity',
-            description: 'Empowering all members of the community, ensuring equitable access to opportunities.'
+            description: 'Empowering all members of the community, ensuring equitable access to opportunities regardless of gender, age, or background.'
         },
         innovation: {
             title: 'Innovation',
-            description: 'Continuously seeking new and better ways to solve challenges and drive progress.'
+            description: 'Continuously seeking new and better ways to solve agricultural challenges through cutting-edge technology and creative problem-solving.'
         },
         passion: {
             title: 'Passion',
-            description: 'Driven by a deep commitment to our mission and the communities we serve.'
+            description: 'Driven by a deep commitment to our mission and an unwavering dedication to transforming lives in agricultural communities across East Africa.'
         },
         empowerment: {
             title: 'Empowerment',
-            description: 'Equipping individuals and communities with the resources to achieve self-reliance.'
+            description: 'Equipping individuals and communities with the knowledge, tools, and resources they need to achieve self-reliance and sustainable prosperity.'
         }
     };
 
-    const honeycombCells = document.querySelectorAll('.honeycomb-cell');
-    const principleTitle = document.getElementById('principle-title');
-    const principleDescription = document.getElementById('principle-description');
+    // Handle overlapping principle cards
+    const principleCards = document.querySelectorAll('.principle-card');
+    const principleDescriptionEnhanced = document.getElementById('principle-description-enhanced');
+    const principleTitleEnhanced = document.getElementById('principle-title-enhanced');
+    const principleDescriptionText = document.getElementById('principle-description-text');
 
-    if (honeycombCells.length > 0 && principleTitle && principleDescription) {
-        console.log('Initializing honeycomb principles interaction');
-        honeycombCells.forEach(cell => {
-            cell.addEventListener('mouseenter', () => {
-                const principleKey = cell.dataset.principle;
+    if (principleCards.length > 0) {
+        console.log('Initializing overlapping principle cards interaction');
+        
+        principleCards.forEach((card, index) => {
+            // Add subtle animations to each card
+            card.style.animationDelay = `${index * 0.2}s`;
+            
+            card.addEventListener('mouseenter', () => {
+                // Reset all cards z-index
+                principleCards.forEach(c => {
+                    c.classList.remove('active');
+                    c.style.zIndex = '';
+                });
+                
+                // Bring current card to top
+                card.classList.add('active');
+                card.style.zIndex = '100';
+                
+                const principleKey = card.dataset.principle;
                 const principle = principles[principleKey];
                 
-                if (principle) {
-                    principleTitle.textContent = principle.title;
-                    principleDescription.textContent = principle.description;
+                if (principle && principleTitleEnhanced && principleDescriptionText) {
+                    principleTitleEnhanced.textContent = principle.title;
+                    principleDescriptionText.textContent = principle.description;
+                    
+                    // Add animation to description container
+                    if (principleDescriptionEnhanced) {
+                        principleDescriptionEnhanced.style.transform = 'scale(1.02)';
+                        principleDescriptionEnhanced.style.boxShadow = '0 25px 50px rgba(218, 165, 32, 0.3)';
+                    }
+                }
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                // Reset card state
+                card.classList.remove('active');
+                card.style.zIndex = '';
+                
+                // Reset description container
+                if (principleDescriptionEnhanced) {
+                    principleDescriptionEnhanced.style.transform = 'scale(1)';
+                    principleDescriptionEnhanced.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+                    
+                    // Reset to default text after a short delay
+                    setTimeout(() => {
+                        if (!document.querySelector('.principle-card:hover')) {
+                            principleTitleEnhanced.textContent = 'Explore Our Values';
+                            principleDescriptionText.textContent = 'Hover over or click our principle cards to discover the core values that drive our mission to transform agricultural communities across East Africa.';
+                        }
+                    }, 100);
+                }
+            });
+            
+            // Add click functionality for mobile
+            card.addEventListener('click', () => {
+                // Reset all cards z-index
+                principleCards.forEach(c => {
+                    c.classList.remove('active');
+                    c.style.zIndex = '';
+                });
+                
+                // Bring current card to top
+                card.classList.add('active');
+                card.style.zIndex = '100';
+                
+                const principleKey = card.dataset.principle;
+                const principle = principles[principleKey];
+                
+                if (principle && principleTitleEnhanced && principleDescriptionText) {
+                    principleTitleEnhanced.textContent = principle.title;
+                    principleDescriptionText.textContent = principle.description;
                 }
             });
         });
-    }
-
-    // Set initial description for honeycomb principles
-    if (honeycombCells.length > 0 && principleTitle && principleDescription) {
-        const initialPrinciple = principles[honeycombCells[0].dataset.principle];
-        if (initialPrinciple) {
-            principleTitle.textContent = initialPrinciple.title;
-            principleDescription.textContent = initialPrinciple.description;
+        
+        // Set initial state
+        if (principleTitleEnhanced && principleDescriptionText) {
+            principleTitleEnhanced.textContent = 'Explore Our Values';
+            principleDescriptionText.textContent = 'Hover over or click our principle cards to discover the core values that drive our mission to transform agricultural communities across East Africa.';
         }
     }
 

@@ -1,20 +1,5 @@
 /* Services Page Styles */
 
-/* 3D Card Carousel Styles */
-.expertise-showcase {
-    position: relative;
-    padding: 4rem 0;
-    overflow: hidden;
-}
-
-.expertise-stage {
-    position: relative;
-    height: 600px;
-    perspective: 1500px;
-    transform-style: preserve-3d;
-}
-
-/* Utility classes for 3D transforms */
 .perspective-1000 {
     perspective: 1000px;
 }
@@ -23,188 +8,366 @@
     transform-style: preserve-3d;
 }
 
-.expertise-cards-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Hero Section Animations */
+.slide {
+    transition: opacity 1s ease-in-out, transform 0.8s ease-in-out;
+}
+
+.slide .bg-cover {
+    transition: transform 0.3s ease-out;
     transform-style: preserve-3d;
 }
 
-.expertise-card {
-    position: absolute;
-    width: 80%;
-    max-width: 1000px;
-    height: auto;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    overflow: hidden;
-    transform-style: preserve-3d;
+.slide:hover .bg-cover {
+    transform: scale(1.05);
 }
 
-/* Card positions */
-.expertise-card.active {
-    z-index: 10;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.expertise-card.prev {
-    z-index: 5;
-    transform: translate(-80%, -50%) scale(0.8) rotateY(10deg);
-    filter: brightness(0.7);
-}
-
-.expertise-card.next {
-    z-index: 5;
-    transform: translate(-20%, -50%) scale(0.8) rotateY(-10deg);
-    filter: brightness(0.7);
-}
-
-/* Card inner structure */
-.expertise-card-inner {
-    display: flex;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    overflow: hidden;
-    height: 100%;
-}
-
-.expertise-card-media {
-    width: 40%;
-    position: relative;
-    overflow: hidden;
-}
-
-.expertise-parallax-image {
-    width: 110%;
-    height: 110%;
-    object-fit: cover;
-    position: absolute;
-    top: -5%;
-    left: -5%;
-    transition: transform 0.1s ease-out;
-}
-
-.expertise-card-content {
-    width: 60%;
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-/* Navigation controls */
-.expertise-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.expertise-prev,
-.expertise-next {
-    background: rgba(212, 175, 55, 0.2);
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 0 1rem;
-    transition: all 0.3s ease;
-}
-
-.expertise-prev:hover,
-.expertise-next:hover {
-    background: rgba(212, 175, 55, 0.4);
-    transform: scale(1.1);
-}
-
-/* Indicators */
-.expertise-indicators {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
-}
-
-.expertise-indicator {
-    height: 3px;
-    background: rgba(26, 60, 52, 0.3);
-    margin: 0 5px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.expertise-indicator.active {
-    background: #d4af37;
-}
-
-/* Text animations */
-.expertise-title,
-.expertise-description,
-.expertise-feature {
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-/* Floating animations */
+/* Floating Elements Animations */
 .floating-element {
     animation: float 6s ease-in-out infinite;
 }
 
 .floating-element-reverse {
-    animation: float-reverse 7s ease-in-out infinite;
+    animation: float-reverse 8s ease-in-out infinite;
 }
 
 .floating-element-slow {
-    animation: float 10s ease-in-out infinite;
+    animation: float-slow 10s ease-in-out infinite;
 }
 
 .floating-element-slow-reverse {
-    animation: float-reverse 12s ease-in-out infinite;
+    animation: float-slow-reverse 12s ease-in-out infinite;
 }
 
 @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
 }
 
 @keyframes float-reverse {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(20px); }
-    100% { transform: translateY(0px); }
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(20px) rotate(-5deg);
+    }
 }
 
-/* Responsive adjustments */
+@keyframes float-slow {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(3deg);
+    }
+}
+
+@keyframes float-slow-reverse {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(15px) rotate(-3deg);
+    }
+}
+
+/* Spin Animations */
+.animate-spin-slow {
+    animation: spin-slow 120s linear infinite;
+}
+
+.animate-spin-slower {
+    animation: spin-slower 180s linear infinite reverse;
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-slower {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Gradient Text Animation */
+.bg-gradient-text {
+    background: linear-gradient(90deg, #DAA520, #F5F5F5, #DAA520);
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* Card Hover Effects */
+.expertise-card {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.expertise-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.approach-cards-container .group {
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.approach-cards-container .group:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+/* CTA Button Glow Effect */
+.cta-button-glow {
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.7);
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.cta-button-glow:hover {
+    box-shadow: 0 0 30px rgba(218, 165, 32, 1);
+    transform: translateY(-2px);
+}
+
+/* Slide Navigation Buttons */
+#prev-slide, #next-slide {
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    padding: 0.5rem;
+}
+
+#prev-slide:hover, #next-slide:hover {
+    background: rgba(218, 165, 32, 0.8);
+    transform: scale(1.1);
+}
+
+/* Expertise Card Media Effects */
+.expertise-card-media img {
+    transition: transform 0.5s ease;
+}
+
+.expertise-card:hover .expertise-card-media img {
+    transform: scale(1.1);
+}
+
+/* Approach Card Image Effects */
+.approach-cards-container .group img {
+    transition: all 0.7s ease-in-out;
+}
+
+.approach-cards-container .group:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.1) contrast(1.1);
+}
+
+/* Split Screen Hover Effects */
+.split-screen-left {
+    transition: transform 0.5s ease;
+}
+
+.split-screen-section:hover .split-screen-left {
+    transform: scale(1.02);
+}
+
+/* Pulse Animation for Hero Titles */
+@keyframes pulse-glow {
+    0%, 100% {
+        text-shadow: 0 0 20px rgba(218, 165, 32, 0.8);
+    }
+    50% {
+        text-shadow: 0 0 40px rgba(218, 165, 32, 1), 0 0 60px rgba(218, 165, 32, 0.6);
+    }
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Bounce Animations for CTA Buttons */
+@keyframes bounce-subtle {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-3px);
+    }
+    60% {
+        transform: translateY(-2px);
+    }
+}
+
+.animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animation-delay-100 {
+    animation-delay: 0.1s;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+}
+
+/* Services Page Styles - Using Tailwind CSS for transitions and animations */
+/* Custom styles only for 3D perspective effects that Tailwind doesn't provide */
+
+/* Enhanced Button Styles */
+.hero-cta-button {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.hero-cta-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    border-radius: 50%;
+}
+
+.hero-cta-button:hover::before {
+    width: 200%;
+    height: 200%;
+    opacity: 1;
+}
+
+/* Expertise and Approach Card Button Enhancement */
+.card-action-button {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.card-action-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.card-action-button:hover::before {
+    left: 100%;
+}
+
+/* Button Icon Animation Enhancement */
+.btn-icon-slide {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-action-button:hover .btn-icon-slide {
+    transform: translateX(4px) scale(1.1);
+}
+
+/* Button Text Animation */
+.btn-text {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card-action-button:hover .btn-text {
+    text-shadow: 0 0 8px rgba(218, 165, 32, 0.6);
+}
+
+/* Modern Expertise Cards Design */
+.expertise-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    will-change: transform;
+}
+
+.expertise-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(147, 51, 234, 0.3),
+        0 10px 20px rgba(219, 39, 119, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Icon Rotation Animation */
+.group:hover .group-hover\:rotate-12 {
+    transform: rotate(12deg);
+}
+
+/* Enhanced Button Hover Effects */
+.expertise-card button {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.expertise-card button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.expertise-card button:hover::before {
+    left: 100%;
+}
+
+/* Responsive Grid Improvements */
 @media (max-width: 768px) {
-    .expertise-card-inner {
-        flex-direction: column;
+    .expertise-card {
+        margin-bottom: 1.5rem;
     }
-    
-    .expertise-card-media,
-    .expertise-card-content {
-        width: 100%;
+}
+
+/* Loading Animation for Cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    
-    .expertise-stage {
-        height: 800px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    
-    .expertise-card.prev {
-        transform: translate(-50%, -70%) scale(0.8);
-    }
-    
-    .expertise-card.next {
-        transform: translate(-50%, -30%) scale(0.8);
-    }
+}
+
+.expertise-card[data-aos="fade-up"] {
+    animation: fadeInUp 0.6s ease-out;
 }
