@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+
+{% block title %}Products - Africana Ventures{% endblock %}
+
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(1, 45, 24, 0.7), rgba(1, 45, 24, 0.8)), url('{{ url_for('static', filename='images/maize.png') }}')"></div>
+    
+    <div class="relative z-20 text-center px-4 max-w-6xl mx-auto" data-aos="fade-up">
+        <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">PREMIUM AGRICULTURAL PRODUCTS</span>
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight font-poppins">Quality Products<br><span class="text-gold">From Farm to Market</span></h1>
+        <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed mb-8">
+            Discover our comprehensive range of agricultural products, from fresh produce to processed goods, all meeting the highest quality standards.
+        </p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <a href="#products-catalog" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Explore Products
+            </a>
+            <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Request Quote
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Product Categories Section -->
+<section id="products-catalog" class="py-24 bg-cream">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">OUR PRODUCT PORTFOLIO</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Premium Agricultural Products</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                From farm-fresh produce to value-added products, explore our diverse range of high-quality agricultural offerings.
+            </p>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="flex flex-wrap justify-center gap-4 mb-16" data-aos="fade-up" data-aos-delay="200">
+            <button class="category-btn active px-8 py-4 rounded-full font-semibold text-lg shadow-lg bg-gold text-dark-green transition-all duration-300" data-category="all">All Products</button>
+            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="fresh">Fresh Produce</button>
+            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="processed">Processed Foods</button>
+            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="inputs">Farm Inputs</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
+            
+            <!-- Maize -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/maize.png') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Premium Maize">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-gold text-dark-green px-3 py-1 rounded-full text-sm font-bold">Premium Grade</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Export Quality</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Premium Maize</h3>
+                        <span class="text-2xl">🌽</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">High-quality yellow and white maize varieties with excellent nutritional value. Grown using sustainable farming practices.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Non-GMO</span>
+                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Aflatoxin Free</span>
+                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Grade A</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Year-round
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fresh Fish -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up" data-aos-delay="100">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/113898.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Fresh Fish">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Fresh Daily</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Lake Victoria</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Fresh Fish</h3>
+                        <span class="text-2xl">🐟</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">Fresh tilapia and other fish species from Lake Victoria, caught daily by local fishing communities using sustainable methods.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Sustainably Caught</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Fresh Daily</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Cold Chain</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Daily
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coffee -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="processed" data-aos="fade-up" data-aos-delay="200">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/416760.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Premium Coffee">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-bold">Single Origin</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Fair Trade</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Premium Coffee</h3>
+                        <span class="text-2xl">☕</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">Arabica coffee beans from the highlands of East Africa, carefully processed and roasted to perfection.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Arabica</span>
+                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Organic</span>
+                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Fair Trade</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Seasonal
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vegetables -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up" data-aos-delay="300">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/141689.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Fresh Vegetables">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">Farm Fresh</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Organic</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Fresh Vegetables</h3>
+                        <span class="text-2xl">🥬</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">Wide variety of fresh vegetables including tomatoes, onions, cabbages, and leafy greens grown using organic methods.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Pesticide Free</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Locally Grown</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Organic</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Year-round
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Farm Inputs -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="inputs" data-aos="fade-up" data-aos-delay="400">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/240173.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Farm Inputs">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold">Quality Assured</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Certified</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Farm Inputs</h3>
+                        <span class="text-2xl">🌱</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">High-quality seeds, fertilizers, and agricultural tools to help farmers maximize their yields and improve crop quality.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Certified Seeds</span>
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Quality Tools</span>
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Organic Options</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Year-round
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dairy Products -->
+            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="dairy" data-aos="fade-up" data-aos-delay="500">
+                <div class="relative h-64 overflow-hidden">
+                    <img src="{{ url_for('static', filename='images/416767.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Dairy Products">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">Farm Fresh</span>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Pasteurized</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Dairy Products</h3>
+                        <span class="text-2xl">🥛</span>
+                    </div>
+                    <p class="text-gray-600 mb-4 leading-relaxed">Fresh milk, cheese, and other dairy products from local farms with the highest hygiene and quality standards.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Hormone Free</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Quality Tested</span>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Fresh Daily</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            <span class="font-semibold">Available:</span> Daily
+                        </div>
+                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Quality Assurance Section -->
+<section class="py-24 bg-gradient-to-br from-dark-green via-dark-green/98 to-dark-green text-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">QUALITY ASSURANCE</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 font-poppins">Our Commitment to Excellence</h2>
+            <p class="text-lg text-cream/90 max-w-3xl mx-auto leading-relaxed">
+                Every product in our portfolio meets international quality standards through rigorous testing and certification processes.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center group" data-aos="fade-up">
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3 font-poppins">ISO Certified</h3>
+                <p class="text-cream/80 leading-relaxed">All processes are ISO certified ensuring consistent quality and safety standards.</p>
+            </div>
+
+            <div class="text-center group" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 104 0 2 2 0 012-2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3 font-poppins">Organic Certified</h3>
+                <p class="text-cream/80 leading-relaxed">Certified organic products grown without harmful chemicals or pesticides.</p>
+            </div>
+
+            <div class="text-center group" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3 font-poppins">Lab Tested</h3>
+                <p class="text-cream/80 leading-relaxed">Rigorous laboratory testing ensures product safety and nutritional value.</p>
+            </div>
+
+            <div class="text-center group" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3 font-poppins">Export Ready</h3>
+                <p class="text-cream/80 leading-relaxed">Products meet international export standards and documentation requirements.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-24 bg-white">
+    <div class="container mx-auto px-4 text-center" data-aos="fade-up">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-dark-green font-poppins">Ready to Partner with Us?</h2>
+            <p class="text-xl text-gray-700 mb-8 leading-relaxed">
+                Join hundreds of satisfied customers who trust Africana Ventures for premium agricultural products. Contact us today to discuss your requirements.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Get Quote
+                </a>
+                <a href="{{ url_for('main.services_page') }}" class="inline-block bg-transparent border-2 border-dark-green text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-dark-green hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    Our Services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false,
+        offset: 120
+    });
+
+    // Category Filter Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const productCards = document.querySelectorAll('.product-card');
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                
+                // Update active button
+                categoryBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-gold', 'text-dark-green');
+                    b.classList.add('bg-white', 'text-gray-700');
+                });
+                
+                btn.classList.remove('bg-white', 'text-gray-700');
+                btn.classList.add('active', 'bg-gold', 'text-dark-green');
+                
+                // Filter products with animation
+                productCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                        }, 100);
+                    } else {
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

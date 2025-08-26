@@ -1,73 +1,373 @@
 {% extends 'base.html' %}
 
+{% block title %}Home - Africana Ventures{% endblock %}
+
+{% block head %}
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Company Color Palette */
+        .text-gold { color: #DAA520; }
+        .bg-gold { background-color: #DAA520; }
+        .text-cream { color: #F5F5DC; }
+        .bg-cream { background-color: #F5F5DC; }
+        .text-dark-green { color: #012d18; }
+        .bg-dark-green { background-color: #012d18; }
+        
+        /* Premium gradient backgrounds */
+        .diagonal-bg {
+            background: linear-gradient(135deg, #012d18 0%, #024d2a 100%);
+        }
+        
+        /* Enhanced glassmorphism */
+        .glassmorphism {
+            background-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Floating animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Pulse glow effect for CTAs */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(218, 165, 32, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(218, 165, 32, 0.8), 0 0 30px rgba(218, 165, 32, 0.6);
+            }
+        }
+        
+        .cta-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        /* Service card hover effects */
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-15px) scale(1.03);
+        }
+        
+        /* Core focus card animations */
+        .core-focus-card {
+            transition: all 0.5s ease;
+        }
+        
+        .core-focus-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(218, 165, 32, 0.3);
+        }
+        
+        /* Hero video and message transitions */
+        .hero-video {
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+        
+        .hero-video.active {
+            opacity: 1;
+        }
+        
+        .hero-message {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .hero-message.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hero-indicators .indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .hero-indicators .indicator.active {
+            background-color: #DAA520;
+            transform: scale(1.2);
+        }
+        
+        .hero-message-container {
+            transition: all 1s ease-in-out;
+        }
+        
+        /* Fallback for when videos don't load */
+        .hero-video:not([src]) {
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section with Dynamic Video Background -->
 <section id="home" class="relative h-screen flex items-center justify-center text-white overflow-hidden">
-    <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover z-0">
-        <source src="{{ url_for('static', filename='videos/hero-bg.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="absolute top-0 left-0 w-full h-full bg-black opacity-60 z-10"></div>
-    <div class="relative z-20 text-center px-4" data-aos="fade-up">
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6 text-green-400" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.7);">Growing Opportunities, Cultivating Futures</h1>
-        <p class="text-xl md:text-2xl font-light max-w-4xl mx-auto mb-10" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">Empowering communities through sustainable agriculture and innovative solutions.</p>
-        <a href="#about" class="mt-8 inline-block bg-green-600 text-white font-bold py-4 px-10 rounded-full text-xl uppercase tracking-wider hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">Discover More</a>
+    <!-- Video Background Container -->
+    <div class="absolute inset-0 hero-video-container">
+        <!-- Video Elements (will be dynamically switched) -->
+        <video class="hero-video active absolute inset-0 w-full h-full object-cover" 
+               muted loop autoplay playsinline
+               data-message-index="0">
+            <source src="{{ url_for('static', filename='videos/hero-bg.mp4') }}" type="video/mp4">
+            <source src="{{ url_for('static', filename='videos/hero-bg.webm') }}" type="video/webm">
+            <!-- Fallback image -->
+            <div class="absolute inset-0 bg-cover bg-center" 
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.7), rgba(1, 45, 24, 0.8)), url('{{ url_for('static', filename='images/101678.jpg') }}')"></div>
+        </video>
+        
+        <video class="hero-video absolute inset-0 w-full h-full object-cover" 
+               muted loop playsinline
+               data-message-index="1">
+            <source src="{{ url_for('static', filename='videos/hero-bg1.mp4') }}" type="video/mp4">
+            <!-- Fallback image -->
+            <div class="absolute inset-0 bg-cover bg-center" 
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.7), rgba(1, 45, 24, 0.8)), url('{{ url_for('static', filename='images/416767.jpg') }}')"></div>
+        </video>
+        
+        <video class="hero-video absolute inset-0 w-full h-full object-cover" 
+               muted loop playsinline
+               data-message-index="2">
+            <source src="{{ url_for('static', filename='videos/hero-bg.mp4') }}" type="video/mp4">
+            <source src="{{ url_for('static', filename='videos/hero-bg.webm') }}" type="video/webm">
+            <!-- Fallback image -->
+            <div class="absolute inset-0 bg-cover bg-center" 
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.7), rgba(1, 45, 24, 0.8)), url('{{ url_for('static', filename='images/113898.jpg') }}')"></div>
+        </video>
+        
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+    
+    <!-- Content Container -->
+    <div class="relative z-20 text-center px-4 max-w-6xl mx-auto" data-aos="fade-up">
+        <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30 hero-badge">TRANSFORMING AFRICAN AGRICULTURE</span>
+        
+        <!-- Dynamic Message Container -->
+        <div class="hero-message-container relative min-h-[300px] flex items-center justify-center">
+            <!-- Message 1 -->
+            <div class="hero-message active absolute inset-0 flex flex-col items-center justify-center" data-index="0">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight font-poppins">Empowering Farmers<br><span class="text-gold">Through Technology</span></h1>
+                <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed font-lora mb-8">
+                    Building end-to-end agricultural solutions that connect smallholder farmers to reliable markets, reduce post-harvest losses, and promote environmentally responsible practices across East Africa.
+                </p>
+            </div>
+            
+            <!-- Message 2 -->
+            <div class="hero-message absolute inset-0 flex flex-col items-center justify-center opacity-0" data-index="1">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight font-poppins">Smart Logistics<br><span class="text-gold">Efficient Distribution</span></h1>
+                <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed font-lora mb-8">
+                    Revolutionizing farm-to-market transport with intelligent routing, cold-chain support, and real-time tracking to ensure fresh produce reaches markets on time.
+                </p>
+            </div>
+            
+            <!-- Message 3 -->
+            <div class="hero-message absolute inset-0 flex flex-col items-center justify-center opacity-0" data-index="2">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight font-poppins">Digital Marketplace<br><span class="text-gold">Fair Trade Platform</span></h1>
+                <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed font-lora mb-8">
+                    Connecting farmers directly with buyers, processors, and exporters through transparent pricing, secure payments, and expanded market access opportunities.
+                </p>
+            </div>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-col md:flex-row justify-center gap-4 mb-8 hero-cta">
+            <a href="{{ url_for('main.about_page') }}" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg cta-glow">
+                Discover Our Impact
+            </a>
+            <a href="{{ url_for('main.services_page') }}" class="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
+                Our Solutions
+            </a>
+        </div>
+        
+        <!-- Dynamic Stats -->
+        <div class="hero-stats flex flex-wrap justify-center gap-4 text-sm font-semibold">
+            <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">🌱 5000+ Farmers Empowered</span>
+            <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">📱 Digital Marketplace</span>
+            <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">🚚 Smart Logistics</span>
+        </div>
+    </div>
+    
+    <!-- Navigation Indicators -->
+    <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-30">
+        <div class="flex space-x-3 hero-indicators">
+            <button class="w-3 h-3 rounded-full bg-gold/60 hover:bg-gold transition-all duration-300 indicator active" data-index="0"></button>
+            <button class="w-3 h-3 rounded-full bg-white/40 hover:bg-gold transition-all duration-300 indicator" data-index="1"></button>
+            <button class="w-3 h-3 rounded-full bg-white/40 hover:bg-gold transition-all duration-300 indicator" data-index="2"></button>
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-30">
+        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
     </div>
 </section>
 
 <!-- Mission and Vision Section -->
-<section class="py-24 bg-primary-green text-white relative overflow-hidden">
-    <div class="absolute inset-0 bg-black opacity-20 z-0"></div> <!-- Subtle dark overlay for glassy effect -->
-    <div class="container mx-auto px-4 text-center relative z-10 p-8 rounded-lg border border-green-600 shadow-lg" data-aos="fade-up">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">Our Mission & Vision</h2>
-        <p class="text-xl md:text-2xl font-light max-w-4xl mx-auto leading-relaxed">
-            <strong>Mission:</strong> To empower farmers and agribusinesses with technology, knowledge, and market access to unlock sustainable prosperity.
-            <br><br>
-            <strong>Vision:</strong> To become Africa’s leading agricultural innovation hub — cultivating a resilient and prosperous agri-ecosystem that leaves no one behind.
-        </p>
-    </div>
-</section>
-
-<!-- Core Values Section -->
 <section class="py-24 bg-white">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-4xl font-extrabold mb-12 text-green-800">Our Core Values</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Inclusivity -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Inclusivity</h3>
-                <p class="text-gray-700">Prioritizing women, youth and vulnerable communities.</p>
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">OUR PURPOSE</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Mission & Vision</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed font-lora">
+                Guided by our commitment to transforming agriculture through innovation and sustainability.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <!-- Mission Card -->
+            <div class="mission-vision-card group relative" data-aos="fade-right">
+                <div class="bg-gradient-to-br from-dark-green via-dark-green/95 to-dark-green/90 text-white p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden hover:shadow-3xl transition-all duration-500">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-gold rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-gold mb-6 font-poppins">Our Mission</h3>
+                        <p class="text-cream/90 leading-relaxed text-lg font-lora">
+                            We aim at empowering smallholder farmers by providing innovative, technology-driven solutions that connect them to markets, reduce post-harvest losses, and promote climate-smart agriculture. We aim to enhance the agricultural value chain, foster economic growth, and improve food security across Tanzania and Africa.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <!-- Sustainability -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Sustainability</h3>
-                <p class="text-gray-700">Protecting the planet for future generations.</p>
+
+            <!-- Vision Card -->
+            <div class="mission-vision-card group relative" data-aos="fade-left">
+                <div class="bg-gradient-to-br from-gold via-gold/95 to-gold/90 text-dark-green p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden hover:shadow-3xl transition-all duration-500">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-dark-green/10 rounded-full -translate-y-16 translate-x-16"></div>
+                    <div class="relative z-10">
+                        <div class="w-16 h-16 bg-dark-green rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-dark-green mb-6 font-poppins">Our Vision</h3>
+                        <p class="text-dark-green/90 leading-relaxed text-lg font-lora">
+                            To become one of the leading technology company groups in Africa, creating and building sustainable businesses that deliver quality and affordable services and products to key social challenges while driving economic prosperity, job creation, and good returns to our shareholders, stakeholders, and partners.
+                        </p>
+                    </div>
+                </div>
             </div>
-            <!-- Innovation -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Innovation</h3>
-                <p class="text-gray-700">Creative tech-driven agriculture solutions.</p>
+        </div>
+        
+        <!-- Key Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16" data-aos="fade-up" data-aos-delay="300">
+            <div class="text-center p-8 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl text-white transform hover:scale-105 transition-all duration-300 float-animation">
+                <div class="text-4xl md:text-5xl font-bold text-gold mb-2 font-poppins">5000+</div>
+                <div class="text-lg font-semibold text-cream">Farmers Connected</div>
+                <div class="text-sm text-cream/80 mt-2">Across East Africa</div>
             </div>
-            <!-- Integrity -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Integrity</h3>
-                <p class="text-gray-700">Transparency, ethics, and trust in everything we do.</p>
+            <div class="text-center p-8 bg-gradient-to-br from-gold to-gold/90 rounded-2xl text-dark-green transform hover:scale-105 transition-all duration-300 float-animation" style="animation-delay: 1s;">
+                <div class="text-4xl md:text-5xl font-bold text-white mb-2 font-poppins">3</div>
+                <div class="text-lg font-semibold text-white">Countries</div>
+                <div class="text-sm text-white/90 mt-2">Tanzania, Kenya, Uganda</div>
             </div>
-            <!-- Excellence -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Excellence</h3>
-                <p class="text-gray-700">High-quality service and long-term impact focus.</p>
-            </div>
-            <!-- Collaboration -->
-            <div class="p-8 bg-gray-50 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="500">
-                <h3 class="text-2xl font-bold mb-4 text-green-800">Collaboration</h3>
-                <p class="text-gray-700">Working with communities, partners, governments, and investors.</p>
+            <div class="text-center p-8 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl text-white transform hover:scale-105 transition-all duration-300 float-animation" style="animation-delay: 2s;">
+                <div class="text-4xl md:text-5xl font-bold text-gold mb-2 font-poppins">4</div>
+                <div class="text-lg font-semibold text-cream">Product Categories</div>
+                <div class="text-sm text-cream/80 mt-2">Comprehensive Portfolio</div>
             </div>
         </div>
     </div>
 </section>
 
-
+<!-- Core Values Section -->
+<section class="py-24 bg-cream">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">CORE VALUES</span>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Our Guiding Principles</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed font-lora">
+                These core values are the foundation of our identity and uniqueness, guiding our actions and operations in the dynamic agritech space.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Innovation -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Innovation</h3>
+                <p class="text-gray-700 font-lora">We embrace creativity and cutting-edge technology to develop forward-thinking solutions that transform the agricultural sector.</p>
+            </div>
+            
+            <!-- Integrity -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Integrity</h3>
+                <p class="text-gray-700 font-lora">We conduct all our business with honesty, transparency, and a strong ethical foundation.</p>
+            </div>
+            
+            <!-- Sustainability -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 104 0 2 2 0 012-2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Sustainability</h3>
+                <p class="text-gray-700 font-lora">We are committed to promoting environmentally responsible practices that ensure long-term agricultural growth.</p>
+            </div>
+            
+            <!-- Empowerment -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 6a3 3 0 11-4 0 3 3 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Empowerment</h3>
+                <p class="text-gray-700 font-lora">We strive to equip smallholder farmers and communities with the tools, knowledge, and resources they need to succeed.</p>
+            </div>
+            
+            <!-- Collaboration -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Collaboration</h3>
+                <p class="text-gray-700 font-lora">We believe in building strong partnerships with farmers, stakeholders, and communities to achieve shared success.</p>
+            </div>
+            
+            <!-- Lasting Impact -->
+            <div class="value-card group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-gold/20 hover:border-gold/50" data-aos="fade-up" data-aos-delay="500">
+                <div class="w-16 h-16 bg-gradient-to-br from-dark-green to-dark-green/90 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-dark-green font-poppins">Lasting Impact</h3>
+                <p class="text-gray-700 font-lora">Dedicated to transforming agriculture and creating meaningful, long-term positive change that benefits communities.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- About Us Section -->
 <section id="about" class="py-24 bg-white overflow-hidden">
@@ -297,6 +597,9 @@
 
 <!-- Custom JS for Core Focus Areas -->
 <script src="{{ url_for('static', filename='js/core_focus_areas.js') }}"></script>
+
+<!-- Enhanced Index Page JavaScript -->
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
 
 <!-- Our Partners Section Start -->

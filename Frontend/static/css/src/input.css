@@ -697,3 +697,236 @@ body {
         transform: translateY(15px) rotate(-3deg);
     }
 }
+
+/* ======================================= */
+/* ADVANCED RECTANGULAR GRID METHODOLOGY */
+/* ======================================= */
+
+/* Premium 3D Grid Container */
+.methodology-grid-container {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+/* Central Hub Advanced Effects */
+.methodology-hub-card {
+    transform-style: preserve-3d;
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, filter;
+}
+
+.methodology-hub-card:hover {
+    transform: translate(-50%, -50%) perspective(1000px) rotateX(5deg) rotateY(8deg) scale(1.1) translateZ(40px);
+    filter: brightness(1.2) contrast(1.1) drop-shadow(0 25px 50px rgba(218, 165, 32, 0.7));
+}
+
+/* Enhanced Grid Cards with Magnetic Effects */
+.methodology-grid-card {
+    transform-style: preserve-3d;
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, filter;
+}
+
+.methodology-grid-card:hover {
+    transform: perspective(1000px) rotateX(8deg) rotateY(12deg) scale(1.1) translateZ(30px);
+    filter: brightness(1.15) contrast(1.2) saturate(1.3) drop-shadow(0 15px 35px rgba(218, 165, 32, 0.5));
+}
+
+/* Shimmer and Ripple Effects */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%) skewX(-15deg);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%) skewX(-15deg);
+        opacity: 0;
+    }
+}
+
+.shimmer-effect {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(218, 165, 32, 0.4),
+        rgba(255, 255, 255, 0.6),
+        rgba(218, 165, 32, 0.4),
+        transparent
+    );
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Magnetic Tracking Effect */
+@keyframes magnetic-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(218, 165, 32, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(218, 165, 32, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(218, 165, 32, 0);
+    }
+}
+
+.magnetic-effect {
+    animation: magnetic-pulse 2s infinite;
+}
+
+/* Enhanced Hover States with Glassmorphism */
+.methodology-card-glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.methodology-card-glass:hover {
+    background: rgba(218, 165, 32, 0.15);
+    border: 1px solid rgba(218, 165, 32, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Premium Gradient Effects */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.premium-gradient {
+    background: linear-gradient(
+        45deg,
+        rgba(1, 45, 24, 0.8),
+        rgba(218, 165, 32, 0.3),
+        rgba(1, 45, 24, 0.9),
+        rgba(218, 165, 32, 0.2)
+    );
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+}
+
+/* Staggered Animation Delays */
+.stagger-delay-1 { animation-delay: 0.1s; }
+.stagger-delay-2 { animation-delay: 0.25s; }
+.stagger-delay-3 { animation-delay: 0.4s; }
+.stagger-delay-4 { animation-delay: 0.55s; }
+.stagger-delay-5 { animation-delay: 0.7s; }
+.stagger-delay-6 { animation-delay: 0.85s; }
+.stagger-delay-7 { animation-delay: 1s; }
+.stagger-delay-8 { animation-delay: 1.15s; }
+
+/* Advanced Card Flip Effect */
+@keyframes card-flip {
+    0% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+    50% {
+        transform: perspective(1000px) rotateY(90deg) scale(0.8);
+    }
+    100% {
+        transform: perspective(1000px) rotateY(0deg);
+    }
+}
+
+.card-flip-animation {
+    animation: card-flip 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Energy Pulse Effect for Central Hub */
+@keyframes energy-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 0 rgba(218, 165, 32, 0.7);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow: 0 0 0 20px rgba(218, 165, 32, 0.3);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 0 40px rgba(218, 165, 32, 0);
+    }
+}
+
+.energy-pulse {
+    animation: energy-pulse 3s ease-in-out infinite;
+}
+
+/* Grid Status Indicator Animation */
+@keyframes status-glow {
+    0% {
+        box-shadow: 0 0 5px rgba(218, 165, 32, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(218, 165, 32, 0.8), 0 0 30px rgba(218, 165, 32, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(218, 165, 32, 0.5);
+    }
+}
+
+.status-indicator {
+    animation: status-glow 2s ease-in-out infinite;
+}
+
+/* Shuffle Button Enhancement */
+.shuffle-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shuffle-button:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(218, 165, 32, 0.4);
+}
+
+.shuffle-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Enhanced Line Clamp for Mobile */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Mobile Enhanced Effects */
+@media (max-width: 768px) {
+    .methodology-mobile-card {
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .methodology-mobile-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        filter: brightness(1.1) drop-shadow(0 10px 25px rgba(218, 165, 32, 0.4));
+    }
+    
+    .methodology-mobile-card:active {
+        transform: translateY(-4px) scale(1.01);
+    }
+
+    /* Reduce motion for mobile users if they prefer */
+    @media (prefers-reduced-motion: reduce) {
+        .methodology-grid-card,
+        .methodology-hub-card,
+        .methodology-mobile-card {
+            transition: none;
+            animation: none;
+        }
+    }
+}

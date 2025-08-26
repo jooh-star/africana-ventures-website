@@ -198,6 +198,19 @@ def services_page():
 def solutions_page():
     return render_template('solutions.html')
 
+@main.route('/products')
+def products_page():
+    """Products page showcasing agricultural products."""
+    # Get company info for the page
+    company_info = CompanyInfo.query.first()
+    
+    # Get product-related images from the database
+    product_images = WebsiteImage.query.filter_by(section='products', is_active=True).order_by(WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
+    
+    return render_template('products.html', 
+                           company_info=company_info,
+                           product_images=product_images)
+
 @main.route('/contact', methods=['GET', 'POST'])
 def contact_page():
     if request.method == 'POST':
