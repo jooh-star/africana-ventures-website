@@ -8,94 +8,417 @@ document.addEventListener('DOMContentLoaded', function() {
         offset: 120
     });
 
-    // Hero Video Carousel
+    // Hero Video Carousel with Curtain-Style Sliding Transitions
     function initializeHeroVideoCarousel() {
         const videos = document.querySelectorAll('.hero-video');
         const messages = document.querySelectorAll('.hero-message');
-        const indicators = document.querySelectorAll('.hero-indicators .indicator');
+        const slideIndicators = document.querySelectorAll('.slide-indicator');
+        const heroSection = document.querySelector('#home');
         
         if (videos.length === 0 || messages.length === 0) return;
         
         let currentIndex = 0;
         let autoplayInterval;
+        let isTransitioning = false;
+        let allPhasesCompleted = false;
         const intervalDuration = 6000; // 6 seconds per slide
+        let scrollAccumulator = 0;
+        const scrollThreshold = 100; // More responsive
+        let isPreviewMode = false;
         
-        // Preload videos
+        // Preload videos with performance optimization
         videos.forEach((video, index) => {
             if (index !== 0) {
                 video.load();
             }
+            // Add error handling for better fallback
+            video.addEventListener('error', () => {
+                console.log(`Video ${index + 1} failed to load, using fallback image`);
+            });
+            
+            // Optimize video playback
+            video.addEventListener('canplay', () => {
+                console.log(`Video ${index + 1} is ready to play`);
+            });
         });
         
-        function switchToSlide(index) {
-            // Remove active classes from all elements
-            videos.forEach(v => v.classList.remove('active'));
-            messages.forEach(m => m.classList.remove('active'));
-            indicators.forEach(i => i.classList.remove('active'));
+        function updateSlideIndicators() {
+            slideIndicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+        
+        function switchToSlide(index, triggeredBy = 'auto', animate = true) {
+            if (isTransitioning || index < 0 || index >= videos.length) return;
             
-            // Add active class to current elements
-            if (videos[index]) videos[index].classList.add('active');
-            if (messages[index]) messages[index].classList.add('active');
-            if (indicators[index]) indicators[index].classList.add('active');
+            // Allow navigation in both directions at any time
+            isTransitioning = true;
+            isPreviewMode = false;
             
-            // Play current video and pause others
+            const oldIndex = currentIndex;
+            currentIndex = index;
+            
+            // Reset all message states
+            messages.forEach(msg => {
+                msg.classList.remove('active', 'slide-out', 'preview-next', 'preview-prev');
+            });
+            
+            // Set the new active message with curtain animation
+            if (animate) {
+                // Current message slides out
+                if (messages[oldIndex]) {
+                    messages[oldIndex].classList.add('slide-out');
+                }
+                
+                // New message slides in with enhanced animation
+                setTimeout(() => {
+                    messages[index].classList.add('active');
+                    // Trigger content animation
+                    const content = messages[index].querySelector('.content');
+                    if (content) {
+                        content.style.animation = 'none';
+                        content.offsetHeight; // Trigger reflow
+                        content.style.animation = 'contentFadeIn 0.8s ease-out both';
+                    }
+                }, 50);
+            } else {
+                messages[index].classList.add('active');
+            }
+            
+            // Update slide indicators
+            updateSlideIndicators();
+            
+            // Switch videos with enhanced performance
             videos.forEach((video, i) => {
                 if (i === index) {
+                    video.classList.add('active');
                     video.currentTime = 0;
+                    // Preload next video for smoother transitions
+                    if (index < videos.length - 1) {
+                        videos[index + 1].preload = 'metadata';
+                    }
                     video.play().catch(() => {
                         console.log('Video autoplay failed, using fallback image');
                     });
                 } else {
+                    video.classList.remove('active');
                     video.pause();
+                    // Reset preload to save bandwidth
+                    if (i !== index + 1) {
+                        video.preload = 'none';
+                    }
                 }
             });
             
-            currentIndex = index;
+            // Handle scroll indicator and autoplay based on current phase
+            const scrollIndicator = document.getElementById('scroll-indicator');
+            if (index === videos.length - 1) {
+                // On final phase - show scroll indicator and stop autoplay
+                if (!allPhasesCompleted) {
+                    setTimeout(() => {
+                        allPhasesCompleted = true;
+                        stopAutoplay();
+                        if (scrollIndicator) {
+                            scrollIndicator.style.opacity = '1';
+                        }
+                        console.log('Final phase reached - normal scrolling enabled');
+                    }, 1000);
+                }
+            } else {
+                // Not on final phase - hide scroll indicator and ensure autoplay can resume
+                if (scrollIndicator) {
+                    scrollIndicator.style.opacity = '0';
+                }
+                // Reset completion status if going back from final phase
+                if (allPhasesCompleted) {
+                    allPhasesCompleted = false;
+                    console.log('Moved back from final phase - phase navigation restored');
+                }
+            }
+            
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 800);
+            
+            console.log(`Curtain transition to slide ${index + 1} (triggered by: ${triggeredBy})`);
         }
         
-        function nextSlide() {
-            const nextIndex = (currentIndex + 1) % videos.length;
-            switchToSlide(nextIndex);
+        function nextSlide(triggeredBy = 'auto') {
+            if (currentIndex < videos.length - 1) {
+                switchToSlide(currentIndex + 1, triggeredBy);
+            }
+        }
+        
+        function prevSlide(triggeredBy = 'scroll') {
+            if (currentIndex > 0) {
+                switchToSlide(currentIndex - 1, triggeredBy);
+            }
         }
         
         function startAutoplay() {
-            autoplayInterval = setInterval(nextSlide, intervalDuration);
+            if (!allPhasesCompleted) {
+                autoplayInterval = setInterval(() => {
+                    if (!allPhasesCompleted && currentIndex < videos.length - 1) {
+                        nextSlide('timer');
+                    }
+                }, intervalDuration);
+            }
         }
         
         function stopAutoplay() {
             if (autoplayInterval) {
                 clearInterval(autoplayInterval);
+                autoplayInterval = null;
             }
         }
         
+        // Curtain-style scroll behavior with horizontal slide preview
+        function handleScroll(e) {
+            // Allow normal scrolling only when on final phase AND not trying to go backward
+            if (allPhasesCompleted && currentIndex === videos.length - 1) {
+                const delta = e.deltaY || e.detail || -e.wheelDelta;
+                if (delta < 0) {
+                    // Scrolling up from final phase - allow going back to previous phase
+                    e.preventDefault();
+                    e.stopPropagation();
+                } else {
+                    // Scrolling down from final phase - allow normal page scrolling
+                    return true;
+                }
+            } else if (currentIndex < videos.length - 1) {
+                // Not on final phase - prevent normal scrolling
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            if (isTransitioning) return false;
+            
+            // Get scroll direction and amount
+            const delta = e.deltaY || e.detail || -e.wheelDelta;
+            scrollAccumulator += delta;
+            
+            // Calculate curtain progress (0 to 1)
+            const progress = Math.abs(scrollAccumulator) / scrollThreshold;
+            const clampedProgress = Math.min(progress, 1);
+            
+            // Enable preview mode for real-time curtain feedback
+            isPreviewMode = true;
+            
+            if (scrollAccumulator > 0 && currentIndex < videos.length - 1) {
+                // Scrolling down - curtain preview next slide
+                const nextIndex = currentIndex + 1;
+                
+                // Reset all message states
+                messages.forEach(msg => {
+                    msg.classList.remove('preview-next', 'preview-prev');
+                });
+                
+                // Show curtain effect: next slide sliding in from right
+                const curtainOffset = 100 - (clampedProgress * 100); // Start at 100%, slide to 0%
+                messages[nextIndex].style.setProperty('--preview-offset', `${curtainOffset}%`);
+                messages[nextIndex].classList.add('preview-next');
+                
+                // Current slide starts sliding out to left
+                const currentOffset = -(clampedProgress * 100); // Start at 0%, slide to -100%
+                messages[currentIndex].style.setProperty('--preview-offset', `${currentOffset}%`);
+                messages[currentIndex].classList.add('preview-prev');
+                
+                // Visual feedback on indicators
+                if (slideIndicators[nextIndex]) {
+                    slideIndicators[nextIndex].style.opacity = 0.5 + (clampedProgress * 0.5);
+                }
+                
+                if (Math.abs(scrollAccumulator) >= scrollThreshold) {
+                    stopAutoplay();
+                    nextSlide('scroll');
+                    scrollAccumulator = 0;
+                    setTimeout(startAutoplay, 3000);
+                }
+            } else if (scrollAccumulator < 0 && currentIndex > 0) {
+                // Scrolling up - curtain preview previous slide (works from any phase)
+                const prevIndex = currentIndex - 1;
+                
+                // Reset all message states
+                messages.forEach(msg => {
+                    msg.classList.remove('preview-next', 'preview-prev');
+                });
+                
+                // Show curtain effect: previous slide sliding in from left
+                const curtainOffset = -100 + (clampedProgress * 100); // Start at -100%, slide to 0%
+                messages[prevIndex].style.setProperty('--preview-offset', `${curtainOffset}%`);
+                messages[prevIndex].classList.add('preview-prev');
+                
+                // Current slide starts sliding out to right
+                const currentOffset = clampedProgress * 100; // Start at 0%, slide to 100%
+                messages[currentIndex].style.setProperty('--preview-offset', `${currentOffset}%`);
+                messages[currentIndex].classList.add('preview-next');
+                
+                // Visual feedback on indicators
+                if (slideIndicators[prevIndex]) {
+                    slideIndicators[prevIndex].style.opacity = 0.5 + (clampedProgress * 0.5);
+                }
+                
+                if (Math.abs(scrollAccumulator) >= scrollThreshold) {
+                    stopAutoplay();
+                    prevSlide('scroll');
+                    scrollAccumulator = 0;
+                    setTimeout(startAutoplay, 3000);
+                }
+            } else {
+                // Reset to current position if at boundaries
+                if (Math.abs(scrollAccumulator) > 30) {
+                    resetCurtainPreview();
+                    scrollAccumulator = 0;
+                }
+            }
+            
+            // Reset scroll accumulator if not moving in valid direction
+            if ((scrollAccumulator > 0 && currentIndex >= videos.length - 1) || 
+                (scrollAccumulator < 0 && currentIndex <= 0)) {
+                scrollAccumulator = 0;
+                resetCurtainPreview();
+            }
+            
+            return false;
+        }
+        
+        // Reset curtain preview to normal state
+        function resetCurtainPreview() {
+            isPreviewMode = false;
+            messages.forEach(msg => {
+                msg.classList.remove('preview-next', 'preview-prev');
+                msg.style.removeProperty('--preview-offset');
+            });
+            
+            // Reset indicator opacities
+            slideIndicators.forEach(indicator => {
+                indicator.style.opacity = '';
+            });
+        }
+        
+        // Reset scroll accumulator with curtain cleanup
+        let scrollTimeout;
+        function resetScrollAccumulator() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                if (!isTransitioning && Math.abs(scrollAccumulator) > 0 && Math.abs(scrollAccumulator) < scrollThreshold) {
+                    scrollAccumulator = 0;
+                    resetCurtainPreview();
+                }
+            }, 150);
+        }
+        
+        // Add click handlers for slide indicators
+        slideIndicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                if (!isTransitioning && index !== currentIndex) {
+                    stopAutoplay();
+                    switchToSlide(index, 'indicator');
+                    setTimeout(startAutoplay, 3000);
+                }
+            });
+        });
+        
         // Initialize first slide
-        switchToSlide(0);
+        switchToSlide(0, 'init', false);
         
         // Start autoplay
         startAutoplay();
         
-        // Indicator click handlers
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                stopAutoplay();
-                switchToSlide(index);
-                // Restart autoplay after 3 seconds
-                setTimeout(startAutoplay, 3000);
-            });
-        });
+        // Add scroll event listeners
+        const wheelHandler = (e) => {
+            handleScroll(e);
+            resetScrollAccumulator();
+        };
+        
+        window.addEventListener('wheel', wheelHandler, { passive: false });
+        window.addEventListener('DOMMouseScroll', wheelHandler, { passive: false }); // Firefox
+        
+        // Touch events for mobile with curtain effect
+        let touchStartY = 0;
+        let touchCurrentY = 0;
+        let isTouching = false;
+        
+        window.addEventListener('touchstart', (e) => {
+            // Allow touch interaction from any phase, including final phase for backward navigation
+            if (!allPhasesCompleted || currentIndex === videos.length - 1) {
+                touchStartY = e.touches[0].clientY;
+                touchCurrentY = touchStartY;
+                isTouching = true;
+            }
+        }, { passive: true });
+        
+        window.addEventListener('touchmove', (e) => {
+            // Allow touch interaction from any phase, including backward from final phase
+            if ((!allPhasesCompleted || currentIndex === videos.length - 1) && isTouching) {
+                e.preventDefault();
+                touchCurrentY = e.touches[0].clientY;
+                const diff = touchStartY - touchCurrentY;
+                
+                // Create curtain preview effect
+                const progress = Math.abs(diff) / 100;
+                const clampedProgress = Math.min(progress, 1);
+                
+                if (diff > 0 && currentIndex < videos.length - 1) {
+                    // Swiping up - next slide curtain
+                    const nextIndex = currentIndex + 1;
+                    const curtainOffset = 100 - (clampedProgress * 100);
+                    
+                    messages.forEach(msg => msg.classList.remove('preview-next', 'preview-prev'));
+                    messages[nextIndex].style.setProperty('--preview-offset', `${curtainOffset}%`);
+                    messages[nextIndex].classList.add('preview-next');
+                    
+                    const currentOffset = -(clampedProgress * 100);
+                    messages[currentIndex].style.setProperty('--preview-offset', `${currentOffset}%`);
+                    messages[currentIndex].classList.add('preview-prev');
+                } else if (diff < 0 && currentIndex > 0) {
+                    // Swiping down - previous slide curtain (works from any phase)
+                    const prevIndex = currentIndex - 1;
+                    const curtainOffset = -100 + (clampedProgress * 100);
+                    
+                    messages.forEach(msg => msg.classList.remove('preview-next', 'preview-prev'));
+                    messages[prevIndex].style.setProperty('--preview-offset', `${curtainOffset}%`);
+                    messages[prevIndex].classList.add('preview-prev');
+                    
+                    const currentOffset = clampedProgress * 100;
+                    messages[currentIndex].style.setProperty('--preview-offset', `${currentOffset}%`);
+                    messages[currentIndex].classList.add('preview-next');
+                }
+                
+                if (Math.abs(diff) > 100) {
+                    if (diff > 0 && currentIndex < videos.length - 1) {
+                        stopAutoplay();
+                        nextSlide('touch');
+                        setTimeout(startAutoplay, 3000);
+                    } else if (diff < 0 && currentIndex > 0) {
+                        stopAutoplay();
+                        prevSlide('touch');
+                        setTimeout(startAutoplay, 3000);
+                    }
+                    isTouching = false;
+                }
+            }
+        }, { passive: false });
+        
+        window.addEventListener('touchend', () => {
+            if ((!allPhasesCompleted || currentIndex === videos.length - 1) && isTouching) {
+                resetCurtainPreview();
+                isTouching = false;
+            }
+        }, { passive: true });
         
         // Pause autoplay on hover
-        const heroSection = document.querySelector('#home');
         if (heroSection) {
             heroSection.addEventListener('mouseenter', stopAutoplay);
-            heroSection.addEventListener('mouseleave', startAutoplay);
+            heroSection.addEventListener('mouseleave', () => {
+                if (!allPhasesCompleted) startAutoplay();
+            });
         }
         
         // Handle video errors (fallback to images)
         videos.forEach((video, index) => {
             video.addEventListener('error', () => {
                 console.log(`Video ${index + 1} failed to load, using fallback image`);
-                // The fallback image is already set in the HTML
             });
             
             video.addEventListener('canplay', () => {
@@ -106,20 +429,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') {
-                return; // Don't interfere with form inputs
+                return;
             }
             
             switch(e.key) {
-                case 'ArrowLeft':
-                    stopAutoplay();
-                    const prevIndex = (currentIndex - 1 + videos.length) % videos.length;
-                    switchToSlide(prevIndex);
-                    setTimeout(startAutoplay, 3000);
-                    break;
                 case 'ArrowRight':
-                    stopAutoplay();
-                    nextSlide();
-                    setTimeout(startAutoplay, 3000);
+                case ' ': // Spacebar
+                    if (currentIndex < videos.length - 1) {
+                        stopAutoplay();
+                        nextSlide('keyboard');
+                        setTimeout(startAutoplay, 3000);
+                    }
+                    break;
+                case 'ArrowLeft':
+                    // Allow going back from any phase
+                    if (currentIndex > 0) {
+                        stopAutoplay();
+                        prevSlide('keyboard');
+                        setTimeout(startAutoplay, 3000);
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (allPhasesCompleted && currentIndex === videos.length - 1) {
+                        // Smooth scroll to next section only from final phase
+                        const nextSection = heroSection.nextElementSibling;
+                        if (nextSection) {
+                            nextSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
                     break;
             }
         });
@@ -131,11 +468,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 videos.forEach(video => video.pause());
             } else {
                 videos[currentIndex].play().catch(() => {});
-                startAutoplay();
+                if (!allPhasesCompleted) startAutoplay();
             }
         });
         
-        console.log('Hero video carousel initialized with', videos.length, 'videos');
+        console.log('Hero swipe carousel initialized:', videos.length, 'videos,', messages.length, 'messages');
     }
 
     // Enhanced hero parallax effect

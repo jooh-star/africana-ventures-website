@@ -161,33 +161,33 @@ def services_page():
 
     expertise_nodes = [
         {
-            'title': 'Adaptive Crop Intelligence',
-            'description': 'Leveraging AI and data analytics for precision farming, optimizing crop yields and resource management.',
+            'title': 'Agri-Marketplace Platform',
+            'description': 'A digital trading platform connecting smallholder farmers directly with buyers, processors, wholesalers, and exporters — enabling transparent pricing, secure payments, and wider market access. Acting as an intermediary between producers and consumers to bridge the gap between local farmers and global buyers.',
             'image_filename': '416767.jpg' # Market Access
         },
         {
-            'title': 'Soil Microbiome Mastery',
-            'description': 'Understanding and enhancing soil health through advanced microbial analysis and sustainable practices.',
+            'title': 'Smart Logistics & Distribution',
+            'description': 'Efficient farm-to-market transport networks using intelligent routing, cold-chain support, and real-time tracking to ensure fresh produce reaches markets on time with minimum post-harvest loss. Leveraging advanced digital platforms and AI-powered analytics to streamline the movement of agricultural produce from farm to market.',
             'image_filename': '416769.jpg' # Sustainable Farming
         },
         {
-            'title': 'Hydro-Dynamic Systems',
-            'description': 'Implementing innovative irrigation solutions for efficient water usage and climate resilience.',
+            'title': 'Value-Added Services',
+            'description': 'Data analytics, agricultural advisory, and agri-financing solutions to optimize farming operations and improve productivity. Offering insights into market trends, crop performance, and expert advice on improving agricultural practices.',
             'image_filename': '416770.jpg' # Value Chain Optimization
         },
         {
-            'title': 'Integrated Pest Ecosystem',
-            'description': 'Developing biological and ecological approaches to pest management, minimizing chemical reliance.',
+            'title': 'B2B Partnerships',
+            'description': 'Strategic collaborations with wholesalers, retailers, and exporters to expand market reach and facilitate large-scale distribution. Partnerships key to expanding market access, enabling products to be sold on a larger scale.',
             'image_filename': '526297.jpg' # Climate Resilience
         },
         {
-            'title': 'Climate Resilience Protocols',
-            'description': 'Designing strategies and technologies to help farms adapt and thrive in changing climatic conditions.',
+            'title': 'Training & Capacity Building',
+            'description': 'Equipping farmers with modern agricultural techniques, business management skills, and sustainable practices through comprehensive training programs. Direct engagement with smallholder farmers to ensure equitable compensation and tailored solutions.',
             'image_filename': '53397.jpg' # Digital Agriculture
         },
         {
-            'title': 'Market Intelligence Networks',
-            'description': 'Providing real-time market insights and connectivity to optimize sales and supply chain efficiency.',
+            'title': 'Sustainable Agriculture',
+            'description': 'Promoting eco-friendly farming practices that protect soil health and biodiversity while increasing yields through climate-smart techniques. Emphasizing sustainable farming practices that protect natural resources for future generations.',
             'image_filename': '53401.jpg' # Community Empowerment
         }
     ]
