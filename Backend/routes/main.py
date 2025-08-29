@@ -18,13 +18,27 @@ def index():
     about_content = WebsiteContent.query.filter_by(section='about').first()
     hero_images = WebsiteImage.query.filter_by(section='hero', is_active=True).order_by(WebsiteImage.is_featured.desc(), WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
     gallery_images = WebsiteImage.query.filter_by(section='gallery', is_active=True).order_by(WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
+    
+    # Organize images by section and subsection for easy template access
+    admin_images = {}
+    all_images = WebsiteImage.query.filter_by(is_active=True).all()
+    for img in all_images:
+        section = img.section_name or img.section  # Support both new and legacy field names
+        subsection = img.subsection_name or 'default'
+        if section not in admin_images:
+            admin_images[section] = {}
+        if subsection not in admin_images[section]:
+            admin_images[section][subsection] = []
+        admin_images[section][subsection].append(img)
+    
     return render_template('index.html', 
                            services=services, 
                            testimonials=testimonials,
                            company_info=company_info,
                            about_content=about_content,
                            hero_images=hero_images,
-                           gallery_images=gallery_images)
+                           gallery_images=gallery_images,
+                           admin_images=admin_images)
 
 @main.route('/about')
 def about_page():
@@ -51,47 +65,34 @@ def about_page():
             Testimonial(name='Maria Garcia', location='Uganda', title='Co-op Leader', testimonial='Lorem ipsum dolor sit amet, consectetur adipiscing elit.', photo_filename='141689.jpg')
         ]
 
-    partners_data = [
-        {
-            'name': 'BBT',
-            'image_filename': 'bbt-logo.png',
-            'transformation_desc': 'Glowing tech mushroom spreading innovation spores'
-        },
-        {
-            'name': 'Kilimo Max',
-            'image_filename': 'kilimo-max-logo.png',
-            'transformation_desc': 'Golden crop optimization aura'
-        },
-        {
-            'name': 'Agirite',
-            'image_filename': 'agirite-logo.png',
-            'transformation_desc': 'Crystalline knowledge formation'
-        },
-        {
-            'name': 'Sabri',
-            'image_filename': 'sabri.png',
-            'transformation_desc': 'Pulsing heart of agricultural community'
-        },
-        {
-            'name': 'Maize Partner',
-            'image_filename': 'maize.png',
-            'transformation_desc': 'DNA helix made of golden grain'
-        },
-        {
-            'name': 'Africana Ventures', # Your Logo
-            'image_filename': 'logo.png',
-            'transformation_desc': 'Central symbiosis hub with flowing tendrils'
-        }
-    ]
+    # Get the specific hero image for the about page
+    hero_image = WebsiteImage.query.filter_by(
+        page_name='about', 
+        section_name='hero', 
+        is_active=True
+    ).order_by(WebsiteImage.created_at.desc()).first()
+    
+    # Organize admin images for the about page
+    admin_images = {}
+    all_images = WebsiteImage.query.filter_by(is_active=True).all()
+    for img in all_images:
+        section = img.section_name or img.section  # Support both new and legacy field names
+        subsection = img.subsection_name or 'default'
+        if section not in admin_images:
+            admin_images[section] = {}
+        if subsection not in admin_images[section]:
+            admin_images[section][subsection] = []
+        admin_images[section][subsection].append(img)
+
     return render_template('about.html', 
                            team_members=team_members,
                            about_content=about_content,
                            mission=mission,
                            vision=vision,
                            company_info=company_info,
-                           about_images=about_images,
                            testimonials=testimonials,
-                           partners_data=partners_data)
+                           hero_image=hero_image,
+                           admin_images=admin_images)
 
 @main.route('/services')
 def services_page():

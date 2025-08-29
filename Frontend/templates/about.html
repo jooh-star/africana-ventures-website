@@ -5,7 +5,7 @@
 {% block head %}
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for glassmorphism and other effects */
+        /* Ready for custom animations and styling */
         .glassmorphism {
             background-color: rgba(255, 255, 255, 0.08); /* Slightly more opaque for text readability */
             backdrop-filter: blur(10px);
@@ -392,53 +392,188 @@
             transition: all 0.3s ease;
         }
         /* Additional background image classes */
-        .hero-bg {
-            background-image: var(--hero-bg-image);
+        .hero-bg-dynamic {
+            /* Background will be set via inline style */
+        }
+        .hero-bg-fallback {
+            background-image: url('{{ url_for('static', filename='images/101678.jpg') }}');
+        }
+        .hero-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(218,165,32,0.4) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .testimonials-bg {
+            background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/113898.jpg') }}');
         }
         .join-us-bg {
-            background-image: var(--join-us-bg-image);
+            background-image: url('{{ url_for('static', filename='images/53397.jpg') }}');
         }
         .contact-bg {
-            background-image: var(--contact-bg-image);
+            background-image: url('{{ url_for('static', filename='images/contact-bg.jpg') }}');
+        }
+        
+        /* New Hero Section Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Interactive hover effects */
+        .interactive-feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(218, 165, 32, 0.3);
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Responsive text sizing */
+        @media (max-width: 640px) {
+            #hero-about h1 {
+                font-size: 2.5rem;
+                line-height: 1.1;
+            }
+            
+            #hero-about p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #hero-about h1 {
+                font-size: 2rem;
+            }
+            
+            #hero-about .flex {
+                flex-direction: column;
+            }
+            
+            #hero-about .gap-3 {
+                gap: 0.5rem;
+            }
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<div class="about-page">
-    <!-- Hero / Banner Section -->
-    <section id="hero-about" class="relative h-[80vh] flex items-center justify-center text-white overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center hero-bg" style="--hero-bg-image: url('{{ url_for('static', filename='images/101678.jpg') }}')"></div>
-        <div class="absolute inset-0 bg-gradient-to-br from-dark-green/80 via-dark-green/60 to-black/40"></div>
-        <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
-            <div class="mb-8" data-aos="fade-up">
-                <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">INNOVATIVE AGRITECH COMPANY</span>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight" style="font-family: 'Poppins', sans-serif;">Transforming Agriculture Through Technology</h1>
-                <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed font-lora mb-8">
-                    Building end-to-end agricultural solutions that connect smallholder farmers to reliable markets, reduce post-harvest losses, and promote environmentally responsible practices across East Africa.
+
+    <!-- Hero Section -->
+    <section id="hero-about" class="relative min-h-screen flex items-center justify-start bg-dark-green overflow-hidden">
+        <!-- Dynamic Background -->
+        <div class="absolute inset-0 bg-cover bg-center hero-bg-overlay">
+            <div class="absolute inset-0 bg-cover bg-center hero-bg-dynamic" 
+                 {% if hero_image %}
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=hero_image.get_url_path()) }}');"
+                 {% elif admin_images.get('hero', {}).get('background') %}
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=admin_images.hero.background[0].get_url_path()) }}');"
+                 {% elif admin_images.get('hero', {}).get('hero') %}
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=admin_images.hero.hero[0].get_url_path()) }}');"
+                 {% else %}
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/101678.jpg') }}');"
+                 {% endif %}></div>
+            
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-r from-forest-green/90 via-dark-green/80 to-transparent"></div>
+            
+            <!-- Subtle Pattern Overlay -->
+            <div class="absolute inset-0 opacity-10 hero-pattern"></div>
+        </div>
+        
+        <!-- Main Content - Left Aligned -->
+        <div class="relative z-20 container mx-auto px-6 lg:px-12">
+            <div class="max-w-2xl" data-aos="fade-right" data-aos-duration="800">
+               
+                
+                <!-- Main Title -->
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight font-poppins" data-aos="fade-right" data-aos-delay="400">
+                    Transforming Agriculture
+                    <span class="block text-gold mt-2">Through Innovation</span>
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg md:text-xl text-cream/90 leading-relaxed mb-8 font-lora max-w-xl" data-aos="fade-right" data-aos-delay="600">
+                    Empowering smallholder farmers across East Africa with cutting-edge technology, sustainable practices, and reliable market connections.
                 </p>
-                <div class="flex flex-wrap justify-center gap-4 text-sm font-semibold">
-                    <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">🌱 Sustainable Farming</span>
-                    <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">📱 Digital Solutions</span>
-                    <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">🤝 Market Access</span>
-                    <span class="px-4 py-2 bg-cream/10 backdrop-blur-sm rounded-full border border-cream/20">🎓 Farmer Education</span>
+                
+               
+                
+                
+                <!-- Call to Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4" data-aos="fade-right" data-aos-delay="1000">
+                    <a href="#our-story" class="group inline-flex items-center justify-center bg-gold hover:bg-gold/90 text-dark-green font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <span>Learn Our Story</span>
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('main.contact_page') }}" class="group inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-dark-green font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                        </svg>
+                        <span>Get In Touch</span>
+                    </a>
                 </div>
             </div>
-            <nav class="text-sm text-cream/80 font-montserrat" data-aos="fade-up" data-aos-delay="200">
-                <a href="{{ url_for('main.index') }}" class="hover:text-gold transition-colors">Home</a> 
-                <span class="mx-2">→</span> 
-                <span class="text-gold">About Africana Ventures</span>
-            </nav>
         </div>
-        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" class="relative block w-full h-24 md:h-32">
-                <path fill="#ffffff" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,176C384,171,480,181,576,192C672,203,768,213,864,202.7C960,192,1056,160,1152,149.3C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-            </svg>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-6 lg:left-12" data-aos="fade-up" data-aos-delay="1200">
+            <div class="flex flex-col items-center text-white/60">
+                <span class="text-xs font-medium mb-2 tracking-wider">SCROLL</span>
+                <div class="w-px h-12 bg-white/30 relative">
+                    <div class="absolute top-0 left-0 w-px h-4 bg-gold animate-pulse"></div>
+                </div>
+                <svg class="w-4 h-4 mt-2 animate-bounce" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </div>
         </div>
+        
+        <!-- Breadcrumb Navigation -->
+        <nav class="absolute top-24 left-6 lg:left-12 z-30" data-aos="fade-right" data-aos-delay="1000">
+            <div class="flex items-center gap-2 text-sm text-white/80">
+                <a href="{{ url_for('main.index') }}" class="hover:text-gold transition-colors duration-300">Home</a>
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-gold font-medium">About</span>
+            </div>
+        </nav>
     </section>
 
     <!-- Introduction Section -->
-    <section class="bg-white py-20 md:py-32">
+    <section id="our-story" class="bg-white py-20 md:py-32">
         <div class="container mx-auto px-4">
             <!-- Company Overview -->
             <div class="max-w-5xl mx-auto text-center mb-16" data-aos="fade-up">
@@ -815,7 +950,10 @@
                 {% for member in team_members %}
                 <div class="team-member-card relative bg-white p-6 rounded-xl shadow-xl text-center transform hover:scale-105 transition-all duration-300 group" data-aos="zoom-in" data-aos-delay="{{ loop.index * 100 }}" data-tilt>
                     <div class="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gold shadow-lg">
-                        <img src="{{ url_for('static', filename='images/' + member.photo_filename) if member.photo_filename else url_for('static', filename='images/placeholder-team.jpg') }}" alt="{{ member.name }}" class="w-full h-full object-cover">
+                        <img src="{% if member.photo_filename %}{{ url_for('static', filename='uploads/' + member.photo_filename) }}{% else %}{{ url_for('static', filename='images/placeholder-team.jpg') }}{% endif %}" 
+                             alt="{{ member.name }}" 
+                             class="w-full h-full object-cover" 
+                             onerror="this.src='{{ url_for('static', filename='images/' + (member.photo_filename if member.photo_filename else 'placeholder-team.jpg')) }}'">
                     </div>
                     <h3 class="text-2xl font-bold text-dark-green mb-2 font-montserrat">{{ member.name }}</h3>
                     <p class="text-gold text-lg font-lora mb-4">{{ member.position }}</p>
@@ -832,7 +970,7 @@
     </section>
 
     <!-- Testimonials / Community Voices -->
-    <section id="testimonials" class="relative py-24 bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/113898.jpg') }}')">
+    <section id="testimonials" class="relative py-24 bg-cover bg-center bg-fixed testimonials-bg">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16" data-aos="fade-up">
                 <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">COMMUNITY VOICES</span>
@@ -853,9 +991,10 @@
                                     <!-- Photo Section -->
                                     <div class="relative flex-shrink-0">
                                         <div class="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-gold shadow-lg group-hover:shadow-xl transition-all duration-300">
-                                            <img src="{{ url_for('static', filename='images/' + testimonial.photo_filename) if testimonial.photo_filename else url_for('static', filename='images/placeholder-team.jpg') }}" 
+                                            <img src="{% if testimonial.photo_filename %}{{ url_for('static', filename='uploads/' + testimonial.photo_filename) }}{% else %}{{ url_for('static', filename='images/placeholder-team.jpg') }}{% endif %}" 
                                                  alt="{{ testimonial.name }}" 
-                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                                                 onerror="this.src='{{ url_for('static', filename='images/' + (testimonial.photo_filename if testimonial.photo_filename else 'placeholder-team.jpg')) }}'">
                                         </div>
                                         <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-gold rounded-full flex items-center justify-center shadow-md">
                                             <svg class="w-5 h-5 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
@@ -929,30 +1068,53 @@
         </div>
     </section>
 
-    <!-- Partners & Supporters: Continuous Horizontal Scroll -->
-    <section id="partners" class="py-24 bg-cream text-dark-green overflow-hidden">
+    <!-- Partners & Supporters: Responsive Layout -->
+    <section id="partners" class="py-24 bg-cream text-dark-green">
         <div class="container mx-auto px-4">
             <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Our Valued Partners & Supporters</h2>
-            <div class="logo-marquee-container relative w-full overflow-hidden py-8">
-                <div class="logo-marquee flex flex-nowrap items-center">
-                    {% for partner in partners_data %}
-                    <div class="partner-logo-item flex-shrink-0 mx-8">
-                        <img src="{{ url_for('static', filename='images/' + partner.image_filename) }}" alt="{{ partner.name }}" class="max-h-20 w-auto transition-all duration-300">
+            {% if admin_images.get('partners_supporters') or admin_images.get('partners') %}
+                <!-- Seamless marquee animation using Tailwind CSS -->
+                <div class="relative w-full overflow-hidden py-8">
+                    <div class="logo-marquee flex items-center">
+                        <!-- First set of logos -->
+                        {% set partner_section = admin_images.get('partners_supporters') or admin_images.get('partners') %}
+                        {% for partner_key, partner_images in partner_section.items() %}
+                            {% if partner_images %}
+                            <div class="partner-logo-item grayscale-30 hover:grayscale-0 transition-all duration-300 hover:scale-110 mx-8">
+                                <img src="{{ url_for('static', filename=partner_images[0].get_url_path()) }}" alt="{{ partner_images[0].description or 'Partner Logo' }}" class="max-h-20 w-auto object-contain">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <!-- Second set for seamless loop (exact duplicate) -->
+                        {% for partner_key, partner_images in partner_section.items() %}
+                            {% if partner_images %}
+                            <div class="partner-logo-item grayscale-30 hover:grayscale-0 transition-all duration-300 hover:scale-110 mx-8">
+                                <img src="{{ url_for('static', filename=partner_images[0].get_url_path()) }}" alt="{{ partner_images[0].description or 'Partner Logo' }}" class="max-h-20 w-auto object-contain">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <!-- Third set to ensure no gaps in the loop -->
+                        {% for partner_key, partner_images in partner_section.items() %}
+                            {% if partner_images %}
+                            <div class="partner-logo-item grayscale-30 hover:grayscale-0 transition-all duration-300 hover:scale-110 mx-8">
+                                <img src="{{ url_for('static', filename=partner_images[0].get_url_path()) }}" alt="{{ partner_images[0].description or 'Partner Logo' }}" class="max-h-20 w-auto object-contain">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                    {# Duplicate partners for seamless loop #}
-                    {% for partner in partners_data %}
-                    <div class="partner-logo-item flex-shrink-0 mx-8">
-                        <img src="{{ url_for('static', filename='images/' + partner.image_filename) }}" alt="{{ partner.name }}" class="max-h-20 w-auto transition-all duration-300">
-                    </div>
-                    {% endfor %}
                 </div>
-            </div>
+            {% else %}
+                <!-- Fallback message when no partners are uploaded -->
+                <div class="w-full text-center py-8">
+                    <p class="text-gray-500 text-lg">Partner logos will appear here once uploaded through the admin panel.</p>
+                    <p class="text-gray-400 text-sm mt-2">Upload partner images with section 'partners' or 'partners_supporters' in the admin image management.</p>
+                </div>
+            {% endif %}
         </div>
     </section>
 
     <!-- Call-to-Action / Join Us -->
-    <section id="join-us" class="relative py-24 text-white text-center overflow-hidden bg-cover bg-center bg-fixed join-us-bg" style="--join-us-bg-image: url('{{ url_for('static', filename='images/53397.jpg') }}')">
+    <section id="join-us" class="relative py-24 text-white text-center overflow-hidden bg-cover bg-center bg-fixed join-us-bg">
         <div class="absolute inset-0 bg-dark-green opacity-70 z-10"></div>
         <div class="relative z-20 container mx-auto px-4" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-extrabold mb-4 font-poppins animate-pulse-glow">Join Us in Transforming Agriculture</h2>
@@ -1024,7 +1186,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact-section" class="relative py-24 text-white overflow-hidden bg-cover bg-center contact-bg" style="--contact-bg-image: url('{{ url_for('static', filename='images/contact-bg.jpg') }}')">
+    <section id="contact-section" class="relative py-24 text-white overflow-hidden bg-cover bg-center contact-bg">
         <div class="absolute inset-0 bg-dark-green opacity-80 z-10"></div>
         <div class="relative z-20 container mx-auto px-4" data-aos="fade-up">
             <h2 class="text-5xl font-extrabold text-center text-gold mb-16 font-poppins">Get In Touch</h2>

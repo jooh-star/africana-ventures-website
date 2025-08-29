@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from Backend.models import db
 
 class Contact(db.Model):
@@ -28,13 +29,82 @@ class WebsiteImage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), nullable=False)
     original_filename = db.Column(db.String(255), nullable=False)
-    section = db.Column(db.String(50), nullable=False)  # hero, about, services, team, etc.
-    description = db.Column(db.String(255))
+    relative_path = db.Column(db.String(500), nullable=True)  # Stores page/section/filename for organized structure
+    
+    # Enhanced organization fields
+    page_name = db.Column(db.String(100), nullable=False)  # 'index', 'about', 'services', 'products', 'contact'
+    section_name = db.Column(db.String(100), nullable=False)  # 'hero', 'team', 'testimonials', 'products'
+    subsection_name = db.Column(db.String(100), nullable=True)  # 'slide_1', 'slide_2', 'card_1', specific position
+    
+    # Content details
+    description = db.Column(db.Text, nullable=False)  # Detailed description of image purpose
     alt_text = db.Column(db.String(255))  # For accessibility
-    display_order = db.Column(db.Integer, default=0)  # For ordering images
+    usage_context = db.Column(db.Text, nullable=True)  # Additional context about where/how it's used
+    
+    # Image classification
+    image_type = db.Column(db.String(50), nullable=False, default='static')  # 'static', 'dynamic', 'background', 'product', 'hero'
+    
+    # Legacy section field for backward compatibility
+    section = db.Column(db.String(50), nullable=True)  # Keeping for legacy compatibility
+    
+    # Display and management
+    display_order = db.Column(db.Integer, default=0)  # For ordering images within sections
     is_active = db.Column(db.Boolean, default=True)
     is_featured = db.Column(db.Boolean, default=False)  # For hero/featured images
+    
+    # File metadata
+    file_size = db.Column(db.Integer, nullable=True)
+    width = db.Column(db.Integer, nullable=True)
+    height = db.Column(db.Integer, nullable=True)
+    
+    # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<WebsiteImage {self.filename} - {self.page_name}/{self.section_name}>' 
+    
+    def get_file_path(self):
+        """Get the full file path for this image"""
+        if self.relative_path:
+            # New organized structure: uploads/page/section/filename
+            return os.path.join('Frontend', 'static', 'uploads', self.relative_path)
+        else:
+            # Legacy structure: images/filename
+            return os.path.join('Frontend', 'static', 'images', self.filename)
+    
+    def get_url_path(self):
+        """Get the URL path for use in templates"""
+        if self.relative_path:
+            # New organized structure
+            return f"uploads/{self.relative_path}"
+        else:
+            # Legacy structure
+            return f"images/{self.filename}"
+    
+    def to_dict(self):
+        """Convert to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'filename': self.filename,
+            'original_filename': self.original_filename,
+            'relative_path': self.relative_path,
+            'page_name': self.page_name,
+            'section_name': self.section_name,
+            'subsection_name': self.subsection_name,
+            'description': self.description,
+            'alt_text': self.alt_text,
+            'usage_context': self.usage_context,
+            'image_type': self.image_type,
+            'display_order': self.display_order,
+            'is_active': self.is_active,
+            'is_featured': self.is_featured,
+            'file_size': self.file_size,
+            'width': self.width,
+            'height': self.height,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'last_modified': self.last_modified.isoformat() if self.last_modified else None
+        }
 
 class TeamMember(db.Model):
     id = db.Column(db.Integer, primary_key=True)

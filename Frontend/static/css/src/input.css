@@ -89,7 +89,37 @@ body {
     opacity: 1;
 }
 
+/* Journey of Excellence Cards Hover Effect */
+.expertise-card-hover .initial-content {
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.expertise-card-hover:hover .initial-content {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.expertise-card-hover .hover-content {
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.expertise-card-hover:hover .hover-content {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
 /* Custom CSS for Core Focus Areas Section */
+
+/* Service Cards Connecting Background Element */
+.services-connecting-bg {
+    background: #DAA520; /* Pure solid golden color */
+    border-radius: 3rem;
+    opacity: 1;
+    transform: rotate(1deg);
+    z-index: 5;
+    /* Ensure it covers exactly 50% of each card */
+    min-height: 24rem; /* h-96 equivalent */
+}
 
 /* Poppins Font Import (handled by Tailwind config now, but keeping for clarity if not using Tailwind font utilities) */
 /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap'); */
@@ -322,11 +352,31 @@ body {
 }
 
 .logo-marquee {
-    animation: marquee-scroll 30s linear infinite; /* Adjust duration for speed */
+    animation: marquee-scroll 60s linear infinite; /* Slow and elegant movement */
+    display: flex;
+    width: max-content; /* Let the content determine the width naturally */
+    will-change: transform; /* Optimize for smooth animation */
 }
 
 .logo-marquee:hover {
     animation-play-state: paused; /* Pause on hover */
+}
+
+/* Partner logo grid styles for few logos */
+.partner-logo-item {
+    filter: grayscale(0.3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 4rem; /* Consistent spacing between logos */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px; /* Ensure minimum width for consistency */
+}
+
+.partner-logo-item:hover {
+    filter: grayscale(0);
+    transform: scale(1.1);
 }
 
 @keyframes marquee-scroll {
@@ -643,6 +693,39 @@ body {
 
 .animate-spin-slower {
     animation: spin 180s linear infinite reverse;
+}
+
+/* Methodology Cards Continuous Movement */
+.animate-slide-right {
+    animation: slide-right 30s linear infinite;
+}
+
+.animate-slide-left {
+    animation: slide-left 25s linear infinite;
+}
+
+@keyframes slide-right {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes slide-left {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Pause animation on hover for better UX */
+.animate-slide-right:hover,
+.animate-slide-left:hover {
+    animation-play-state: paused;
 }
 
 /* Floating element animations for services page */

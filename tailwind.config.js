@@ -14,18 +14,19 @@ module.exports = {
         'earth-brown': '#8B4513', // Earthy tone
         'light-gray': '#F5F5F5', // Lighter gray
         'cta-orange': '#FF8C00', // A vibrant orange for CTAs
-        'forest-green': '#012d18', // New custom color
-        'accent-dark-green': '#014421', // New custom color
-        'wheat-gold': '#DAA520', // New custom color
-        'soft-cream': '#F8F8F5', // New custom color
+        'forest-green': '#012d18', // Brand primary color
+        'accent-dark-green': '#014421', // Brand secondary color
+        'wheat-gold': '#DAA520', // Brand accent color
+        'soft-cream': '#F8F8F5', // Brand background color
         'gold': '#DAA520', // Adding 'gold' alias for clarity
         'cream': '#F5F5DC', // Adding 'cream'
         'dark-green': '#012d18', // Adding 'dark-green' alias for clarity
       },
       fontFamily: {
-        'sans': ['Montserrat', 'sans-serif'],
-        'body': ['Lato', 'sans-serif'],
-        'poppins': ['Poppins', 'sans-serif'], // New custom font
+        'sans': ['Inter', 'Montserrat', 'sans-serif'],
+        'body': ['Inter', 'Lato', 'sans-serif'],
+        'poppins': ['Poppins', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'], // Primary admin font
         'dancing-script': ['Dancing Script', 'cursive'],
       },
       animation: {
@@ -34,10 +35,14 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-text': 'linear-gradient(90deg, #d4af37, #f5f5f5)',
+      },
+      grayscale: {
+        30: '0.3',
       }
     }
   },
   plugins: [
-      require('flowbite/plugin')
+    require('flowbite/plugin'),
+    require('@tailwindcss/line-clamp') // For text truncation
   ],
 }

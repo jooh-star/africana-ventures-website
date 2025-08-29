@@ -98,6 +98,64 @@ def perform_sqlite_migrations():
             if 'company_name' in legacy_cols:
                 conn.exec_driver_sql("UPDATE company_info SET name = company_name WHERE name IS NULL OR name = ''")
 
+        # WebsiteImage enhanced fields for comprehensive image management
+        if not column_exists('website_image', 'page_name'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN page_name VARCHAR(100)")
+        if not column_exists('website_image', 'section_name'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN section_name VARCHAR(100)")
+        if not column_exists('website_image', 'subsection_name'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN subsection_name VARCHAR(100)")
+        if not column_exists('website_image', 'alt_text'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN alt_text VARCHAR(255)")
+        if not column_exists('website_image', 'usage_context'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN usage_context TEXT")
+        if not column_exists('website_image', 'image_type'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN image_type VARCHAR(50) DEFAULT 'static'")
+        if not column_exists('website_image', 'display_order'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN display_order INTEGER DEFAULT 0")
+        if not column_exists('website_image', 'is_active'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN is_active BOOLEAN DEFAULT 1")
+        if not column_exists('website_image', 'is_featured'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN is_featured BOOLEAN DEFAULT 0")
+        if not column_exists('website_image', 'file_size'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN file_size INTEGER")
+        if not column_exists('website_image', 'width'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN width INTEGER")
+        if not column_exists('website_image', 'height'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN height INTEGER")
+        if not column_exists('website_image', 'last_modified'):
+            conn.exec_driver_sql("ALTER TABLE website_image ADD COLUMN last_modified DATETIME")
+        
+        # Update existing WebsiteImage records with default values for new required fields
+        # Set page_name and section_name based on existing section field for backward compatibility
+        conn.exec_driver_sql("""
+            UPDATE website_image 
+            SET page_name = CASE 
+                WHEN section = 'hero' THEN 'index'
+                WHEN section = 'about' THEN 'about'
+                WHEN section = 'services' THEN 'services'
+                WHEN section = 'team' THEN 'about'
+                WHEN section = 'contact' THEN 'contact'
+                WHEN section = 'gallery' THEN 'gallery'
+                WHEN section = 'background' THEN 'index'
+                WHEN section = 'logo' THEN 'base'
+                ELSE 'index'
+            END,
+            section_name = COALESCE(section, 'hero'),
+            description = COALESCE(description, 'Website image'),
+            image_type = CASE
+                WHEN section = 'hero' THEN 'hero'
+                WHEN section = 'background' THEN 'background'
+                WHEN section = 'logo' THEN 'static'
+                ELSE 'static'
+            END
+            WHERE page_name IS NULL OR section_name IS NULL
+        """)
+        
+        # Add admin photo field to User table if missing
+        if not column_exists('user', 'photo_filename'):
+            conn.exec_driver_sql("ALTER TABLE user ADD COLUMN photo_filename VARCHAR(255)")
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -136,13 +194,17 @@ def create_admin_if_not_exists():
 # ADD THIS INSTEAD - Create a function to initialize the database
 def initialize_app(app):
     with app.app_context():
+        # Run migrations first
+        try:
+            perform_sqlite_migrations()
+        except Exception as e:
+            print(f"Migration warning: {e}")
+        
+        # Then create tables and admin
         db.create_all()
         # Only create admin if not in testing mode
         if not app.config.get('TESTING'):
             create_admin_if_not_exists()
-
-# Call the initialization function after app creation but before routes
-initialize_app(app)
 
 # Page routes are handled by the 'main' blueprint
 
@@ -278,6 +340,9 @@ def nl2br_filter(text):
     if text is None:
         return ''
     return Markup(escape(text).replace('\n', '<br>\n'))
+
+# Initialize the application
+initialize_app(app)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -174,7 +174,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Curtain-style scroll behavior with horizontal slide preview
         function handleScroll(e) {
-            // Allow normal scrolling only when on final phase AND not trying to go backward
+            // Check if we're in the hero section area
+            const heroRect = heroSection.getBoundingClientRect();
+            const isInHeroArea = heroRect.top <= 0 && heroRect.bottom > 0;
+            
+            // If not in hero area, allow normal scrolling
+            if (!isInHeroArea) {
+                return true;
+            }
+            
+            // Allow normal scrolling only when on final phase AND scrolling down
             if (allPhasesCompleted && currentIndex === videos.length - 1) {
                 const delta = e.deltaY || e.detail || -e.wheelDelta;
                 if (delta < 0) {
@@ -186,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return true;
                 }
             } else if (currentIndex < videos.length - 1) {
-                // Not on final phase - prevent normal scrolling
+                // Not on final phase - prevent normal scrolling only in hero area
                 e.preventDefault();
                 e.stopPropagation();
             }
@@ -325,14 +334,31 @@ document.addEventListener('DOMContentLoaded', function() {
         // Start autoplay
         startAutoplay();
         
-        // Add scroll event listeners
+        // Add scroll event listeners with position monitoring
         const wheelHandler = (e) => {
             handleScroll(e);
             resetScrollAccumulator();
         };
+
+        // Monitor scroll position to ensure normal scrolling is restored
+        let scrollPositionMonitor;
+        const checkScrollPosition = () => {
+            const heroRect = heroSection.getBoundingClientRect();
+            const isWellPastHero = heroRect.bottom < -100; // 100px past hero section
+            
+            if (isWellPastHero && !allPhasesCompleted) {
+                // Force completion if user somehow scrolled past hero
+                allPhasesCompleted = true;
+                stopAutoplay();
+                console.log('Scroll past hero detected - enabling normal scrolling');
+            }
+        };
         
         window.addEventListener('wheel', wheelHandler, { passive: false });
         window.addEventListener('DOMMouseScroll', wheelHandler, { passive: false }); // Firefox
+        
+        // Monitor scroll position every 100ms
+        scrollPositionMonitor = setInterval(checkScrollPosition, 100);
         
         // Touch events for mobile with curtain effect
         let touchStartY = 0;

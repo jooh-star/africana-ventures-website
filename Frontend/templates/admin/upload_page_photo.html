@@ -1,0 +1,1133 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Upload Photo - {{ page_name|title }}{% endblock %}
+{% block page_title %}Upload Photo for {{ page_name|title }} Page{% endblock %}
+{% block page_description %}Add a new photo with proper organization and metadata{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Navigation -->
+    <div class="flex items-center mb-6">
+        <a href="{{ url_for('admin.admin_page_photos', page_name=page_name) }}" 
+           class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors mr-4">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to {{ page_name|title }} Photos
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 flex items-center">
+                {% if page_name == 'index' %}
+                    <i class="fas fa-home mr-3 text-blue-600"></i>
+                {% elif page_name == 'about' %}
+                    <i class="fas fa-info-circle mr-3 text-green-600"></i>
+                {% elif page_name == 'services' %}
+                    <i class="fas fa-cogs mr-3 text-purple-600"></i>
+                {% elif page_name == 'products' %}
+                    <i class="fas fa-box mr-3 text-orange-600"></i>
+                {% elif page_name == 'contact' %}
+                    <i class="fas fa-envelope mr-3 text-red-600"></i>
+                {% elif page_name == 'solutions' %}
+                    <i class="fas fa-lightbulb mr-3 text-yellow-600"></i>
+                {% elif page_name == 'base' %}
+                    <i class="fas fa-layer-group mr-3 text-gray-600"></i>
+                {% endif %}
+                Upload Photo for {{ page_name|title }}
+            </h1>
+            <p class="text-gray-600">Add a new photo with proper organization and metadata</p>
+        </div>
+    </div>
+
+    <!-- Page-specific Information -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+            <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+            {{ page_name|title }} Page Context
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            {% if page_name == 'about' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Hero, Our Story/Journey, Our Principles (6 principle cards), Impact Timeline, Our Team, Business Model Cards, Our Advantages, Testimonials (carousel), Join Us, Contact
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Team photos, principle illustrations, timeline images, business model visuals, testimonial photos, background patterns, floating animation elements
+                </div>
+            {% elif page_name == 'services' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Hero Slideshow (3 slides with different backgrounds), Methodology Infographic Section, 8-Step Process Framework (Assessment & Planning, Implementation, etc.), Service showcase cards
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Hero slideshow backgrounds (3 different images), process step illustrations, methodology infographic elements, service card backgrounds, pattern overlays
+                </div>
+            {% elif page_name == 'products' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Hero, Category Filters (All Products, Fresh Produce, Processed Foods, Farm Inputs), Product Grid (Maize, Fresh Fish, Coffee, Vegetables, Farm Inputs), Product Detail Cards
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Product photos (maize, fish, coffee, vegetables), category illustrations, product badges, quality labels (Premium Grade, Export Quality, Non-GMO, etc.)
+                </div>
+            {% elif page_name == 'contact' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Hero, Contact Form Section (detailed form with service selection), Contact Information Cards (Phone, Email, Location), Office Hours & Additional Info
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Hero background, contact method icons, office photos, location images, background overlays, glassmorphism card backgrounds
+                </div>
+            {% elif page_name == 'solutions' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Hero, Core Solutions Grid (7 solution cards: Agri-Marketplace, Smart Logistics, Advisory & Consulting, Input Access & Agri-Finance, Training & Capacity Building, Data/IoT/Traceability, Value Addition)
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Hero background, solution icons, glassmorphism card backgrounds, hover effects, gradient overlays
+                </div>
+            {% elif page_name == 'base' %}
+                <div class="text-gray-700">
+                    <strong>Common sections:</strong> Navigation, Header, Footer
+                </div>
+                <div class="text-gray-700">
+                    <strong>Image types:</strong> Logos, navigation icons, global backgrounds
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert bg-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-50 border border-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-200 text-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-800 px-4 py-3 rounded-lg mb-6" role="alert">
+                    <div class="flex items-center">
+                        <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'error' else 'info-circle' }} mr-2"></i>
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Upload Form -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="fas fa-upload mr-3 text-green-600"></i>
+                Upload New Photo
+            </h3>
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data" class="p-6 space-y-8">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <!-- Step 1: File Upload -->
+            <div class="border border-gray-200 rounded-lg p-6 bg-gray-50/50">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                        <span class="text-green-800 font-bold">1</span>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-900">Select Photo</h4>
+                </div>
+                
+                <div>
+                    <label for="image_file" class="block text-sm font-medium text-gray-700 mb-2">Photo File *</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-gray-400 transition-colors bg-white" id="upload_area">
+                        <div class="space-y-1 text-center" id="upload_content">
+                            <i class="fas fa-cloud-upload-alt text-gray-400 text-3xl mb-3"></i>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="image_file" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                    <span>Upload a file</span>
+                                    <input type="file" id="image_file" name="image_file" class="sr-only" required accept="image/*">
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 16MB</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Status and Progress -->
+                    <div id="upload_status" class="hidden mt-4">
+                        <!-- File Selected Status -->
+                        <div id="file_selected" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file-image text-blue-600 mr-3 text-xl"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-blue-900" id="selected_file_name">No file selected</p>
+                                        <p class="text-xs text-blue-600" id="selected_file_size">0 MB</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="clearFileSelection()" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload Progress -->
+                        <div id="upload_progress" class="hidden bg-green-50 border border-green-200 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-green-900">Uploading...</span>
+                                <span class="text-sm text-green-600" id="upload_percentage">0%</span>
+                            </div>
+                            <div class="w-full bg-green-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full transition-all duration-300" id="progress_bar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-xs text-green-600 mt-1" id="upload_status_text">Preparing upload...</p>
+                        </div>
+                        
+                        <!-- Upload Success -->
+                        <div id="upload_success" class="hidden bg-green-50 border border-green-200 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-600 mr-3 text-xl"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-green-900">Upload completed successfully!</p>
+                                    <p class="text-xs text-green-600" id="success_file_name">File uploaded</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload Error -->
+                        <div id="upload_error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-circle text-red-600 mr-3 text-xl"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-red-900">Upload failed</p>
+                                    <p class="text-xs text-red-600" id="error_message">Please try again</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Organization -->
+            <div class="border border-gray-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                        <span class="text-blue-800 font-bold">2</span>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-900">Organization</h4>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="section_name" class="block text-sm font-medium text-gray-700 mb-2">Section *</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="section_name" name="section_name" required onchange="testFunction()">
+                            <option value="">Select Section to View Existing Photos</option>
+                            {% if page_name == 'index' %}
+                                <option value="services_overview">Services Overview</option>
+                                <option value="about_preview">About Us Preview</option>
+                                <option value="products">Products Section</option>
+                                <option value="core_focus_areas">Core Focus Areas (7 Blocks)</option>
+                            {% elif page_name == 'about' %}
+                                <option value="hero">Hero Section</option>
+                                <option value="partners_supporters">Our Partner Section</option>
+                            {% elif page_name == 'services' %}
+                                <option value="hero_slideshow">Hero Slideshow (3 Slides)</option>
+                                <option value="methodology_infographic">Methodology Infographic</option>
+                                <option value="process_steps">Process Steps (8-Step Framework)</option>
+                                <option value="service_cards">Service Cards</option>
+                                <option value="implementation">Implementation</option>
+                                <option value="background_patterns">Background Patterns</option>
+                            {% elif page_name == 'products' %}
+                                <option value="hero">Hero Section</option>
+                                <option value="category_filters">Category Filters</option>
+                                <option value="product_cards">Product Cards</option>
+                                <option value="fresh_produce">Fresh Produce</option>
+                                <option value="processed_foods">Processed Foods</option>
+                                <option value="farm_inputs">Farm Inputs</option>
+                                <option value="product_badges">Product Badges & Labels</option>
+                            {% elif page_name == 'contact' %}
+                                <option value="hero">Hero Section</option>
+                                <option value="contact_cards">Contact Information Cards</option>
+                                <option value="office_hours">Office Hours & Additional Info</option>
+                                <option value="contact_methods">Multiple Contact Methods</option>
+                            {% elif page_name == 'solutions' %}
+                                <option value="hero">Hero Section</option>
+                                <option value="core_solutions">Core Solutions Grid</option>
+                                <option value="agri_marketplace">Agri-Marketplace Platform</option>
+                                <option value="smart_logistics">Smart Logistics & Distribution</option>
+                                <option value="advisory_consulting">Advisory & Consulting</option>
+                                <option value="input_finance">Input Access & Agri-Finance</option>
+                                <option value="training_capacity">Training & Capacity Building</option>
+                                <option value="data_iot">Data, IoT & Traceability</option>
+                                <option value="value_addition">Value Addition & Processing</option>
+                            {% elif page_name == 'base' %}
+                                <option value="navigation">Navigation</option>
+                                <option value="header">Header</option>
+                                <option value="footer">Footer</option>
+                                <option value="global">Global Elements</option>
+                            {% endif %}
+                            
+                            <!-- Common existing sections (excluded for about page to maintain clean section list) -->
+                            {% if page_name not in ['about'] %}
+                                {% for section in sections %}
+                                    {% if section not in ['hero', 'navigation', 'team', 'testimonials', 'products', 'services', 'innovation', 'solutions', 'journey', 'split_screen', 'focus', 'product_cards', 'contact', 'join_us', 'header', 'footer', 'global', 'categories', 'features', 'location', 'info', 'process', 'benefits'] %}
+                                    <option value="{{ section }}">{{ section|title }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Select the section where this photo will be used</p>
+                    </div>
+                    
+                    <!-- Subsection Field -->
+                    <div>
+                        <label for="subsection_name" class="block text-sm font-medium text-gray-700 mb-2">Specific Element/Card</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="subsection_name" name="subsection_name" onchange="filterPhotosBySubsection()">
+                            <option value="">Select specific card/element (optional)</option>
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Choose which specific card or element to modify</p>
+                    </div>
+                </div>
+                
+                <!-- Auto-determined Image Type Display -->
+                <div id="image_type_display" class="hidden mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        <span class="font-medium text-gray-700">Image Type:</span>
+                        <span id="image_type_text" class="ml-2 text-gray-900">Will be determined based on section selection</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Photo Details -->
+            <div class="border border-gray-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                        <span class="text-purple-800 font-bold">3</span>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-900">Photo Details</h4>
+                </div>
+                
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Photo Title *</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="title" name="title" required placeholder="Enter a descriptive title for this photo">
+                        <p class="text-sm text-gray-500 mt-1">A descriptive title for this photo (will auto-populate when replacing existing photos)</p>
+                    </div>
+                    
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="description" name="description" rows="3" placeholder="Describe what this photo shows and where it will be used"></textarea>
+                        <p class="text-sm text-gray-500 mt-1">Brief description of the photo content and usage context</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="alt_text" class="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="alt_text" name="alt_text" placeholder="Alternative text for accessibility">
+                            <p class="text-sm text-gray-500 mt-1">Text description for accessibility and SEO</p>
+                        </div>
+                        
+                        <div>
+                            <label for="display_order" class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="display_order" name="display_order" value="0" min="0">
+                            <p class="text-sm text-gray-500 mt-1">Order in which this photo appears (0 = first)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Mode Indicator -->
+            <div id="action_mode_indicator" class="hidden">
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-edit text-amber-600 mr-2"></i>
+                        <span class="font-semibold text-amber-800">Replacing: </span>
+                        <span id="replacing_photo_name" class="text-amber-700"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden fields for photo replacement -->
+            <input type="hidden" id="replacing_photo_id" name="replacing_photo_id">
+            <input type="hidden" id="action_mode" name="action_mode" value="new">
+            <input type="hidden" id="image_type" name="image_type" value="">
+            <input type="hidden" id="usage_context" name="usage_context" value="">
+            <input type="hidden" id="is_replacing" name="is_replacing" value="false">
+            <input type="hidden" id="replacing_image_id" name="replacing_image_id" value="">
+
+            <!-- Photo Selection Area - Initially Hidden -->
+            <div id="photo_selection_area" class="hidden border border-gray-200 rounded-lg p-6">
+                <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                        <span class="text-indigo-800 font-bold">4</span>
+                    </div>
+                    <h4 class="text-lg font-medium text-gray-900">Existing Photos in This Section</h4>
+                </div>
+                
+                <p class="text-gray-600 mb-4">Click on any photo below to replace it, or add a new one</p>
+                
+                <div id="existing_photos_container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <!-- Photos will be loaded here dynamically -->
+                </div>
+                
+                <button type="button" id="add_new_photo_btn" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add New Photo to This Section
+                </button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200 space-y-3 sm:space-y-0 sm:space-x-4">
+                <a href="{{ url_for('admin.admin_page_photos', page_name=page_name) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
+                </a>
+                <button type="submit" class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-upload mr-2"></i>
+                    Upload Photo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Global variables
+let currentPagePhotos = {};
+let selectedPhotoData = null;
+
+// Handle section selection change
+function testFunction() {
+    console.log('Section selection changed');
+    const sectionSelect = document.getElementById('section_name');
+    const selectedSection = sectionSelect.value;
+    console.log('Selected section:', selectedSection);
+    
+    // Auto-determine image type based on section
+    autoSetImageType(selectedSection, '');
+    
+    // Load subsection options and photos for the selected section
+    loadSubsectionOptions();
+    loadSectionPhotos();
+}
+
+// Auto-determine image type based on section and subsection
+function autoSetImageType(section, subsection) {
+    const imageTypeInput = document.getElementById('image_type');
+    const imageTypeDisplay = document.getElementById('image_type_display');
+    const imageTypeText = document.getElementById('image_type_text');
+    
+    let imageType = 'static'; // default
+    let displayText = 'Static Content';
+    
+    // Determine image type based on section and subsection
+    if (section === 'hero' || section === 'hero_slideshow') {
+        imageType = 'hero';
+        displayText = 'Hero/Banner';
+    } else if (section.includes('slideshow') || subsection.includes('slide') || subsection.includes('video')) {
+        imageType = 'dynamic';
+        displayText = 'Dynamic/Slideshow';
+    } else if (section === 'products' || section === 'services_overview' || section === 'core_focus_areas' || 
+               subsection.includes('product') || subsection.includes('service') || subsection.includes('block_')) {
+        imageType = 'product';
+        displayText = 'Product/Feature';
+    } else if (section.includes('background') || subsection.includes('background') || 
+               section === 'impact_timeline' || section === 'join_us') {
+        imageType = 'background';
+        displayText = 'Background';
+    } else if (section === 'team' || section === 'testimonials' || section === 'about_preview' || 
+               section === 'our_story' || section === 'principles' || section === 'contact_cards') {
+        imageType = 'static';
+        displayText = 'Static Content';
+    }
+    
+    // Set the hidden input value
+    if (imageTypeInput) {
+        imageTypeInput.value = imageType;
+    }
+    
+    // Show the auto-determined type
+    if (imageTypeDisplay && imageTypeText) {
+        imageTypeText.textContent = displayText;
+        imageTypeDisplay.classList.remove('hidden');
+    }
+    
+    console.log('Auto-determined image type:', imageType, '(' + displayText + ')');
+}
+
+// Load photos for selected section
+function loadSectionPhotos() {
+    const sectionSelect = document.getElementById('section_name');
+    const selectedSection = sectionSelect.value;
+    const photoSelectionArea = document.getElementById('photo_selection_area');
+    const photosContainer = document.getElementById('existing_photos_container');
+    
+    if (!selectedSection) {
+        photoSelectionArea.classList.add('hidden');
+        return;
+    }
+    
+    // Show loading state
+    photosContainer.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin text-gray-400"></i> Loading photos...</div>';
+    photoSelectionArea.classList.remove('hidden');
+    
+    // Fetch photos for this section
+    fetch(`/admin/api/photos/${encodeURIComponent('{{ page_name }}')}/${encodeURIComponent(selectedSection)}`)
+        .then(response => response.json())
+        .then(data => {
+            currentPagePhotos = data.photos || [];
+            displaySectionPhotos(currentPagePhotos);
+        })
+        .catch(error => {
+            console.error('Error loading photos:', error);
+            photosContainer.innerHTML = '<div class="text-center py-4 text-red-600"><i class="fas fa-exclamation-triangle mr-2"></i>Error loading photos</div>';
+        });
+}
+
+// Load subsection options based on selected section
+function loadSubsectionOptions() {
+    const sectionSelect = document.getElementById('section_name');
+    const selectedSection = sectionSelect.value;
+    const subsectionSelect = document.getElementById('subsection_name');
+    
+    if (!subsectionSelect) {
+        console.error('subsection_name element not found!');
+        return;
+    }
+    
+    // Clear existing options
+    subsectionSelect.innerHTML = '<option value="">Select specific card/element (optional)</option>';
+    
+    if (!selectedSection) {
+        return;
+    }
+    
+    // Get the current page name from the template
+    const currentPageName = '{{ page_name }}';
+    
+    // Define page-specific subsection options to avoid conflicts
+    const pageSpecificSubsectionOptions = {
+        'index': {
+            'hero': [
+                {value: 'video_1', label: 'Video Background 1'},
+                {value: 'video_2', label: 'Video Background 2'}, 
+                {value: 'video_3', label: 'Video Background 3'},
+                {value: 'curtain_overlay', label: 'Curtain Transition Overlay'},
+                {value: 'hero_content', label: 'Hero Content Area'},
+                {value: 'hero_slide_101678', label: 'Hero Background - 101678.jpg (Agricultural Innovation)'},
+                {value: 'hero_slide_416767', label: 'Hero Background - 416767.jpg (Farm Landscape)'},
+                {value: 'hero_slide_113898', label: 'Hero Background - 113898.jpg (Market Access)'}
+            ],
+            'services_overview': [
+                {value: 'agricultural_technology', label: 'Agricultural Technology'},
+                {value: 'market_access', label: 'Market Access'},
+                {value: 'financial_services', label: 'Financial Services'},
+                {value: 'training_education', label: 'Training & Education'},
+                {value: 'supply_chain', label: 'Supply Chain'},
+                {value: 'agri_tech_photo_579959', label: 'Agricultural Technology - 579959.jpg (Smart Farming Solutions)'},
+                {value: 'market_access_photo_240173', label: 'Market Access - 240173.jpg (Market Connection)'},
+                {value: 'financial_services_photo_141689', label: 'Financial Services - 141689.jpg (Financial Solutions)'},
+                {value: 'training_photo_our_team_1', label: 'Training & Education - our-team-1.jpg (Training Programs)'},
+                {value: 'supply_chain_photo_416767', label: 'Supply Chain - 416767.jpg (Logistics Solutions)'}
+            ],
+            'about_preview': [
+                {value: 'about_africana_ventures', label: 'About Africana Ventures'}
+            ],
+            'products': [
+                {value: 'horticulture', label: 'Horticulture Products'},
+                {value: 'cereals_legumes', label: 'Cereals & Legumes'},
+                {value: 'oilseeds_nuts', label: 'Oilseeds & Nuts'},
+                {value: 'horticulture_photo_416769', label: 'Horticulture Products - 416769.jpg (Fresh Produce)'},
+                {value: 'cereals_legumes_photo_526297', label: 'Cereals & Legumes - 526297.jpg (Grains and Protein Crops)'},
+                {value: 'oilseeds_nuts_photo_53396', label: 'Oilseeds & Nuts - 53396.jpg (Value-Added Products)'}
+            ],
+            'core_focus_areas': [
+                {value: 'block_1', label: 'Agri-Marketplace Platform'},
+                {value: 'block_2', label: 'Smart Logistics & Distribution'},
+                {value: 'block_3', label: 'Advisory & Consulting'},
+                {value: 'block_4', label: 'Access to Inputs & Finance'},
+                {value: 'block_5', label: 'Training & Capacity Building'},
+                {value: 'block_6', label: 'Data & Traceability'},
+                {value: 'block_7', label: 'Value Addition & Processing'}
+            ]
+        },
+        
+        'about': {
+            'hero': [
+                {value: 'hero_content', label: 'Hero Content Area'}
+            ],
+            'partners_supporters': [
+                {value: 'partner_logo_1', label: 'Partner Logo 1'},
+                {value: 'partner_logo_2', label: 'Partner Logo 2'},
+                {value: 'partner_logo_3', label: 'Partner Logo 3'},
+                {value: 'partner_logo_4', label: 'Partner Logo 4'},
+                {value: 'partner_logo_5', label: 'Partner Logo 5'},
+                {value: 'partner_logo_6', label: 'Partner Logo 6'},
+                {value: 'partner_logo_7', label: 'Partner Logo 7'},
+                {value: 'partner_logo_8', label: 'Partner Logo 8'},
+                {value: 'partner_logo_9', label: 'Partner Logo 9'},
+                {value: 'partner_logo_10', label: 'Partner Logo 10'}
+            ]
+        },
+        
+        'services': {
+            'hero_slideshow': [
+                {value: 'slide_1', label: 'Hero Slide 1'},
+                {value: 'slide_2', label: 'Hero Slide 2'},
+                {value: 'slide_3', label: 'Hero Slide 3'},
+                {value: 'slide_1_photo_101678', label: 'Slide 1 - 101678.jpg (Agricultural Innovation)'},
+                {value: 'slide_2_photo_113898', label: 'Slide 2 - 113898.jpg (Market Connection)'},
+                {value: 'slide_3_photo_141689', label: 'Slide 3 - 141689.jpg (Data-Driven Advisory)'}
+            ],
+            'process_steps': [
+                {value: 'step_1', label: 'Assessment & Planning'},
+                {value: 'step_2', label: 'Implementation Step 2'},
+                {value: 'step_3', label: 'Implementation Step 3'},
+                {value: 'step_4', label: 'Implementation Step 4'},
+                {value: 'step_5', label: 'Implementation Step 5'},
+                {value: 'step_6', label: 'Implementation Step 6'},
+                {value: 'step_7', label: 'Implementation Step 7'},
+                {value: 'step_8', label: 'Implementation Step 8'}
+            ],
+            'service_cards': [
+                {value: 'service_card_1', label: 'Service Card 1'},
+                {value: 'service_card_2', label: 'Service Card 2'},
+                {value: 'service_card_3', label: 'Service Card 3'}
+            ]
+        },
+        
+        'products': {
+            'hero': [
+                {value: 'hero_background_maize', label: 'Hero Background - maize.png (Premium Maize)'},
+                {value: 'hero_content', label: 'Hero Content Area'},
+                {value: 'hero_cta_buttons', label: 'Hero CTA Buttons'}
+            ],
+            'product_cards': [
+                {value: 'maize_card', label: 'Maize Product'},
+                {value: 'fish_card', label: 'Fresh Fish Product'},
+                {value: 'coffee_card', label: 'Coffee Product'},
+                {value: 'vegetables_card', label: 'Vegetables Product'},
+                {value: 'farm_inputs_card', label: 'Farm Inputs Product'},
+                {value: 'premium_maize_photo', label: 'Premium Maize - maize.png'},
+                {value: 'fresh_fish_photo_113898', label: 'Fresh Fish - 113898.jpg (Lake Victoria Fish)'},
+                {value: 'premium_coffee_photo_416760', label: 'Premium Coffee - 416760.jpg (Arabica Coffee)'},
+                {value: 'fresh_vegetables_photo_141689', label: 'Fresh Vegetables - 141689.jpg (Organic Vegetables)'},
+                {value: 'farm_inputs_photo_240173', label: 'Farm Inputs - 240173.jpg (Quality Inputs)'}
+            ],
+            'category_filters': [
+                {value: 'all_products', label: 'All Products Filter'},
+                {value: 'fresh_produce_filter', label: 'Fresh Produce Filter'},
+                {value: 'processed_foods_filter', label: 'Processed Foods Filter'},
+                {value: 'farm_inputs_filter', label: 'Farm Inputs Filter'}
+            ],
+            'product_badges': [
+                {value: 'premium_grade', label: 'Premium Grade Badge'},
+                {value: 'export_quality', label: 'Export Quality Badge'},
+                {value: 'non_gmo', label: 'Non-GMO Badge'},
+                {value: 'organic', label: 'Organic Badge'}
+            ]
+        },
+        
+        'contact': {
+            'hero': [
+                {value: 'hero_background_416767', label: 'Hero Background - 416767.jpg (Farm Landscape)'},
+                {value: 'hero_content', label: 'Hero Content Area'}
+            ],
+            'contact_cards': [
+                {value: 'phone_card', label: 'Phone Contact Card'},
+                {value: 'email_card', label: 'Email Contact Card'},
+                {value: 'location_card', label: 'Location Contact Card'}
+            ],
+            'contact_methods': [
+                {value: 'whatsapp', label: 'WhatsApp Contact'},
+                {value: 'phone_call', label: 'Phone Call'},
+                {value: 'email_method', label: 'Email Method'},
+                {value: 'office_visit', label: 'Office Visit'}
+            ]
+        },
+        
+        'solutions': {
+            'core_solutions': [
+                {value: 'agri_marketplace_card', label: 'Agri-Marketplace Card'},
+                {value: 'smart_logistics_card', label: 'Smart Logistics Card'},
+                {value: 'advisory_consulting_card', label: 'Advisory & Consulting Card'},
+                {value: 'input_finance_card', label: 'Input Access & Finance Card'},
+                {value: 'training_capacity_card', label: 'Training & Capacity Card'},
+                {value: 'data_iot_card', label: 'Data, IoT & Traceability Card'},
+                {value: 'value_addition_card', label: 'Value Addition Card'}
+            ]
+        }
+    };
+    
+    // Get subsection options for the current page
+    const subsectionOptions = pageSpecificSubsectionOptions[currentPageName] || {};
+    
+    // Get options for selected section from current page
+    const options = subsectionOptions[selectedSection] || [];
+    
+    if (options.length > 0) {
+        options.forEach(function(option) {
+            const newOption = document.createElement('option');
+            newOption.value = option.value;
+            newOption.textContent = option.label;
+            subsectionSelect.appendChild(newOption);
+        });
+        console.log(`Added ${options.length} subsection options for: ${selectedSection}`);
+    } else {
+        console.log(`No subsection options defined for section: ${selectedSection}`);
+    }
+}
+
+// Filter photos by selected subsection
+function filterPhotosBySubsection() {
+    const selectedSection = document.getElementById('section_name').value;
+    const selectedSubsection = document.getElementById('subsection_name').value;
+    
+    // Auto-determine image type based on section and subsection
+    autoSetImageType(selectedSection, selectedSubsection);
+    
+    if (selectedSubsection) {
+        // Filter current photos by subsection
+        const filteredPhotos = currentPagePhotos.filter(photo => 
+            photo.subsection_name === selectedSubsection
+        );
+        displaySectionPhotos(filteredPhotos);
+        console.log(`Filtered to ${filteredPhotos.length} photos for subsection: ${selectedSubsection}`);
+    } else {
+        // Show all photos in section
+        displaySectionPhotos(currentPagePhotos);
+        console.log('Showing all photos in section');
+    }
+}
+
+// Display photos for the selected section
+function displaySectionPhotos(photos) {
+    const photosContainer = document.getElementById('existing_photos_container');
+    
+    if (!photos || photos.length === 0) {
+        photosContainer.innerHTML = `
+            <div class="col-span-full text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
+                <i class="fas fa-image text-gray-400 text-3xl mb-2"></i>
+                <p class="text-gray-500">No photos in this section yet</p>
+                <p class="text-sm text-gray-400">Click "Add New Photo" to add the first one</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const photosHtml = photos.map((photo, index) => `
+        <div class="photo-option border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all transform hover:scale-105" 
+             onclick="selectPhoto(${index})" 
+             data-photo-index="${index}">
+            <div class="space-y-3">
+                <!-- Photo Preview -->
+                <div class="relative">
+                    <img src="/static/uploads/${photo.relative_path || photo.filename}" 
+                         class="w-full h-32 object-cover rounded-lg" 
+                         alt="${photo.alt_text || photo.description}">
+                    <div class="absolute top-2 right-2 flex space-x-1">
+                        ${photo.is_featured ? '<span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-star mr-1"></i>Featured</span>' : ''}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${photo.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${photo.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Photo Info -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-semibold text-gray-900 truncate">
+                            ${photo.original_filename || photo.filename}
+                        </h4>
+                        <span class="text-xs text-gray-500">${photo.image_type || 'static'}</span>
+                    </div>
+                    
+                    ${photo.subsection_name ? `
+                    <div class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full inline-block">
+                        <i class="fas fa-tag mr-1"></i>${photo.subsection_name}
+                    </div>
+                    ` : ''}
+                    
+                    <p class="text-sm text-gray-500 line-clamp-2">
+                        ${photo.description || 'No description'}
+                    </p>
+                </div>
+                
+                <!-- Action Button -->
+                <button type="button" class="w-full bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-sync-alt mr-1"></i>
+                    Replace This Photo
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    photosContainer.innerHTML = photosHtml;
+}
+
+// Select a photo to replace
+function selectPhoto(photoIndex) {
+    selectedPhotoData = currentPagePhotos[photoIndex];
+    
+    // Remove previous selections
+    document.querySelectorAll('.photo-option').forEach(el => {
+        el.classList.remove('border-blue-500', 'bg-blue-50');
+        el.classList.add('border-gray-200');
+    });
+    
+    // Highlight selected photo
+    const selectedElement = document.querySelector(`[data-photo-index="${photoIndex}"]`);
+    if (selectedElement) {
+        selectedElement.classList.add('border-blue-500', 'bg-blue-50');
+        selectedElement.classList.remove('border-gray-200');
+    }
+    
+    // Auto-populate form fields
+    populateFormFields(selectedPhotoData);
+    
+    // Show relevant form sections
+    showFormSections();
+}
+
+// Populate form fields with existing photo data
+function populateFormFields(photoData) {
+    if (!photoData) return;
+    
+    // Set basic form values
+    document.getElementById('title').value = photoData.original_filename || photoData.filename.replace(/\.[^/.]+$/, "");
+    document.getElementById('subsection_name').value = photoData.subsection_name || '';
+    document.getElementById('description').value = photoData.description || '';
+    document.getElementById('alt_text').value = photoData.alt_text || '';
+    document.getElementById('display_order').value = photoData.display_order || 0;
+    
+    // Set hidden fields with full data
+    document.getElementById('image_type').value = photoData.image_type || 'static';
+    document.getElementById('usage_context').value = photoData.usage_context || '';
+    document.getElementById('is_replacing').value = 'true';
+    document.getElementById('replacing_image_id').value = photoData.id;
+    
+    // Update UI to show replacement mode
+    updateUIForReplacement(photoData);
+    
+    // Show action mode indicator
+    showActionModeIndicator(photoData);
+}
+
+// Show action mode indicator
+function showActionModeIndicator(photoData) {
+    const actionModeEl = document.getElementById('action_mode_indicator');
+    const replacingNameEl = document.getElementById('replacing_photo_name');
+    
+    if (actionModeEl && replacingNameEl) {
+        replacingNameEl.textContent = photoData.original_filename || photoData.filename;
+        actionModeEl.classList.remove('hidden');
+    }
+}
+
+// Update UI to show replacement mode
+function updateUIForReplacement(photoData) {
+    const titleEl = document.querySelector('.px-6.py-4.border-b h3');
+    if (titleEl && titleEl.textContent.includes('Upload New Photo')) {
+        titleEl.innerHTML = `
+            <i class="fas fa-sync-alt mr-3 text-orange-600"></i>
+            Replace Photo: ${photoData.original_filename || photoData.filename}
+        `;
+    }
+    
+    const submitBtn = document.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.innerHTML = `
+            <i class="fas fa-sync-alt mr-2"></i>
+            Replace Photo
+        `;
+        submitBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+        submitBtn.classList.add('bg-orange-600', 'hover:bg-orange-700');
+    }
+}
+
+// Show relevant form sections
+function showFormSections() {
+    const descriptionArea = document.getElementById('description_area');
+    const subsectionArea = document.getElementById('subsection_area');
+    
+    if (descriptionArea) descriptionArea.classList.remove('hidden');
+    if (subsectionArea) subsectionArea.classList.remove('hidden');
+}
+    
+// Handle "Add New Photo" button
+function handleAddNewPhoto() {
+    // Reset selection
+    selectedPhotoData = null;
+    document.querySelectorAll('.photo-option').forEach(el => {
+        el.classList.remove('border-blue-500', 'bg-blue-50');
+        el.classList.add('border-gray-200');
+    });
+    
+    // Clear form
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('alt_text').value = '';
+    document.getElementById('display_order').value = '0';
+    document.getElementById('subsection_name').value = '';
+    document.getElementById('is_replacing').value = 'false';
+    document.getElementById('replacing_image_id').value = '';
+    
+    // Hide action mode indicators
+    const actionModeEl = document.getElementById('action_mode_indicator');
+    if (actionModeEl) actionModeEl.classList.add('hidden');
+    
+    // Reset UI
+    const titleEl = document.querySelector('.px-6.py-4.border-b h3');
+    if (titleEl) {
+        titleEl.innerHTML = `
+            <i class="fas fa-upload mr-3 text-green-600"></i>
+            Upload New Photo
+        `;
+    }
+    
+    const submitBtn = document.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.innerHTML = `
+            <i class="fas fa-upload mr-2"></i>
+            Upload Photo
+        `;
+        submitBtn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+        submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+    }
+}
+
+// Auto-generate description and alt text from title
+function autoGenerateFields() {
+    const titleInput = document.getElementById('title');
+    const altTextInput = document.getElementById('alt_text');
+    const descriptionInput = document.getElementById('description');
+    
+    if (titleInput && altTextInput && !altTextInput.value) {
+        altTextInput.value = titleInput.value;
+    }
+    
+    if (titleInput && descriptionInput && !descriptionInput.value && !selectedPhotoData) {
+        const section = document.getElementById('section_name').value;
+        if (section) {
+            descriptionInput.value = `${titleInput.value} for ${section.replace('_', ' ')} section on ${currentPageName} page`;
+        }
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Upload page JavaScript loaded successfully');
+    
+    // Add event listeners
+    const addNewBtn = document.getElementById('add_new_photo_btn');
+    const titleInput = document.getElementById('title');
+    
+    if (addNewBtn) addNewBtn.addEventListener('click', handleAddNewPhoto);
+    if (titleInput) titleInput.addEventListener('input', autoGenerateFields);
+    
+    // File upload preview
+    const fileInput = document.getElementById('image_file');
+    if (fileInput) {
+        console.log('File input found, adding change listener');
+        fileInput.addEventListener('change', function(e) {
+            console.log('File input changed');
+            const file = e.target.files[0];
+            if (file) {
+                console.log('File selected:', file.name, 'Size:', (file.size / 1024 / 1024).toFixed(2) + 'MB');
+                // Show file selection status
+                showFileSelected(file);
+                
+                // Auto-fill title if empty
+                const titleInput = document.getElementById('title');
+                if (titleInput && !titleInput.value) {
+                    titleInput.value = file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, ' ');
+                    autoGenerateFields();
+                }
+            }
+        });
+    } else {
+        console.error('File input not found!');
+    }
+    
+    // Add form submission handler for upload progress
+    const uploadForm = document.querySelector('form[enctype="multipart/form-data"]');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('image_file');
+            if (fileInput && fileInput.files[0]) {
+                e.preventDefault();
+                uploadFileWithProgress(this);
+            }
+        });
+    }
+});
+
+// Show file selected status
+function showFileSelected(file) {
+    console.log('showFileSelected called with file:', file.name);
+    const uploadStatus = document.getElementById('upload_status');
+    const fileSelected = document.getElementById('file_selected');
+    const fileName = document.getElementById('selected_file_name');
+    const fileSize = document.getElementById('selected_file_size');
+    
+    if (!uploadStatus) {
+        console.error('upload_status element not found!');
+        return;
+    }
+    if (!fileSelected) {
+        console.error('file_selected element not found!');
+        return;
+    }
+    
+    // Hide other status indicators
+    hideAllUploadStatus();
+    
+    // Show file selected status
+    uploadStatus.classList.remove('hidden');
+    fileSelected.classList.remove('hidden');
+    
+    // Update file information
+    fileName.textContent = file.name;
+    fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+    
+    // Update upload area visual
+    const uploadArea = document.getElementById('upload_area');
+    if (uploadArea) {
+        uploadArea.classList.add('border-blue-500', 'bg-blue-50');
+        uploadArea.classList.remove('border-gray-300');
+        console.log('Upload area visual updated');
+    } else {
+        console.error('upload_area element not found!');
+    }
+    
+    console.log('File selection status displayed successfully');
+}
+
+// Clear file selection
+function clearFileSelection() {
+    const fileInput = document.getElementById('image_file');
+    const uploadArea = document.getElementById('upload_area');
+    const uploadStatus = document.getElementById('upload_status');
+    
+    // Clear file input
+    fileInput.value = '';
+    
+    // Reset upload area visual
+    uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+    uploadArea.classList.add('border-gray-300');
+    
+    // Hide status
+    uploadStatus.classList.add('hidden');
+    hideAllUploadStatus();
+}
+
+// Hide all upload status indicators
+function hideAllUploadStatus() {
+    document.getElementById('file_selected').classList.add('hidden');
+    document.getElementById('upload_progress').classList.add('hidden');
+    document.getElementById('upload_success').classList.add('hidden');
+    document.getElementById('upload_error').classList.add('hidden');
+}
+
+// Upload file with progress tracking
+function uploadFileWithProgress(form) {
+    const formData = new FormData(form);
+    const uploadStatus = document.getElementById('upload_status');
+    const uploadProgress = document.getElementById('upload_progress');
+    const progressBar = document.getElementById('progress_bar');
+    const uploadPercentage = document.getElementById('upload_percentage');
+    const uploadStatusText = document.getElementById('upload_status_text');
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Show upload progress
+    hideAllUploadStatus();
+    uploadStatus.classList.remove('hidden');
+    uploadProgress.classList.remove('hidden');
+    
+    // Disable submit button
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Uploading...';
+    
+    // Create XMLHttpRequest for progress tracking
+    const xhr = new XMLHttpRequest();
+    
+    // Upload progress handler
+    xhr.upload.addEventListener('progress', function(e) {
+        if (e.lengthComputable) {
+            const percentComplete = Math.round((e.loaded / e.total) * 100);
+            progressBar.style.width = percentComplete + '%';
+            uploadPercentage.textContent = percentComplete + '%';
+            
+            if (percentComplete < 30) {
+                uploadStatusText.textContent = 'Uploading file...';
+            } else if (percentComplete < 70) {
+                uploadStatusText.textContent = 'Processing image...';
+            } else if (percentComplete < 95) {
+                uploadStatusText.textContent = 'Saving to database...';
+            } else {
+                uploadStatusText.textContent = 'Finalizing upload...';
+            }
+        }
+    });
+    
+    // Upload completion handler
+    xhr.addEventListener('load', function() {
+        if (xhr.status === 200) {
+            // Parse response
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    showUploadSuccess(response.filename || 'File uploaded successfully');
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = form.action.replace('/upload', '');
+                    }, 2000);
+                } else {
+                    showUploadError(response.message || 'Upload failed');
+                }
+            } catch (e) {
+                // If not JSON response, check if it's a successful redirect
+                if (xhr.responseURL && xhr.responseURL.includes('/admin/')) {
+                    showUploadSuccess('Upload completed successfully!');
+                    setTimeout(() => {
+                        window.location.href = xhr.responseURL;
+                    }, 1500);
+                } else {
+                    showUploadError('Upload completed but response was unexpected');
+                }
+            }
+        } else {
+            showUploadError(`Upload failed with status: ${xhr.status}`);
+        }
+        
+        // Re-enable submit button
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fas fa-upload mr-2"></i>Upload Photo';
+    });
+    
+    // Upload error handler
+    xhr.addEventListener('error', function() {
+        showUploadError('Network error occurred during upload');
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="fas fa-upload mr-2"></i>Upload Photo';
+    });
+    
+    // Send the request
+    xhr.open('POST', form.action);
+    xhr.send(formData);
+}
+
+// Show upload success
+function showUploadSuccess(filename) {
+    const uploadStatus = document.getElementById('upload_status');
+    const uploadSuccess = document.getElementById('upload_success');
+    const successFileName = document.getElementById('success_file_name');
+    
+    hideAllUploadStatus();
+    uploadStatus.classList.remove('hidden');
+    uploadSuccess.classList.remove('hidden');
+    successFileName.textContent = filename;
+}
+
+// Show upload error
+function showUploadError(message) {
+    const uploadStatus = document.getElementById('upload_status');
+    const uploadError = document.getElementById('upload_error');
+    const errorMessage = document.getElementById('error_message');
+    
+    hideAllUploadStatus();
+    uploadStatus.classList.remove('hidden');
+    uploadError.classList.remove('hidden');
+    errorMessage.textContent = message;
+}
+</script>
+{% endblock %}

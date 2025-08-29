@@ -2,194 +2,323 @@
 
 {% block title %}Image Management{% endblock %}
 {% block page_title %}Website Images{% endblock %}
+{% block page_description %}Manage and organize all website images by page, section, and subsection{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Website Images</h2>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-        <i class="fas fa-upload"></i> Upload Image
-    </button>
+<!-- Action Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div>
+        <h2 class="text-3xl font-bold text-gray-900">Website Images</h2>
+        <p class="text-gray-600 mt-1">Comprehensive image management for your website content</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+        <a href="{{ url_for('admin.populate_initial_image_data') }}" 
+           onclick="return confirm('This will populate the database with existing image data. Continue?')"
+           class="inline-flex items-center px-4 py-2 border border-blue-300 rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200">
+            <i class="fas fa-database mr-2"></i>
+            Populate Initial Data
+        </a>
+        <button type="button" 
+                class="upload-modal-btn inline-flex items-center px-6 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 shadow-lg">
+            <i class="fas fa-upload mr-2"></i>
+            Upload Image
+        </button>
+    </div>
+</div>
+
+<!-- Filters Section -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+            <i class="fas fa-filter mr-2 text-yellow-600"></i>
+            Filters
+        </h3>
+    </div>
+    <div class="p-6">
+        <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label for="page" class="block text-sm font-medium text-gray-700 mb-2">Page</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" name="page" id="page">
+                    <option value="">All Pages</option>
+                    {% for page in pages %}
+                    <option value="{{ page }}" {{ 'selected' if page == current_page }}>{{ page|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="section" class="block text-sm font-medium text-gray-700 mb-2">Section</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" name="section" id="section">
+                    <option value="">All Sections</option>
+                    {% for section in sections %}
+                    <option value="{{ section }}" {{ 'selected' if section == current_section }}>{{ section|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" name="type" id="type">
+                    <option value="">All Types</option>
+                    {% for type in types %}
+                    <option value="{{ type }}" {{ 'selected' if type == current_type }}>{{ type|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex items-end space-x-2">
+                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-search mr-2"></i>Filter
+                </button>
+                <a href="{{ url_for('admin.admin_images') }}" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <!-- Upload Modal -->
-<div class="modal fade" id="uploadModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-upload"></i> Upload New Image</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form method="POST" action="{{ url_for('admin.upload_image') }}" enctype="multipart/form-data">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="image" class="form-label">Image File *</label>
-                                <input type="file" class="form-control" id="image" name="image" required accept="image/*">
-                                <div class="form-text">Max size: 16MB. Supported formats: JPG, PNG, GIF, WebP</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="section" class="form-label">Section *</label>
-                                <select class="form-select" id="section" name="section" required>
-                                    <option value="">Select Section</option>
-                                    <option value="hero">Hero Section</option>
-                                    <option value="about">About Page</option>
-                                    <option value="services">Services Page</option>
-                                    <option value="team">Team Section</option>
-                                    <option value="contact">Contact Page</option>
-                                    <option value="gallery">Gallery</option>
-                                    <option value="background">Background Images</option>
-                                    <option value="logo">Logo & Branding</option>
-                                </select>
-                                <div id="section-recommendation" class="form-text mt-2">
-                                    Select a section to see recommendations.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description" 
-                               placeholder="Brief description of the image">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="alt_text" class="form-label">Alt Text</label>
-                        <input type="text" class="form-control" id="alt_text" name="alt_text" 
-                               placeholder="Alternative text for accessibility">
-                        <div class="form-text">Important for SEO and accessibility</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="display_order" class="form-label">Display Order</label>
-                                <input type="number" class="form-control" id="display_order" name="display_order" 
-                                       value="0" min="0">
-                                <div class="form-text">Lower numbers appear first</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured">
-                                    <label class="form-check-label" for="is_featured">
-                                        Featured Image
-                                    </label>
-                                    <div class="form-text">Mark as featured/hero image</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Upload Image
-                    </button>
-                </div>
-            </form>
+<div id="uploadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-xl font-semibold text-gray-900 flex items-center">
+                <i class="fas fa-upload mr-3 text-green-600"></i>
+                Upload New Image
+            </h3>
+            <button type="button" onclick="document.getElementById('uploadModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="image_file" class="block text-sm font-medium text-gray-700 mb-2">Image File *</label>
+                        <input type="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="image_file" name="image_file" required accept="image/*">
+                        <p class="text-sm text-gray-500 mt-1">Max size: 16MB. Supported formats: JPG, PNG, GIF, WebP</p>
+                    </div>
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="title" name="title" required placeholder="Image title for reference">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="page_name" class="block text-sm font-medium text-gray-700 mb-2">Page *</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="page_name" name="page_name" required onchange="updateSectionOptions()">
+                            <option value="">Select Page</option>
+                            <option value="base">Base/Navigation</option>
+                            <option value="index">Homepage</option>
+                            <option value="about">About Page</option>
+                            <option value="services">Services Page</option>
+                            <option value="products">Products Page</option>
+                            <option value="contact">Contact Page</option>
+                            <option value="solutions">Solutions Page</option>
+                            <option value="gallery">Gallery</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="section_name" class="block text-sm font-medium text-gray-700 mb-2">Section *</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="section_name" name="section_name" required onchange="updateSubsectionOptions()">
+                            <option value="">Select Section</option>
+                            <option value="hero">Hero Section</option>
+                            <option value="navigation">Navigation</option>
+                            <option value="team">Team Section</option>
+                            <option value="testimonials">Testimonials</option>
+                            <option value="products">Products</option>
+                            <option value="services">Services</option>
+                            <option value="services_overview">Services Overview</option>
+                            <option value="about_preview">About Preview</option>
+                            <option value="core_focus_areas">Core Focus Areas</option>
+                            <option value="innovation">Innovation</option>
+                            <option value="solutions">Solutions</option>
+                            <option value="journey">Journey/About</option>
+                            <option value="split_screen">Split Screen</option>
+                            <option value="focus">Focus Areas</option>
+                            <option value="product_cards">Product Cards</option>
+                            <option value="contact">Contact</option>
+                            <option value="join_us">Join Us</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="subsection_name" class="block text-sm font-medium text-gray-700 mb-2">Subsection</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="subsection_name" name="subsection_name">
+                            <option value="">Select specific element (optional)</option>
+                        </select>
+                        <p class="text-sm text-gray-500 mt-1">Optional: specific position/element</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                    <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="description" name="description" rows="3" required placeholder="Detailed description of the image purpose and usage"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="alt_text" class="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="alt_text" name="alt_text" placeholder="Alternative text for accessibility">
+                        <p class="text-sm text-gray-500 mt-1">Important for SEO and accessibility</p>
+                    </div>
+                    <div>
+                        <label for="image_type" class="block text-sm font-medium text-gray-700 mb-2">Image Type *</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="image_type" name="image_type" required>
+                            <option value="static">Static</option>
+                            <option value="background">Background</option>
+                            <option value="hero">Hero/Banner</option>
+                            <option value="product">Product</option>
+                            <option value="dynamic">Dynamic</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="usage_context" class="block text-sm font-medium text-gray-700 mb-2">Usage Context</label>
+                    <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="usage_context" name="usage_context" rows="2" placeholder="Additional context about where and how this image is used"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="display_order" class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                        <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" id="display_order" name="display_order" value="0" min="0">
+                        <p class="text-sm text-gray-500 mt-1">Lower numbers appear first</p>
+                    </div>
+                    <div class="flex items-center pt-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" id="is_featured" name="is_featured">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Featured Image</span>
+                        </label>
+                        <p class="text-sm text-gray-500 ml-6">Mark as featured/hero image</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end items-center p-6 border-t border-gray-200 space-x-3">
+                <button type="button" onclick="document.getElementById('uploadModal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-upload mr-2"></i>
+                    Upload Image
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 <!-- Image Grid -->
-<div class="row">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {% for image in images %}
-    <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100">
-            <div class="position-relative">
-                <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
-                     class="card-img-top" 
-                     alt="{{ image.alt_text or image.description or 'Website image' }}"
-                     style="height: 200px; object-fit: cover;">
-                
-                <div class="position-absolute top-0 end-0 p-2">
-                    {% if image.is_featured %}
-                    <span class="badge bg-warning">
-                        <i class="fas fa-star"></i> Featured
-                    </span>
-                    {% endif %}
-                    <span class="badge bg-{{ 'success' if image.is_active else 'secondary' }}">
-                        {{ 'Active' if image.is_active else 'Inactive' }}
-                    </span>
-                </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        <div class="relative">
+            <img src="{{ url_for('static', filename=image.get_url_path()) }}" 
+                 class="w-full h-48 object-cover" 
+                 alt="{{ image.alt_text or image.description or 'Website image' }}">
+            
+            <!-- Status Badges -->
+            <div class="absolute top-2 right-2 flex flex-col space-y-1">
+                {% if image.is_featured %}
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    <i class="fas fa-star mr-1"></i> Featured
+                </span>
+                {% endif %}
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {% if image.is_active %}bg-green-100 text-green-800{% else %}bg-gray-100 text-gray-800{% endif %}">
+                    {% if image.is_active %}Active{% else %}Inactive{% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-4">
+            <h3 class="font-semibold text-gray-900 mb-2 truncate">{{ image.original_filename }}</h3>
+            
+            <!-- Page/Section Hierarchy -->
+            <div class="flex items-center text-sm text-gray-600 mb-2">
+                <i class="fas fa-sitemap mr-2 text-gray-400"></i>
+                <span class="truncate">
+                    {{ image.page_name|title }} > {{ image.section_name|title }}
+                    {% if image.subsection_name %} > {{ image.subsection_name|title }}{% endif %}
+                </span>
             </div>
             
-            <div class="card-body">
-                <h6 class="card-title">{{ image.original_filename }}</h6>
-                <p class="text-muted mb-2">
-                    <i class="fas fa-folder"></i> {{ image.section|title }}
-                </p>
-                
-                {% if image.description %}
-                <p class="card-text small">{{ image.description }}</p>
-                {% endif %}
-                
-                {% if image.alt_text %}
-                <p class="card-text small text-muted">
-                    <strong>Alt:</strong> {{ image.alt_text }}
-                </p>
-                {% endif %}
-                
-                <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                        <i class="fas fa-calendar"></i> {{ image.created_at.strftime('%Y-%m-%d') }}
-                    </small>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-outline-primary btn-sm" 
-                                onclick="viewImage('{{ url_for('static', filename='uploads/' + image.filename) }}', '{{ image.original_filename }}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="{{ url_for('admin.edit_image', image_id=image.id) }}" 
-                           class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a href="{{ url_for('admin.toggle_image', image_id=image.id) }}" 
-                           class="btn btn-outline-{{ 'warning' if image.is_active else 'success' }} btn-sm">
-                            <i class="fas fa-{{ 'eye-slash' if image.is_active else 'eye' }}"></i>
-                        </a>
-                        <a href="{{ url_for('admin.delete_image', image_id=image.id) }}" 
-                           class="btn btn-outline-danger btn-sm"
-                           onclick="return confirm('Are you sure you want to delete this image?')">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+            <!-- Image Type Badge -->
+            {% if image.image_type %}
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-3">
+                {{ image.image_type|title }}
+            </span>
+            {% endif %}
+            
+            <!-- Description -->
+            {% if image.description %}
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ image.description }}</p>
+            {% endif %}
+            
+            <!-- Alt Text -->
+            {% if image.alt_text %}
+            <p class="text-xs text-gray-500 mb-3">
+                <span class="font-medium">Alt:</span> {{ image.alt_text|truncate(50) }}
+            </p>
+            {% endif %}
+            
+            <!-- Footer with Date and Actions -->
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <span class="text-xs text-gray-500 flex items-center">
+                    <i class="fas fa-calendar mr-1"></i>
+                    {{ image.created_at.strftime('%m/%d/%Y') }}
+                </span>
+                <div class="flex items-center space-x-1">
+                    <button type="button" 
+                            data-image-src="{{ url_for('static', filename=image.get_url_path()) }}" 
+                            data-image-title="{{ image.original_filename }}"
+                            class="view-image-btn p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
+                            title="View Image">
+                        <i class="fas fa-eye text-sm"></i>
+                    </button>
+                    <a href="{{ url_for('admin.edit_image', image_id=image.id) }}" 
+                       class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" 
+                       title="Edit Image">
+                        <i class="fas fa-edit text-sm"></i>
+                    </a>
+                    <a href="{{ url_for('admin.toggle_image', image_id=image.id, return_url=url_for('admin.admin_images')) }}" 
+                       class="p-2 text-gray-400 hover:text-{% if image.is_active %}yellow{% else %}green{% endif %}-600 hover:bg-{% if image.is_active %}yellow{% else %}green{% endif %}-50 rounded-lg transition-colors" 
+                       title="{% if image.is_active %}Deactivate{% else %}Activate{% endif %} Image">
+                        <i class="fas fa-{% if image.is_active %}eye-slash{% else %}eye{% endif %} text-sm"></i>
+                    </a>
+                    <a href="{{ url_for('admin.delete_image', image_id=image.id, return_url=url_for('admin.admin_images')) }}" 
+                       class="delete-image-btn p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                       title="Delete Image">
+                        <i class="fas fa-trash text-sm"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-images fa-3x text-muted mb-3"></i>
-                <h5 class="text-muted">No images uploaded yet</h5>
-                <p class="text-muted">Start by uploading your first image.</p>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                    <i class="fas fa-upload"></i> Upload Image
-                </button>
-            </div>
+    <!-- Empty State -->
+    <div class="col-span-full">
+        <div class="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-300">
+            <i class="fas fa-images text-4xl text-gray-400 mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No images uploaded yet</h3>
+            <p class="text-gray-500 mb-6">Start building your image library by uploading your first image.</p>
+            <button type="button" 
+                    class="upload-modal-btn inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                <i class="fas fa-upload mr-2"></i>
+                Upload Your First Image
+            </button>
         </div>
     </div>
     {% endfor %}
 </div>
 
 <!-- Image View Modal -->
-<div class="modal fade" id="imageViewModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageViewTitle">Image Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <img id="imageViewSrc" src="" alt="" class="img-fluid" style="max-height: 500px;">
-            </div>
+<div id="imageViewModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 id="imageViewTitle" class="text-lg font-semibold text-gray-900">Image Preview</h3>
+            <button type="button" onclick="document.getElementById('imageViewModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-4 text-center">
+            <img id="imageViewSrc" src="" alt="" class="max-w-full max-h-96 rounded-lg">
         </div>
     </div>
 </div>
@@ -200,57 +329,337 @@
 function viewImage(src, title) {
     document.getElementById('imageViewSrc').src = src;
     document.getElementById('imageViewTitle').textContent = title;
-    new bootstrap.Modal(document.getElementById('imageViewModal')).show();
+    document.getElementById('imageViewModal').classList.remove('hidden');
 }
 
-// Display recommendations based on selected section
+// Update section options based on selected page
+function updateSectionOptions() {
+    const pageSelect = document.getElementById('page_name');
+    const sectionSelect = document.getElementById('section_name');
+    
+    if (!pageSelect || !sectionSelect) return;
+    
+    const selectedPage = pageSelect.value;
+    
+    // Clear existing options
+    sectionSelect.innerHTML = '<option value="">Select Section</option>';
+    
+    if (!selectedPage) return;
+    
+    // Define section options for each page
+    const sectionOptions = {
+        'index': {
+            'services_overview': 'Services Overview',
+            'about_preview': 'About Us Preview',
+            'products': 'Products Section',
+            'core_focus_areas': 'Core Focus Areas (7 Blocks)',
+            'hero': 'Hero Section'
+        },
+        'about': {
+            'hero': 'Hero Section',
+            'partners_supporters': 'Our Partner Section'
+        },
+        'services': {
+            'hero': 'Hero Section',
+            'services': 'Services',
+            'testimonials': 'Testimonials',
+            'innovation': 'Innovation',
+            'solutions': 'Solutions'
+        },
+        'products': {
+            'hero': 'Hero Section',
+            'products': 'Product Categories',
+            'features': 'Product Features',
+            'categories': 'Categories'
+        },
+        'contact': {
+            'hero': 'Hero Section',
+            'contact': 'Contact Form',
+            'location': 'Location/Maps',
+            'info': 'Contact Information'
+        },
+        'solutions': {
+            'hero': 'Hero Section',
+            'process': 'Process Flow',
+            'benefits': 'Benefits',
+            'innovation': 'Innovation'
+        },
+        'base': {
+            'navigation': 'Navigation',
+            'header': 'Header',
+            'footer': 'Footer',
+            'global': 'Global Elements'
+        },
+        'gallery': {
+            'gallery': 'Gallery Images'
+        }
+    };
+    
+    const options = sectionOptions[selectedPage];
+    
+    if (options) {
+        Object.entries(options).forEach(([value, label]) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            sectionSelect.appendChild(option);
+        });
+        console.log(`Added ${Object.keys(options).length} section options for page: ${selectedPage}`);
+    } else {
+        console.log(`No section options defined for page: ${selectedPage}`);
+    }
+    
+    // Clear subsection options when section changes
+    const subsectionSelect = document.getElementById('subsection_name');
+    if (subsectionSelect) {
+        subsectionSelect.innerHTML = '<option value="">Select specific element (optional)</option>';
+    }
+}
+
+// Update subsection options based on selected section
+function updateSubsectionOptions() {
+    const sectionSelect = document.getElementById('section_name');
+    const subsectionSelect = document.getElementById('subsection_name');
+    
+    if (!sectionSelect || !subsectionSelect) return;
+    
+    const selectedSection = sectionSelect.value;
+    
+    // Clear existing options
+    subsectionSelect.innerHTML = '<option value="">Select specific element (optional)</option>';
+    
+    if (!selectedSection) return;
+    
+    // Define subsection options for each section
+    const subsectionOptions = {
+        // Services Overview - 5 main service cards
+        'services': {
+            'agricultural_technology': 'Agricultural Technology',
+            'market_access': 'Market Access',
+            'financial_services': 'Financial Services',
+            'training_education': 'Training & Education',
+            'supply_chain': 'Supply Chain',
+            'agri_tech_photo_579959': 'Agricultural Technology - 579959.jpg (Smart Farming Solutions)',
+            'market_access_photo_240173': 'Market Access - 240173.jpg (Market Connection)',
+            'financial_services_photo_141689': 'Financial Services - 141689.jpg (Financial Solutions)',
+            'training_photo_our_team_1': 'Training & Education - our-team-1.jpg (Training Programs)',
+            'supply_chain_photo_416767': 'Supply Chain - 416767.jpg (Logistics Solutions)'
+        },
+        // About Preview section
+        'about_preview': {
+            'about_africana_ventures': 'About Africana Ventures'
+        },
+        // Hero section
+        'hero': {
+            'video_1': 'Video Background 1',
+            'video_2': 'Video Background 2',
+            'video_3': 'Video Background 3',
+            'curtain_overlay': 'Curtain Transition Overlay',
+            'hero_content': 'Hero Content Area',
+            'hero_slide_101678': 'Hero Background - 101678.jpg (Agricultural Innovation)',
+            'hero_slide_416767': 'Hero Background - 416767.jpg (Farm Landscape)',
+            'hero_slide_113898': 'Hero Background - 113898.jpg (Market Access)',
+            'hero_background_maize': 'Hero Background - maize.png (Premium Maize) [Products]',
+            'hero_background_101678': 'Hero Background - 101678.jpg (Agricultural Innovation) [About]',
+            'hero_background_416767': 'Hero Background - 416767.jpg (Farm Landscape) [Contact]'
+        },
+        // Team section
+        'team': {
+            'team_member_1': 'Team Member 1',
+            'team_member_2': 'Team Member 2',
+            'team_member_3': 'Team Member 3',
+            'team_member_4': 'Team Member 4',
+            'main_photo': 'Main Team Photo'
+        },
+        // Products section
+        'products': {
+            'horticulture': 'Horticulture Products',
+            'cereals_legumes': 'Cereals & Legumes',
+            'oilseeds_nuts': 'Oilseeds & Nuts',
+            'spices': 'Spices',
+            'premium_maize_photo': 'Premium Maize - maize.png',
+            'fresh_fish_photo_113898': 'Fresh Fish - 113898.jpg (Lake Victoria Fish)',
+            'premium_coffee_photo_416760': 'Premium Coffee - 416760.jpg (Arabica Coffee)',
+            'fresh_vegetables_photo_141689': 'Fresh Vegetables - 141689.jpg (Organic Vegetables)',
+            'farm_inputs_photo_240173': 'Farm Inputs - 240173.jpg (Quality Inputs)'
+        },
+        // Focus areas
+        'focus': {
+            'block_1': 'Agri-Marketplace Platform',
+            'block_2': 'Smart Logistics & Distribution',
+            'block_3': 'Advisory & Consulting',
+            'block_4': 'Access to Inputs & Finance',
+            'block_5': 'Training & Capacity Building',
+            'block_6': 'Data & Traceability',
+            'block_7': 'Value Addition & Processing'
+        },
+        // Core Focus Areas (same as focus for consistency)
+        'core_focus_areas': {
+            'block_1': 'Agri-Marketplace Platform',
+            'block_2': 'Smart Logistics & Distribution',
+            'block_3': 'Advisory & Consulting',
+            'block_4': 'Access to Inputs & Finance',
+            'block_5': 'Training & Capacity Building',
+            'block_6': 'Data & Traceability',
+            'block_7': 'Value Addition & Processing'
+        },
+        // Innovation section
+        'innovation': {
+            'smart_agriculture': 'Smart Agriculture Technology',
+            'market_access': 'Market Access Feature'
+        },
+        // Solutions section
+        'solutions': {
+            'hero': 'Solutions Hero Image'
+        },
+        // Testimonials section
+        'testimonials': {
+            'background': 'Testimonials Background',
+            'customer_photos': 'Customer Photos',
+            'testimonials_background_113898': 'Testimonials Background - 113898.jpg (Fresh Fish/Market)',
+            'testimonial_photos': 'Testimonial Photos - Dynamic filenames'
+        },
+        // Hero Slideshow (Services page)
+        'hero_slideshow': {
+            'slide_1': 'Hero Slide 1',
+            'slide_2': 'Hero Slide 2',
+            'slide_3': 'Hero Slide 3',
+            'slide_1_photo_101678': 'Slide 1 - 101678.jpg (Agricultural Innovation)',
+            'slide_2_photo_113898': 'Slide 2 - 113898.jpg (Market Connection)',
+            'slide_3_photo_141689': 'Slide 3 - 141689.jpg (Data-Driven Advisory)'
+        },
+        // Join Us section
+        'join_us': {
+            'join_us_background_53397': 'Join Us Background - 53397.jpg',
+            'join_us_content': 'Join Us Content Area'
+        },
+        // Partners section (About page)
+        'partners_supporters': {
+            'partner_logo_1': 'Partner Logo 1',
+            'partner_logo_2': 'Partner Logo 2',
+            'partner_logo_3': 'Partner Logo 3',
+            'supporter_logo_1': 'Supporter Logo 1',
+            'supporter_logo_2': 'Supporter Logo 2',
+            'background_pattern': 'Background Pattern'
+        }
+    };
+    
+    const options = subsectionOptions[selectedSection];
+    
+    if (options) {
+        Object.entries(options).forEach(([value, label]) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            subsectionSelect.appendChild(option);
+        });
+        console.log(`Added ${Object.keys(options).length} subsection options for: ${selectedSection}`);
+    } else {
+        console.log(`No subsection options defined for section: ${selectedSection}`);
+    }
+}
+
+// Event delegation and modal handling
 document.addEventListener('DOMContentLoaded', function() {
-    const sectionSelect = document.getElementById('section');
-    const recommendationDiv = document.getElementById('section-recommendation');
+    const imageModal = document.getElementById('imageViewModal');
+    const uploadModal = document.getElementById('uploadModal');
+    
+    // Handle view image buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.view-image-btn')) {
+            const btn = e.target.closest('.view-image-btn');
+            const src = btn.dataset.imageSrc;
+            const title = btn.dataset.imageTitle;
+            viewImage(src, title);
+        }
+        
+        // Handle upload modal buttons
+        if (e.target.closest('.upload-modal-btn')) {
+            uploadModal.classList.remove('hidden');
+        }
+        
+        // Handle delete confirmation
+        if (e.target.closest('.delete-image-btn')) {
+            if (!confirm('Are you sure you want to delete this image? This action cannot be undone.')) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+    
+    // Close modals when clicking outside
+    [imageModal, uploadModal].forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+    });
+    
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            imageModal?.classList.add('hidden');
+            uploadModal?.classList.add('hidden');
+        }
+    });
+    
+    // Section recommendations
+    const sectionSelect = document.getElementById('section_name');
     
     function updateRecommendation() {
-        const section = sectionSelect.value;
+        const section = sectionSelect?.value;
+        if (!section) return;
+        
         let recommendation = '';
         
         switch(section) {
             case 'hero':
-                recommendation = '<strong>Recommendation:</strong> Use high-quality, wide landscape images (1920×1080px). These images appear at the top of the homepage and should represent your brand identity.';
+                recommendation = 'Use high-quality, wide landscape images (1920×1080px). These images appear at the top of pages and should represent your brand identity.';
                 break;
             case 'about':
-                recommendation = '<strong>Recommendation:</strong> Use images that tell your company story or show your team in action (800×600px). These appear on the About page.';
+                recommendation = 'Use images that tell your company story or show your team in action (800×600px). These appear on the About page.';
                 break;
             case 'services':
-                recommendation = '<strong>Recommendation:</strong> Use images that represent your services or show results (800×600px). These appear on the Services page.';
+                recommendation = 'Use images that represent your services or show results (800×600px). These appear on the Services page.';
                 break;
             case 'team':
-                recommendation = '<strong>Recommendation:</strong> Use professional headshots or team photos (400×400px, square). These appear in the team section.';
+                recommendation = 'Use professional headshots or team photos (400×400px, square). These appear in the team section.';
                 break;
             case 'contact':
-                recommendation = '<strong>Recommendation:</strong> Use images of your office or contact-related visuals (800×600px). These appear on the Contact page.';
+                recommendation = 'Use images of your office or contact-related visuals (800×600px). These appear on the Contact page.';
                 break;
             case 'gallery':
-                recommendation = '<strong>Recommendation:</strong> Use high-quality project photos or portfolio items (800×600px). These appear in the gallery section.';
+                recommendation = 'Use high-quality project photos or portfolio items (800×600px). These appear in the gallery section.';
                 break;
             case 'background':
-                recommendation = '<strong>Recommendation:</strong> Use subtle patterns or textures that don\'t distract from content (1920×1080px). These are used as section backgrounds.';
+                recommendation = 'Use subtle patterns or textures that don\'t distract from content (1920×1080px). These are used as section backgrounds.';
                 break;
-            case 'logo':
-                recommendation = '<strong>Recommendation:</strong> Use transparent PNG files for logos (at least 200×200px). These appear in the header, footer, and favicon.';
+            case 'navigation':
+                recommendation = 'Use transparent PNG files for logos (at least 200×200px). These appear in the header, footer, and favicon.';
                 break;
             default:
-                recommendation = 'Select a section to see recommendations.';
+                recommendation = 'Select a section to see specific recommendations for optimal image sizing and usage.';
         }
         
-        recommendationDiv.innerHTML = recommendation;
+        // Show recommendation as a tooltip or small text below the select
+        const existingTip = sectionSelect.parentNode.querySelector('.recommendation-tip');
+        if (existingTip) {
+            existingTip.remove();
+        }
+        
+        if (recommendation) {
+            const tip = document.createElement('p');
+            tip.className = 'recommendation-tip text-xs text-blue-600 mt-1 bg-blue-50 p-2 rounded';
+            tip.innerHTML = `<i class="fas fa-lightbulb mr-1"></i><strong>Tip:</strong> ${recommendation}`;
+            sectionSelect.parentNode.appendChild(tip);
+        }
     }
     
-    // Initial update
-    if (sectionSelect) {
-        updateRecommendation();
-        
-        // Update on change
-        sectionSelect.addEventListener('change', updateRecommendation);
-    }
+    // Add event listener for section changes
+    sectionSelect?.addEventListener('change', updateRecommendation);
 });
 </script>
 {% endblock %}

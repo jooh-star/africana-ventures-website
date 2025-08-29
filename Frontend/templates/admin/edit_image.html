@@ -2,152 +2,298 @@
 
 {% block title %}Edit Image{% endblock %}
 {% block page_title %}Edit Image{% endblock %}
+{% block page_description %}Update image details and organization{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-edit"></i> Edit Image</h5>
-            </div>
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
-                         alt="{{ image.alt_text or image.description or 'Website image' }}"
-                         class="img-fluid rounded" style="max-height: 300px;">
-                </div>
-                
-                <form method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="section" class="form-label">Section *</label>
-                                <select class="form-select" id="section" name="section" required>
-                                    <option value="">Select Section</option>
-                                    <option value="hero" {% if image.section == 'hero' %}selected{% endif %}>Hero Section</option>
-                                    <option value="about" {% if image.section == 'about' %}selected{% endif %}>About Page</option>
-                                    <option value="services" {% if image.section == 'services' %}selected{% endif %}>Services Page</option>
-                                    <option value="team" {% if image.section == 'team' %}selected{% endif %}>Team Section</option>
-                                    <option value="contact" {% if image.section == 'contact' %}selected{% endif %}>Contact Page</option>
-                                    <option value="gallery" {% if image.section == 'gallery' %}selected{% endif %}>Gallery</option>
-                                    <option value="background" {% if image.section == 'background' %}selected{% endif %}>Background Images</option>
-                                    <option value="logo" {% if image.section == 'logo' %}selected{% endif %}>Logo & Branding</option>
-                                </select>
-                                <div id="section-recommendation" class="form-text mt-2">
-                                    <!-- Section recommendation will be displayed here via JavaScript -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description" 
-                               value="{{ image.description or '' }}" placeholder="Brief description of the image">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="alt_text" class="form-label">Alt Text</label>
-                        <input type="text" class="form-control" id="alt_text" name="alt_text" 
-                               value="{{ image.alt_text or '' }}" placeholder="Alternative text for accessibility">
-                        <div class="form-text">Important for SEO and accessibility</div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="display_order" class="form-label">Display Order</label>
-                                <input type="number" class="form-control" id="display_order" name="display_order" 
-                                       value="{{ image.display_order }}" min="0">
-                                <div class="form-text">Lower numbers appear first</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {% if image.is_active %}checked{% endif %}>
-                                    <label class="form-check-label" for="is_active">
-                                        Active
-                                    </label>
-                                    <div class="form-text">Show this image on the website</div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" {% if image.is_featured %}checked{% endif %}>
-                                    <label class="form-check-label" for="is_featured">
-                                        Featured Image
-                                    </label>
-                                    <div class="form-text">Mark as featured/hero image</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ url_for('admin.admin_images') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back to Images
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="fas fa-edit mr-3 text-blue-600"></i>
+                Edit Image Details
+            </h3>
+        </div>
+        
+        <!-- Image Preview -->
+        <div class="p-6 bg-gray-50 border-b border-gray-200">
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='images/' + image.filename) }}" 
+                     alt="{{ image.alt_text or image.description or 'Website image' }}"
+                     class="max-w-full max-h-80 rounded-lg shadow-lg mx-auto">
+                <p class="text-sm text-gray-500 mt-2">Current image: {{ image.filename }}</p>
             </div>
         </div>
+        
+        <!-- Edit Form -->
+        <form method="POST" class="p-6 space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <!-- Page, Section, Subsection -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <label for="page_name" class="block text-sm font-medium text-gray-700 mb-2">Page *</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="page_name" name="page_name" required>
+                        <option value="">Select Page</option>
+                        <option value="base" {% if image.page_name == 'base' %}selected{% endif %}>Base/Navigation</option>
+                        <option value="index" {% if image.page_name == 'index' %}selected{% endif %}>Homepage</option>
+                        <option value="about" {% if image.page_name == 'about' %}selected{% endif %}>About Page</option>
+                        <option value="services" {% if image.page_name == 'services' %}selected{% endif %}>Services Page</option>
+                        <option value="products" {% if image.page_name == 'products' %}selected{% endif %}>Products Page</option>
+                        <option value="contact" {% if image.page_name == 'contact' %}selected{% endif %}>Contact Page</option>
+                        <option value="solutions" {% if image.page_name == 'solutions' %}selected{% endif %}>Solutions Page</option>
+                        <option value="gallery" {% if image.page_name == 'gallery' %}selected{% endif %}>Gallery</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="section_name" class="block text-sm font-medium text-gray-700 mb-2">Section *</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="section_name" name="section_name" onchange="updateSubsectionOptions()" required>
+                        <option value="">Select Section</option>
+                        <option value="hero" {% if image.section_name == 'hero' %}selected{% endif %}>Hero Section</option>
+                        <option value="navigation" {% if image.section_name == 'navigation' %}selected{% endif %}>Navigation</option>
+                        <option value="team" {% if image.section_name == 'team' %}selected{% endif %}>Team Section</option>
+                        <option value="testimonials" {% if image.section_name == 'testimonials' %}selected{% endif %}>Testimonials</option>
+                        <option value="products" {% if image.section_name == 'products' %}selected{% endif %}>Products</option>
+                        <option value="services" {% if image.section_name == 'services' %}selected{% endif %}>Services</option>
+                        <option value="services_overview" {% if image.section_name == 'services_overview' %}selected{% endif %}>Services Overview</option>
+                        <option value="about_preview" {% if image.section_name == 'about_preview' %}selected{% endif %}>About Preview</option>
+                        <option value="innovation" {% if image.section_name == 'innovation' %}selected{% endif %}>Innovation</option>
+                        <option value="solutions" {% if image.section_name == 'solutions' %}selected{% endif %}>Solutions</option>
+                        <option value="journey" {% if image.section_name == 'journey' %}selected{% endif %}>Journey/About</option>
+                        <option value="split_screen" {% if image.section_name == 'split_screen' %}selected{% endif %}>Split Screen</option>
+                        <option value="focus" {% if image.section_name == 'focus' %}selected{% endif %}>Focus Areas</option>
+                        <option value="core_focus_areas" {% if image.section_name == 'core_focus_areas' %}selected{% endif %}>Core Focus Areas</option>
+                        <option value="product_cards" {% if image.section_name == 'product_cards' %}selected{% endif %}>Product Cards</option>
+                        <option value="contact" {% if image.section_name == 'contact' %}selected{% endif %}>Contact</option>
+                        <option value="join_us" {% if image.section_name == 'join_us' %}selected{% endif %}>Join Us</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="subsection_name" class="block text-sm font-medium text-gray-700 mb-2">Subsection</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="subsection_name" name="subsection_name">
+                        <option value="">Select Subsection</option>
+                    </select>
+                    <p class="text-sm text-gray-500 mt-1">Optional: specific position/element</p>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="description" name="description" rows="3" required placeholder="Detailed description of the image purpose and usage">{{ image.description or '' }}</textarea>
+            </div>
+            
+            <!-- Alt Text and Image Type -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="alt_text" class="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
+                    <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="alt_text" name="alt_text" value="{{ image.alt_text or '' }}" placeholder="Alternative text for accessibility">
+                    <p class="text-sm text-gray-500 mt-1">Important for SEO and accessibility</p>
+                </div>
+                <div>
+                    <label for="image_type" class="block text-sm font-medium text-gray-700 mb-2">Image Type *</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="image_type" name="image_type" required>
+                        <option value="static" {% if image.image_type == 'static' %}selected{% endif %}>Static</option>
+                        <option value="background" {% if image.image_type == 'background' %}selected{% endif %}>Background</option>
+                        <option value="hero" {% if image.image_type == 'hero' %}selected{% endif %}>Hero/Banner</option>
+                        <option value="product" {% if image.image_type == 'product' %}selected{% endif %}>Product</option>
+                        <option value="dynamic" {% if image.image_type == 'dynamic' %}selected{% endif %}>Dynamic</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Usage Context -->
+            <div>
+                <label for="usage_context" class="block text-sm font-medium text-gray-700 mb-2">Usage Context</label>
+                <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="usage_context" name="usage_context" rows="2" placeholder="Additional context about where and how this image is used">{{ image.usage_context or '' }}</textarea>
+            </div>
+            
+            <!-- Display Settings -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="display_order" class="block text-sm font-medium text-gray-700 mb-2">Display Order</label>
+                    <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" id="display_order" name="display_order" value="{{ image.display_order }}" min="0">
+                    <p class="text-sm text-gray-500 mt-1">Lower numbers appear first</p>
+                </div>
+                <div class="space-y-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" id="is_active" name="is_active" {% if image.is_active %}checked{% endif %}>
+                        <span class="ml-2 text-sm font-medium text-gray-700">Active</span>
+                    </label>
+                    <p class="text-sm text-gray-500">Show this image on the website</p>
+                    
+                    <label class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500" id="is_featured" name="is_featured" {% if image.is_featured %}checked{% endif %}>
+                        <span class="ml-2 text-sm font-medium text-gray-700">Featured Image</span>
+                    </label>
+                    <p class="text-sm text-gray-500">Mark as featured/hero image</p>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-gray-200 space-y-3 sm:space-y-0 sm:space-x-4">
+                <a href="{{ url_for('admin.admin_images') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Images
+                </a>
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                    <i class="fas fa-save mr-2"></i>
+                    Save Changes
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Display recommendations based on selected section
-    document.addEventListener('DOMContentLoaded', function() {
-        const sectionSelect = document.getElementById('section');
-        const recommendationDiv = document.getElementById('section-recommendation');
+    // Define subsection options for different sections
+    const subsectionOptions = {
+        'hero': [
+            {value: 'slide_1', label: 'Main Slide'},
+            {value: 'slide_2', label: 'Secondary Slide'},
+            {value: 'slide_3', label: 'Third Slide'},
+            {value: 'background', label: 'Background Image'},
+            {value: 'hero_slide_101678', label: 'Hero Background - 101678.jpg (Agricultural Innovation)'},
+            {value: 'hero_slide_416767', label: 'Hero Background - 416767.jpg (Farm Landscape)'},
+            {value: 'hero_slide_113898', label: 'Hero Background - 113898.jpg (Market Access)'},
+            {value: 'hero_background_maize', label: 'Hero Background - maize.png (Premium Maize) [Products]'},
+            {value: 'hero_background_101678', label: 'Hero Background - 101678.jpg (Agricultural Innovation) [About]'},
+            {value: 'hero_background_416767', label: 'Hero Background - 416767.jpg (Farm Landscape) [Contact]'}
+        ],
+        'services_overview': [
+            {value: 'agricultural_technology', label: 'Agricultural Technology'},
+            {value: 'market_access', label: 'Market Access'},
+            {value: 'financial_services', label: 'Financial Services'},
+            {value: 'training_education', label: 'Training & Education'},
+            {value: 'supply_chain', label: 'Supply Chain'},
+            {value: 'agri_tech_photo_579959', label: 'Agricultural Technology - 579959.jpg (Smart Farming Solutions)'},
+            {value: 'market_access_photo_240173', label: 'Market Access - 240173.jpg (Market Connection)'},
+            {value: 'financial_services_photo_141689', label: 'Financial Services - 141689.jpg (Financial Solutions)'},
+            {value: 'training_photo_our_team_1', label: 'Training & Education - our-team-1.jpg (Training Programs)'},
+            {value: 'supply_chain_photo_416767', label: 'Supply Chain - 416767.jpg (Logistics Solutions)'}
+        ],
+        'about_preview': [
+            {value: 'about_africana_ventures', label: 'About Africana Ventures'}
+        ],
+        'team': [
+            {value: 'leadership', label: 'Leadership Team'},
+            {value: 'technical', label: 'Technical Team'},
+            {value: 'operations', label: 'Operations Team'}
+        ],
+        'testimonials': [
+            {value: 'client_1', label: 'Client Testimonial 1'},
+            {value: 'client_2', label: 'Client Testimonial 2'},
+            {value: 'client_3', label: 'Client Testimonial 3'},
+            {value: 'testimonials_background_113898', label: 'Testimonials Background - 113898.jpg (Fresh Fish/Market)'},
+            {value: 'testimonial_photos', label: 'Testimonial Photos - Dynamic filenames'}
+        ],
+        'products': [
+            {value: 'horticulture', label: 'Horticulture Products'},
+            {value: 'cereals_legumes', label: 'Cereals & Legumes'},
+            {value: 'oilseeds_nuts', label: 'Oilseeds & Nuts'},
+            {value: 'spices', label: 'Spices'}
+        ],
+        'product_cards': [
+            {value: 'card_1', label: 'Product Card 1'},
+            {value: 'card_2', label: 'Product Card 2'},
+            {value: 'card_3', label: 'Product Card 3'},
+            {value: 'card_4', label: 'Product Card 4'},
+            {value: 'premium_maize_photo', label: 'Premium Maize - maize.png'},
+            {value: 'fresh_fish_photo_113898', label: 'Fresh Fish - 113898.jpg (Lake Victoria Fish)'},
+            {value: 'premium_coffee_photo_416760', label: 'Premium Coffee - 416760.jpg (Arabica Coffee)'},
+            {value: 'fresh_vegetables_photo_141689', label: 'Fresh Vegetables - 141689.jpg (Organic Vegetables)'},
+            {value: 'farm_inputs_photo_240173', label: 'Farm Inputs - 240173.jpg (Quality Inputs)'}
+        ],
+        'focus': [
+            {value: 'block_1', label: 'Agri-Marketplace Platform'},
+            {value: 'block_2', label: 'Smart Logistics & Distribution'},
+            {value: 'block_3', label: 'Advisory & Consulting'},
+            {value: 'block_4', label: 'Access to Inputs & Finance'},
+            {value: 'block_5', label: 'Training & Capacity Building'},
+            {value: 'block_6', label: 'Data & Traceability'},
+            {value: 'block_7', label: 'Value Addition & Processing'}
+        ],
+        'core_focus_areas': [
+            {value: 'block_1', label: 'Agri-Marketplace Platform'},
+            {value: 'block_2', label: 'Smart Logistics & Distribution'},
+            {value: 'block_3', label: 'Advisory & Consulting'},
+            {value: 'block_4', label: 'Access to Inputs & Finance'},
+            {value: 'block_5', label: 'Training & Capacity Building'},
+            {value: 'block_6', label: 'Data & Traceability'},
+            {value: 'block_7', label: 'Value Addition & Processing'}
+        ],
+        'hero_slideshow': [
+            {value: 'slide_1', label: 'Hero Slide 1'},
+            {value: 'slide_2', label: 'Hero Slide 2'},
+            {value: 'slide_3', label: 'Hero Slide 3'},
+            {value: 'slide_1_photo_101678', label: 'Slide 1 - 101678.jpg (Agricultural Innovation)'},
+            {value: 'slide_2_photo_113898', label: 'Slide 2 - 113898.jpg (Market Connection)'},
+            {value: 'slide_3_photo_141689', label: 'Slide 3 - 141689.jpg (Data-Driven Advisory)'}
+        ],
+        'join_us': [
+            {value: 'join_us_background_53397', label: 'Join Us Background - 53397.jpg'},
+            {value: 'join_us_content', label: 'Join Us Content Area'}
+        ]
+    };
+
+    function updateSubsectionOptions() {
+        const sectionSelect = document.getElementById('section_name');
+        const subsectionSelect = document.getElementById('subsection_name');
+        const selectedSection = sectionSelect.value;
+        const currentSubsection = '{{ image.subsection_name or "" }}';
         
-        function updateRecommendation() {
-            const section = sectionSelect.value;
-            let recommendation = '';
+        // Clear existing options
+        subsectionSelect.innerHTML = '<option value="">Select Subsection</option>';
+        
+        // Add options for the selected section
+        if (selectedSection && subsectionOptions[selectedSection]) {
+            subsectionOptions[selectedSection].forEach(function(option) {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.value;
+                optionElement.textContent = option.label;
+                
+                // Select current subsection if it matches
+                if (option.value === currentSubsection) {
+                    optionElement.selected = true;
+                }
+                
+                subsectionSelect.appendChild(optionElement);
+            });
+        } else if (selectedSection) {
+            // If no predefined options, add generic options
+            const genericOptions = [
+                {value: 'main', label: 'Main'},
+                {value: 'secondary', label: 'Secondary'},
+                {value: 'background', label: 'Background'}
+            ];
             
-            switch(section) {
-                case 'hero':
-                    recommendation = '<strong>Recommendation:</strong> Use high-quality, wide landscape images (1920×1080px). These images appear at the top of the homepage and should represent your brand identity.';
-                    break;
-                case 'about':
-                    recommendation = '<strong>Recommendation:</strong> Use images that tell your company story or show your team in action (800×600px). These appear on the About page.';
-                    break;
-                case 'services':
-                    recommendation = '<strong>Recommendation:</strong> Use images that represent your services or show results (800×600px). These appear on the Services page.';
-                    break;
-                case 'team':
-                    recommendation = '<strong>Recommendation:</strong> Use professional headshots or team photos (400×400px, square). These appear in the team section.';
-                    break;
-                case 'contact':
-                    recommendation = '<strong>Recommendation:</strong> Use images of your office or contact-related visuals (800×600px). These appear on the Contact page.';
-                    break;
-                case 'gallery':
-                    recommendation = '<strong>Recommendation:</strong> Use high-quality project photos or portfolio items (800×600px). These appear in the gallery section.';
-                    break;
-                case 'background':
-                    recommendation = '<strong>Recommendation:</strong> Use subtle patterns or textures that don\'t distract from content (1920×1080px). These are used as section backgrounds.';
-                    break;
-                case 'logo':
-                    recommendation = '<strong>Recommendation:</strong> Use transparent PNG files for logos (at least 200×200px). These appear in the header, footer, and favicon.';
-                    break;
-                default:
-                    recommendation = 'Select a section to see recommendations.';
-            }
-            
-            recommendationDiv.innerHTML = recommendation;
+            genericOptions.forEach(function(option) {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.value;
+                optionElement.textContent = option.label;
+                
+                if (option.value === currentSubsection) {
+                    optionElement.selected = true;
+                }
+                
+                subsectionSelect.appendChild(optionElement);
+            });
         }
         
-        // Initial update
-        updateRecommendation();
-        
-        // Update on change
-        sectionSelect.addEventListener('change', updateRecommendation);
+        // If current subsection doesn't match any predefined option, add it as custom
+        if (currentSubsection && !subsectionSelect.querySelector(`option[value="${currentSubsection}"]`)) {
+            const customOption = document.createElement('option');
+            customOption.value = currentSubsection;
+            customOption.textContent = `${currentSubsection} (Custom)`;
+            customOption.selected = true;
+            subsectionSelect.appendChild(customOption);
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateSubsectionOptions();
     });
 </script>
 {% endblock %}

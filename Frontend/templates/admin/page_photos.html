@@ -1,0 +1,297 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ page_name|title }} Photos{% endblock %}
+{% block page_title %}{{ page_name|title }} Page Photos{% endblock %}
+{% block page_description %}Manage photos for the {{ page_name }} page{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div class="flex items-center mb-4 sm:mb-0">
+        <a href="{{ url_for('admin.admin_pages') }}" 
+           class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors mr-4">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Pages
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 capitalize flex items-center">
+                {% if page_name == 'index' %}
+                    <i class="fas fa-home mr-3 text-blue-600"></i>
+                    Homepage Photos
+                {% elif page_name == 'about' %}
+                    <i class="fas fa-info-circle mr-3 text-green-600"></i>
+                    About Page Photos
+                {% elif page_name == 'services' %}
+                    <i class="fas fa-cogs mr-3 text-purple-600"></i>
+                    Services Page Photos
+                {% elif page_name == 'products' %}
+                    <i class="fas fa-box mr-3 text-orange-600"></i>
+                    Products Page Photos
+                {% elif page_name == 'contact' %}
+                    <i class="fas fa-envelope mr-3 text-red-600"></i>
+                    Contact Page Photos
+                {% elif page_name == 'solutions' %}
+                    <i class="fas fa-lightbulb mr-3 text-yellow-600"></i>
+                    Solutions Page Photos
+                {% elif page_name == 'base' %}
+                    <i class="fas fa-layer-group mr-3 text-gray-600"></i>
+                    Base/Navigation Photos
+                {% endif %}
+            </h1>
+            <p class="text-gray-600">{{ images|length }} photos organized in {{ sections|length }} sections</p>
+        </div>
+    </div>
+    
+    <a href="{{ url_for('admin.upload_page_photo', page_name=page_name) }}" 
+       class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+        <i class="fas fa-plus mr-2"></i>
+        Upload New Photo
+    </a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert bg-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-50 border border-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-200 text-{{ 'green' if category == 'success' else 'red' if category == 'error' else 'blue' }}-800 px-4 py-3 rounded-lg mb-6" role="alert">
+                <div class="flex items-center">
+                    <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-circle' if category == 'error' else 'info-circle' }} mr-2"></i>
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- Quick Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="flex items-center">
+            <div class="p-2 bg-blue-100 rounded-lg">
+                <i class="fas fa-images text-blue-600"></i>
+            </div>
+            <div class="ml-3">
+                <div class="text-sm font-medium text-gray-500">Total Photos</div>
+                <div class="text-lg font-semibold text-gray-900">{{ images|length }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="flex items-center">
+            <div class="p-2 bg-green-100 rounded-lg">
+                <i class="fas fa-eye text-green-600"></i>
+            </div>
+            <div class="ml-3">
+                <div class="text-sm font-medium text-gray-500">Active</div>
+                <div class="text-lg font-semibold text-gray-900">{{ images|selectattr('is_active')|list|length }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="flex items-center">
+            <div class="p-2 bg-yellow-100 rounded-lg">
+                <i class="fas fa-star text-yellow-600"></i>
+            </div>
+            <div class="ml-3">
+                <div class="text-sm font-medium text-gray-500">Featured</div>
+                <div class="text-lg font-semibold text-gray-900">{{ images|selectattr('is_featured')|list|length }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="flex items-center">
+            <div class="p-2 bg-purple-100 rounded-lg">
+                <i class="fas fa-layer-group text-purple-600"></i>
+            </div>
+            <div class="ml-3">
+                <div class="text-sm font-medium text-gray-500">Sections</div>
+                <div class="text-lg font-semibold text-gray-900">{{ sections|length }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if images %}
+    <!-- Photos by Section -->
+    {% for section_name, section_images in sections.items() %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 capitalize flex items-center">
+                    <i class="fas fa-folder-open mr-3 text-blue-600"></i>
+                    {{ section_name|title }} Section
+                    <span class="ml-3 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        {{ section_images|length }} photos
+                    </span>
+                </h3>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for image in section_images %}
+                <div class="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
+                    <div class="relative">
+                        <img src="{{ url_for('static', filename=image.get_url_path()) }}" 
+                             class="w-full h-40 object-cover" 
+                             alt="{{ image.alt_text or image.description or 'Website image' }}">
+                        
+                        <!-- Status Badges -->
+                        <div class="absolute top-2 right-2 flex flex-col space-y-1">
+                            {% if image.is_featured %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                <i class="fas fa-star mr-1"></i> Featured
+                            </span>
+                            {% endif %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {% if image.is_active %}bg-green-100 text-green-800{% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {% if image.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                        
+                        <!-- Image Type Badge -->
+                        {% if image.image_type %}
+                        <div class="absolute top-2 left-2">
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {{ image.image_type|title }}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-4">
+                        <h4 class="font-medium text-gray-900 mb-2 truncate">{{ image.original_filename }}</h4>
+                        
+                        <!-- Subsection -->
+                        {% if image.subsection_name %}
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-tag mr-2 text-gray-400"></i>
+                            <span class="truncate">{{ image.subsection_name|title }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Description -->
+                        {% if image.description %}
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ image.description }}</p>
+                        {% endif %}
+                        
+                        <!-- Alt Text -->
+                        {% if image.alt_text %}
+                        <p class="text-xs text-gray-500 mb-3">
+                            <span class="font-medium">Alt:</span> {{ image.alt_text|truncate(30) }}
+                        </p>
+                        {% endif %}
+                        
+                        <!-- Footer -->
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-200">
+                            <span class="text-xs text-gray-500 flex items-center">
+                                <i class="fas fa-calendar mr-1"></i>
+                                {{ image.created_at.strftime('%m/%d/%Y') }}
+                            </span>
+                            <div class="flex items-center space-x-1">
+                                <button type="button" 
+                                        data-image-src="{{ url_for('static', filename=image.get_url_path()) }}" 
+                                        data-image-title="{{ image.original_filename }}"
+                                        class="view-image-btn p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
+                                        title="View Image">
+                                    <i class="fas fa-eye text-sm"></i>
+                                </button>
+                                <a href="{{ url_for('admin.edit_image', image_id=image.id) }}" 
+                                   class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" 
+                                   title="Edit Image">
+                                    <i class="fas fa-edit text-sm"></i>
+                                </a>
+                                <a href="{{ url_for('admin.toggle_image', image_id=image.id, return_url=url_for('admin.admin_page_photos', page_name=page_name)) }}" 
+                                   class="p-2 text-gray-400 hover:text-{% if image.is_active %}yellow{% else %}green{% endif %}-600 hover:bg-{% if image.is_active %}yellow{% else %}green{% endif %}-50 rounded-lg transition-colors" 
+                                   title="{% if image.is_active %}Deactivate{% else %}Activate{% endif %} Image">
+                                    <i class="fas fa-{% if image.is_active %}eye-slash{% else %}eye{% endif %} text-sm"></i>
+                                </a>
+                                <a href="{{ url_for('admin.delete_image', image_id=image.id, return_url=url_for('admin.admin_page_photos', page_name=page_name)) }}" 
+                                   class="delete-image-btn p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                                   title="Delete Image">
+                                    <i class="fas fa-trash text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <!-- Empty State -->
+    <div class="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-300">
+        <i class="fas fa-images text-6xl text-gray-400 mb-6"></i>
+        <h3 class="text-xl font-medium text-gray-900 mb-4">No photos uploaded yet</h3>
+        <p class="text-gray-500 mb-8 max-w-md mx-auto">
+            Start building the {{ page_name }} page photo library by uploading your first image. 
+            Photos will be organized by sections for easy management.
+        </p>
+        <a href="{{ url_for('admin.upload_page_photo', page_name=page_name) }}" 
+           class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+            <i class="fas fa-upload mr-2"></i>
+            Upload First Photo
+        </a>
+    </div>
+{% endif %}
+
+<!-- Image View Modal -->
+<div id="imageViewModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+            <h3 id="imageViewTitle" class="text-lg font-semibold text-gray-900">Image Preview</h3>
+            <button type="button" onclick="document.getElementById('imageViewModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-4 text-center">
+            <img id="imageViewSrc" src="" alt="" class="max-w-full max-h-96 rounded-lg">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function viewImage(src, title) {
+    document.getElementById('imageViewSrc').src = src;
+    document.getElementById('imageViewTitle').textContent = title;
+    document.getElementById('imageViewModal').classList.remove('hidden');
+}
+
+// Event delegation and modal handling
+document.addEventListener('DOMContentLoaded', function() {
+    const imageModal = document.getElementById('imageViewModal');
+    
+    // Handle view image buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.view-image-btn')) {
+            const btn = e.target.closest('.view-image-btn');
+            const src = btn.dataset.imageSrc;
+            const title = btn.dataset.imageTitle;
+            viewImage(src, title);
+        }
+        
+        // Handle delete confirmation
+        if (e.target.closest('.delete-image-btn')) {
+            if (!confirm('Are you sure you want to delete this image? This action cannot be undone.')) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+    
+    // Close modal when clicking outside
+    if (imageModal) {
+        imageModal.addEventListener('click', function(e) {
+            if (e.target === imageModal) {
+                imageModal.classList.add('hidden');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
