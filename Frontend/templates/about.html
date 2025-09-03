@@ -492,15 +492,9 @@
         <!-- Dynamic Background -->
         <div class="absolute inset-0 bg-cover bg-center hero-bg-overlay">
             <div class="absolute inset-0 bg-cover bg-center hero-bg-dynamic" 
-                 {% if hero_image %}
-                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=hero_image.get_url_path()) }}');"
-                 {% elif admin_images.get('hero', {}).get('background') %}
-                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=admin_images.hero.background[0].get_url_path()) }}');"
-                 {% elif admin_images.get('hero', {}).get('hero') %}
-                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.6), rgba(1, 45, 24, 0.7)), url('{{ url_for('static', filename=admin_images.hero.hero[0].get_url_path()) }}');"
-                 {% else %}
-                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/101678.jpg') }}');"
-                 {% endif %}></div>
+                
+                 style="background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=2000&auto=format&fit=crop');"
+            </div>
             
             <!-- Dark Overlay -->
             <div class="absolute inset-0 bg-gradient-to-r from-forest-green/90 via-dark-green/80 to-transparent"></div>
@@ -942,29 +936,55 @@
         </div>
     </section>
 
-    <!-- Team / Leadership -->
-    <section id="team" class="py-24 bg-cream text-dark-green overflow-hidden">
-        <div class="container mx-auto px-4">
-            <h2 class="text-5xl font-extrabold text-center text-dark-green mb-16 font-poppins" data-aos="fade-up">Meet Our Visionary Team</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                {% for member in team_members %}
-                <div class="team-member-card relative bg-white p-6 rounded-xl shadow-xl text-center transform hover:scale-105 transition-all duration-300 group" data-aos="zoom-in" data-aos-delay="{{ loop.index * 100 }}" data-tilt>
-                    <div class="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gold shadow-lg">
-                        <img src="{% if member.photo_filename %}{{ url_for('static', filename='uploads/' + member.photo_filename) }}{% else %}{{ url_for('static', filename='images/placeholder-team.jpg') }}{% endif %}" 
-                             alt="{{ member.name }}" 
-                             class="w-full h-full object-cover" 
-                             onerror="this.src='{{ url_for('static', filename='images/' + (member.photo_filename if member.photo_filename else 'placeholder-team.jpg')) }}'">
-                    </div>
-                    <h3 class="text-2xl font-bold text-dark-green mb-2 font-montserrat">{{ member.name }}</h3>
-                    <p class="text-gold text-lg font-lora mb-4">{{ member.position }}</p>
-                    <p class="text-gray-700 text-sm font-lora mb-4">{{ member.bio[:100] + '...' if member.bio and member.bio|length > 100 else member.bio }}</p>
-                    <div class="flex justify-center space-x-4">
-                        {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" class="text-dark-green hover:text-gold transition-colors duration-300"><i class="fab fa-linkedin text-2xl"></i></a>{% endif %}
-                        {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank" class="text-dark-green hover:text-gold transition-colors duration-300"><i class="fab fa-twitter-square text-2xl"></i></a>{% endif %}
-                        {% if member.email %}<a href="mailto:{{ member.email }}" class="text-dark-green hover:text-gold transition-colors duration-300"><i class="fas fa-envelope-square text-2xl"></i></a>{% endif %}
+    <!-- Team / Leadership (Premium Staggered Gallery with Hover Details) -->
+    <section id="team" class="py-24 bg-gray-50 text-dark-green">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center flex-col lg:flex-row md:mt-20">
+                <!-- Left Intro -->
+                <div class="w-full lg:w-1/2">
+                    <h2 class="font-poppins text-4xl sm:text-5xl text-gray-900 font-bold leading-tight mb-6 text-center lg:text-left">
+                        Our leading, strong & creative team
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-10 text-center lg:text-left">
+                        These people work on making our product best.
+                    </p>
+                    <a href="{{ url_for('main.contact_page') }}" class="cursor-pointer py-3 px-8 w-56 bg-gold text-dark-green text-base font-semibold transition-all duration-300 block text-center rounded-full hover:bg-yellow-600 mx-auto lg:mx-0">
+                        Join our team
+                    </a>
+                </div>
+
+                <!-- Right Staggered Grid -->
+                <div class="w-full lg:w-1/2 lg:mt-0 md:mt-40 mt-16 max-lg:max-w-2xl">
+                    <div class="grid grid-cols-1 min-[450px]:grid-cols-2 md:grid-cols-3 gap-8">
+                        {% for member in team_members %}
+                        {% set stagger = 'md:mt-20' if (loop.index0 % 3 != 1) else '' %}
+                        <div class="relative group mx-auto {{ 'min-[450px]:mr-0' if loop.index0 % 2 == 0 else 'min-[450px]:ml-0' }} {{ stagger }}">
+                            <img 
+                                src="{% if member.photo_filename %}{{ url_for('static', filename='uploads/' + member.photo_filename) }}{% else %}{{ url_for('static', filename='images/placeholder-team.jpg') }}{% endif %}"
+                                alt="{{ member.name }}" 
+                                class="w-44 h-56 rounded-2xl object-cover shadow-md" 
+                                loading="lazy"
+                                onerror="this.src='{{ url_for('static', filename='images/placeholder-team.jpg') }}'"
+                            />
+                            <!-- Overlay with details: hidden by default, visible on hover only -->
+                            <div class="absolute inset-0 rounded-2xl bg-dark-green/80 backdrop-blur-[1px] border border-gold/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                                <div class="p-4 w-full text-white">
+                                    <h3 class="text-sm sm:text-base font-semibold">{{ member.name }}</h3>
+                                    <p class="text-gold text-xs sm:text-sm">{{ member.position }}</p>
+                                    {% if member.bio %}
+                                    <p class="text-[11px] sm:text-xs text-white/90 mt-2 leading-snug">{{ member.bio[:90] + '…' if member.bio|length > 90 else member.bio }}</p>
+                                    {% endif %}
+                                    <div class="flex gap-3 mt-3">
+                                        {% if member.linkedin %}<a href="{{ member.linkedin }}" target="_blank" class="text-white hover:text-gold"><i class="fab fa-linkedin"></i></a>{% endif %}
+                                        {% if member.twitter %}<a href="{{ member.twitter }}" target="_blank" class="text-white hover:text-gold"><i class="fab fa-twitter"></i></a>{% endif %}
+                                        {% if member.email %}<a href="mailto:{{ member.email }}" class="text-white hover:text-gold"><i class="fas fa-envelope"></i></a>{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </section>

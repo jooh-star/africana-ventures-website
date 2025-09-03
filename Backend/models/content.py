@@ -45,11 +45,11 @@ class WebsiteImage(db.Model):
     image_type = db.Column(db.String(50), nullable=False, default='static')  # 'static', 'dynamic', 'background', 'product', 'hero'
     
     # Legacy section field for backward compatibility
-    section = db.Column(db.String(50), nullable=True)  # Keeping for legacy compatibility
+    section = db.Column(db.String(50), nullable=True, index=True)  # Keeping for legacy compatibility
     
     # Display and management
-    display_order = db.Column(db.Integer, default=0)  # For ordering images within sections
-    is_active = db.Column(db.Boolean, default=True)
+    display_order = db.Column(db.Integer, default=0, index=True)  # For ordering images within sections
+    is_active = db.Column(db.Boolean, default=True, index=True)
     is_featured = db.Column(db.Boolean, default=False)  # For hero/featured images
     
     # File metadata
@@ -60,6 +60,10 @@ class WebsiteImage(db.Model):
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    __table_args__ = (
+        db.Index('ix_websiteimage_page_section_active_order', 'page_name', 'section_name', 'is_active', 'display_order'),
+    )
     
     def __repr__(self):
         return f'<WebsiteImage {self.filename} - {self.page_name}/{self.section_name}>' 

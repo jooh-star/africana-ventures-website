@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 if (this.type === 'tel') {
-                    const phonePattern = /^[\+]?[1-9][\d]{0,15}$/;
+                    const phonePattern = /^[\+]?[1-9][\d]{8,15}$/;
                     if (phonePattern.test(this.value.replace(/\s/g, ''))) {
                         this.style.borderColor = '#22c55e';
                     } else if (this.value.length > 0) {
@@ -61,6 +61,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // Enhanced form submission
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Validate form before submission
+            let isValid = true;
+            const requiredFields = contactForm.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!validateRequired(field.value)) {
+                    isValid = false;
+                    field.style.borderColor = '#ef4444';
+                }
+            });
+            
+            const emailField = contactForm.querySelector('input[type="email"]');
+            if (emailField && emailField.value && !validateEmail(emailField.value)) {
+                isValid = false;
+                emailField.style.borderColor = '#ef4444';
+            }
+            
+            const phoneField = contactForm.querySelector('input[type="tel"]');
+            if (phoneField && phoneField.value && !validatePhone(phoneField.value)) {
+                isValid = false;
+                phoneField.style.borderColor = '#ef4444';
+            }
+            
+            if (!isValid) {
+                showNotification('Please correct the errors in the form before submitting.', 'error');
+                return;
+            }
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalContent = submitBtn.innerHTML;
@@ -77,24 +105,40 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             submitBtn.disabled = true;
             
-            // Simulate form submission (in real implementation, this would be an AJAX call)
-            setTimeout(() => {
-                // Show success message
-                showNotification('Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
-                
-                // Reset form
-                contactForm.reset();
-                
+            // Submit form via AJAX
+            const formData = new FormData(contactForm);
+            
+            fetch(contactForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message || 'Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
+                    // Reset form
+                    contactForm.reset();
+                    // Reset field styles
+                    formFields.forEach(field => {
+                        field.style.borderColor = '#e5e7eb';
+                        field.style.backgroundColor = 'rgba(245, 245, 220, 0.3)';
+                    });
+                } else {
+                    showNotification(data.message || 'There was an error sending your message. Please try again.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('There was an error sending your message. Please try again.', 'error');
+            })
+            .finally(() => {
                 // Reset button
                 submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
-                
-                // Reset field styles
-                formFields.forEach(field => {
-                    field.style.borderColor = '#e5e7eb';
-                    field.style.backgroundColor = 'rgba(245, 245, 220, 0.3)';
-                });
-            }, 2000);
+            });
         });
     }
 
@@ -114,11 +158,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Contact info card interactions
-    const contactCards = document.querySelectorAll('.bg-white\\/10');
+    const contactCards = document.querySelectorAll('.contact-card');
     contactCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px) scale(1.02)';
-            this.style.boxShadow = '0 20px 40px rgba(218, 165, 32, 0.3)';
+            this.style.transform = 'translateY(-10px)';
+            this.style.boxShadow = '0 25px 50px rgba(218, 165, 32, 0.3)';
         });
         
         card.addEventListener('mouseleave', function() {
@@ -127,30 +171,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Parallax effect for hero section
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const hero = document.querySelector('section');
-        
-        if (hero) {
-            const speed = 0.5;
-            hero.style.transform = `translateY(${scrolled * speed}px)`;
-        }
-    });
-
-    // Phone number formatting
-    const phoneInput = document.querySelector('input[type="tel"]');
-    if (phoneInput) {
+    // Phone number formatting for Tanzania numbers
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
+    phoneInputs.forEach(phoneInput => {
         phoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
-            if (value.startsWith('254')) {
+            
+            // Handle Tanzania numbers
+            if (value.startsWith('255')) {
                 value = '+' + value;
             } else if (value.startsWith('0')) {
-                value = '+254' + value.substring(1);
+                value = '+255' + value.substring(1);
+            } else if (value.startsWith('7') && value.length >= 9) {
+                value = '+255' + value;
             }
             
-            // Format as +254 XXX XXX XXX
-            if (value.length > 4) {
+            // Format as +255 XXX XXX XXX
+            if (value.startsWith('+255') && value.length > 4) {
                 value = value.substring(0, 4) + ' ' + 
                        value.substring(4, 7) + ' ' + 
                        value.substring(7, 10) + ' ' + 
@@ -159,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             e.target.value = value.trim();
         });
-    }
+    });
 
     // Character counter for message field
     const messageField = document.querySelector('textarea[name="message"]');
@@ -189,8 +226,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Notification system
 function showNotification(message, type = 'info') {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.fixed.top-20.right-4');
+    existingNotifications.forEach(notification => notification.remove());
+    
     const notification = document.createElement('div');
-    notification.className = `fixed top-20 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ${
+    notification.className = `fixed top-20 right-4 z-[9999] max-w-md p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ${
         type === 'success' ? 'bg-green-500 text-white' : 
         type === 'error' ? 'bg-red-500 text-white' : 
         'bg-blue-500 text-white'
@@ -224,7 +265,7 @@ function showNotification(message, type = 'info') {
     
     // Auto remove after 5 seconds
     setTimeout(() => {
-        notification.style.transform = 'translateX(full)';
+        notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.remove();
@@ -240,7 +281,8 @@ function validateEmail(email) {
 }
 
 function validatePhone(phone) {
-    const pattern = /^[\+]?[1-9][\d]{8,14}$/;
+    // Allow Tanzania phone numbers
+    const pattern = /^(\+255|255)?[0-9]{9,12}$/;
     return pattern.test(phone.replace(/\s/g, ''));
 }
 

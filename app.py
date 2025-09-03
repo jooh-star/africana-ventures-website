@@ -22,18 +22,20 @@ app = Flask(
 )
 
 # Configuration
-# Replace this
-app.config['SECRET_KEY'] = 'your-secret-key-here-change-in-production'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///africana_ventures.db'
-
-# With this
 import os
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
 
+# Instance directory for writable data (DB, etc.)
+instance_dir = os.path.join(project_root, 'instance')
+os.makedirs(instance_dir, exist_ok=True)
+
+# Default to SQLite DB inside instance folder (cPanel friendly)
+default_sqlite_path = f"sqlite:///{os.path.join(instance_dir, 'africana_ventures.db')}"
+
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-dev-key-not-for-production')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///africana_ventures.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', default_sqlite_path)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = os.path.join(frontend_folder, 'static', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -152,6 +154,18 @@ def perform_sqlite_migrations():
             WHERE page_name IS NULL OR section_name IS NULL
         """)
         
+        # Product soft-delete column and unique index if missing
+        if not column_exists('product', 'is_deleted'):
+            conn.exec_driver_sql("ALTER TABLE product ADD COLUMN is_deleted BOOLEAN DEFAULT 0")
+            # Backfill any NULLs to 0 for safety
+            conn.exec_driver_sql("UPDATE product SET is_deleted = 0 WHERE is_deleted IS NULL")
+        
+        # Ensure unique index on (category, name) exists in SQLite
+        # SQLite doesn't support altering constraints easily; create index if not exists
+        conn.exec_driver_sql(
+            "CREATE UNIQUE INDEX IF NOT EXISTS ix_product_category_name ON product (category, name)"
+        )
+
         # Add admin photo field to User table if missing
         if not column_exists('user', 'photo_filename'):
             conn.exec_driver_sql("ALTER TABLE user ADD COLUMN photo_filename VARCHAR(255)")
@@ -211,12 +225,14 @@ def initialize_app(app):
 # Contact form submission
 import logging
 
-# Configure logging
+# Configure logging (write to instance/logs)
+logs_dir = os.path.join(instance_dir, 'logs')
+os.makedirs(logs_dir, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("app.log"),
+        logging.FileHandler(os.path.join(logs_dir, "app.log")),
         logging.StreamHandler()
     ]
 )
@@ -340,6 +356,11 @@ def nl2br_filter(text):
     if text is None:
         return ''
     return Markup(escape(text).replace('\n', '<br>\n'))
+
+# Health check for cPanel/monitoring
+@app.route('/healthz')
+def healthz():
+    return jsonify({"status": "ok"}), 200
 
 # Initialize the application
 initialize_app(app)

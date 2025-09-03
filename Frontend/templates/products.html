@@ -1,369 +1,865 @@
 {% extends 'base.html' %}
 
-{% block title %}Products - Africana Ventures{% endblock %}
+{% block title %}Premium Agricultural Products - Africana Ventures{% endblock %}
 
 {% block head %}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Premium Agricultural Products Page Styles */
+        
+        /* Hero Section with Organic Flow Animation */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #012d18 0%, #024d2a 100%);
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(218, 165, 32, 0.1) 0%, rgba(1, 45, 24, 0.9) 70%);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+        
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #F5F5DC;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #DAA520;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .hero-description {
+            font-size: 1.25rem;
+            color: #e0e0e0;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Floating Elements Animation */
+        .floating-element {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.1;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .floating-1 {
+            top: 10%;
+            left: 5%;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #DAA520;
+            animation-delay: 0s;
+        }
+        
+        .floating-2 {
+            bottom: 15%;
+            right: 8%;
+            width: 80px;
+            height: 80px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            background: #DAA520;
+            animation-delay: 2s;
+        }
+        
+        .floating-3 {
+            top: 20%;
+            right: 12%;
+            width: 60px;
+            height: 60px;
+            border-radius: 20% 80% 80% 20% / 80% 20% 80% 20%;
+            background: #F5F5DC;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, -30px) rotate(10deg);
+            }
+            50% {
+                transform: translate(-15px, 25px) rotate(-15deg);
+            }
+            75% {
+                transform: translate(10px, 15px) rotate(5deg);
+            }
+        }
+        
+        /* Organic Shape Divider */
+        .organic-divider {
+            position: relative;
+            height: 100px;
+            background: #F5F5DC;
+            overflow: hidden;
+        }
+        
+        .divider-shape {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: #012d18;
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+        
+        /* Product Categories - Morphing Navigation */
+        .categories-section {
+            background: #F5F5DC;
+            padding: 5rem 0;
+        }
+        
+        .categories-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .categories-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-tag {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(1, 45, 24, 0.1);
+            color: #012d18;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        .categories-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #012d18;
+            margin-bottom: 1rem;
+        }
+        
+        .categories-subtitle {
+            font-size: 1.25rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Morphing Category Navigation */
+        .morphing-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        
+        .morph-category {
+            position: relative;
+            padding: 1rem 2rem;
+            background: transparent;
+            border: 2px solid #012d18;
+            color: #012d18;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .morph-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: #012d18;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: -1;
+        }
+        
+        .morph-category:hover::before {
+            width: 100%;
+        }
+        
+        .morph-category:hover {
+            color: #F5F5DC;
+        }
+        
+        .morph-category.active {
+            background: #012d18;
+            color: #F5F5DC;
+            border-color: #012d18;
+        }
+        
+        .morph-category.active::before {
+            width: 100%;
+        }
+        
+        /* Premium Product Showcase */
+        .products-showcase {
+            background: #012d18;
+            padding: 5rem 0;
+        }
+        
+        .products-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Unique Product Card Design - Organic Shape */
+        .product-card {
+            position: relative;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .product-content-wrapper:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border-color: rgba(218, 165, 32, 0.6);
+        }
+        
+        .product-image-container {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .product-content-wrapper:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
+        }
+        
+        .badge-gold {
+            background: #DAA520;
+            color: #012d18;
+            box-shadow: 0 5px 15px rgba(218, 165, 32, 0.4);
+        }
+        
+        .badge-organic {
+            background: #4CAF50;
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .badge-export {
+            background: #2196F3;
+            color: white;
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+        }
+        
+        .product-info {
+            padding: 2.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-category {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: rgba(218, 165, 32, 0.2);
+            color: #DAA520;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #F5F5DC;
+            margin-bottom: 1.25rem;
+            line-height: 1.3;
+        }
+        
+        .product-description {
+            color: #e0e0e0;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+        
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        .product-tag {
+            padding: 0.4rem 1rem;
+            background: rgba(1, 45, 24, 0.3);
+            color: #DAA520;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(218, 165, 32, 0.2);
+        }
+        
+        .availability {
+            font-size: 1rem;
+            color: #DAA520;
+        }
+        
+        .availability span {
+            font-weight: 700;
+        }
+        
+        .learn-more-btn {
+            background: transparent;
+            color: #DAA520;
+            border: 2px solid #DAA520;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .learn-more-btn:hover {
+            background: #DAA520;
+            color: #012d18;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(218, 165, 32, 0.3);
+        }
+        
+        /* Quality Assurance Section with Interactive Elements */
+        .quality-section {
+            background: #F5F5DC;
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quality-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .quality-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .quality-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #012d18;
+            margin-bottom: 1.5rem;
+        }
+        
+        .quality-description {
+            font-size: 1.25rem;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        
+        /* Interactive Quality Cards */
+        .quality-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .quality-card {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quality-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quality-icon-container {
+            height: 180px;
+            background: linear-gradient(135deg, #012d18 0%, #024d2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quality-icon {
+            font-size: 4rem;
+            color: #DAA520;
+            z-index: 2;
+            transition: transform 0.5s ease;
+        }
+        
+        .quality-card:hover .quality-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .quality-icon-bg {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(218, 165, 32, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+        }
+        
+        .quality-content {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .quality-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: #012d18;
+            margin-bottom: 1rem;
+        }
+        
+        .quality-card-description {
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        /* CTA Section with Organic Elements */
+        .cta-section {
+            background: linear-gradient(135deg, #012d18 0%, #024d2a 100%);
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(218, 165, 32, 0.05) 0%, rgba(1, 45, 24, 0.2) 70%);
+            z-index: 1;
+        }
+        
+        .cta-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #F5F5DC;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+        
+        .cta-description {
+            font-size: 1.25rem;
+            color: #e0e0e0;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .cta-button {
+            padding: 1.25rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cta-button-primary {
+            background: #DAA520;
+            color: #012d18;
+        }
+        
+        .cta-button-primary:hover {
+            background: #c4961d;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(218, 165, 32, 0.5);
+        }
+        
+        .cta-button-secondary {
+            background: transparent;
+            color: #F5F5DC;
+            border: 2px solid #F5F5DC;
+        }
+        
+        .cta-button-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #DAA520;
+            color: #DAA520;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .product-content-wrapper {
+                flex-direction: row;
+            }
+            
+            .product-image-container {
+                width: 45%;
+                height: auto;
+            }
+            
+            .product-info {
+                width: 55%;
+            }
+            
+            .hero-title {
+                font-size: 4.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.75rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .product-image-container {
+                width: 40%;
+            }
+            
+            .product-info {
+                width: 60%;
+            }
+        }
+        
+        /* Animation Classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        /* Scroll Reveal Effect */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
-    <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(1, 45, 24, 0.7), rgba(1, 45, 24, 0.8)), url('{{ url_for('static', filename='images/maize.png') }}')"></div>
+<!-- Hero Section with Organic Flow Animation -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
     
-    <div class="relative z-20 text-center px-4 max-w-6xl mx-auto" data-aos="fade-up">
-        <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">PREMIUM AGRICULTURAL PRODUCTS</span>
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight font-poppins">Quality Products<br><span class="text-gold">From Farm to Market</span></h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed mb-8">
-            Discover our comprehensive range of agricultural products, from fresh produce to processed goods, all meeting the highest quality standards.
+    <!-- Floating Elements -->
+    <div class="floating-element floating-1"></div>
+    <div class="floating-element floating-2"></div>
+    <div class="floating-element floating-3"></div>
+    
+    <div class="hero-content">
+        <h1 class="hero-title" data-aos="fade-up">Premium Agricultural Excellence</h1>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">From Farm to Market, Delivered with Precision</p>
+        <p class="hero-description" data-aos="fade-up" data-aos-delay="400">
+            Discover our curated collection of premium agricultural products, sustainably sourced and expertly processed to meet the highest quality standards for discerning markets worldwide.
         </p>
-        <div class="flex flex-col md:flex-row justify-center gap-4">
-            <a href="#products-catalog" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8" data-aos="fade-up" data-aos-delay="600">
+            <a href="#products-catalog" class="inline-block bg-gold text-dark-green font-bold py-4 px-8 rounded-full text-lg uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Explore Products
             </a>
-            <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-8 rounded-full text-lg uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Request Quote
             </a>
         </div>
     </div>
 </section>
 
+<!-- Organic Shape Divider -->
+<div class="organic-divider">
+    <div class="divider-shape"></div>
+</div>
+
 <!-- Product Categories Section -->
-<section id="products-catalog" class="py-24 bg-cream">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">OUR PRODUCT PORTFOLIO</span>
-            <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Premium Agricultural Products</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                From farm-fresh produce to value-added products, explore our diverse range of high-quality agricultural offerings.
+<section class="categories-section">
+    <div class="categories-container">
+        <div class="categories-header">
+            <span class="section-tag">PRODUCT PORTFOLIO</span>
+            <h2 class="categories-title">Our Premium Product Categories</h2>
+            <p class="categories-subtitle">
+                Explore our diverse range of high-quality agricultural offerings, carefully categorized to meet your specific needs and market requirements.
             </p>
         </div>
-
-        <!-- Category Filter -->
-        <div class="flex flex-wrap justify-center gap-4 mb-16" data-aos="fade-up" data-aos-delay="200">
-            <button class="category-btn active px-8 py-4 rounded-full font-semibold text-lg shadow-lg bg-gold text-dark-green transition-all duration-300" data-category="all">All Products</button>
-            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="fresh">Fresh Produce</button>
-            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="processed">Processed Foods</button>
-            <button class="category-btn px-8 py-4 rounded-full font-semibold text-lg bg-white text-gray-700 hover:bg-gold hover:text-dark-green shadow-lg transition-all duration-300" data-category="inputs">Farm Inputs</button>
+        
+        <!-- Morphing Category Navigation -->
+        <div class="morphing-nav">
+            <div class="morph-category active" data-category="all">All Products</div>
+            <div class="morph-category" data-category="horticulture">Horticulture</div>
+            <div class="morph-category" data-category="cereals">Cereals & Legumes</div>
+            <div class="morph-category" data-category="oilseeds">Oilseeds & Nuts</div>
+            <div class="morph-category" data-category="inputs">Farm Inputs</div>
         </div>
+    </div>
+</section>
 
-        <!-- Products Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="products-grid">
+<!-- Premium Product Showcase -->
+<section id="products-catalog" class="products-showcase">
+    <div class="products-container">
+        <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Products will be dynamically loaded here by JavaScript -->
+        </div>
+    </div>
+
+<script>
+    const productImagesData = {{ product_images | tojson }};
+</script>
+</section>
+
+<!-- Quality Assurance Section with Interactive Elements -->
+<section class="quality-section">
+    <div class="quality-container">
+        <div class="quality-header">
+            <span class="section-tag">QUALITY ASSURANCE</span>
+            <h2 class="quality-title">Our Commitment to Excellence</h2>
+            <p class="quality-description">
+                Every product in our portfolio meets international quality standards through rigorous testing and certification processes, ensuring consistent excellence from farm to market.
+            </p>
+        </div>
+        
+        <div class="quality-grid">
+            <div class="quality-card scroll-reveal">
+                <div class="quality-icon-container">
+                    <div class="quality-icon-bg"></div>
+                    <i class="fas fa-certificate quality-icon"></i>
+                </div>
+                <div class="quality-content">
+                    <h3 class="quality-card-title">ISO Certified</h3>
+                    <p class="quality-card-description">
+                        All processes are ISO certified ensuring consistent quality and safety standards across our entire supply chain with regular audits and compliance checks.
+                    </p>
+                </div>
+            </div>
             
-            <!-- Maize -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/maize.png') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Premium Maize">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-gold text-dark-green px-3 py-1 rounded-full text-sm font-bold">Premium Grade</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Export Quality</span>
-                    </div>
+            <div class="quality-card scroll-reveal">
+                <div class="quality-icon-container">
+                    <div class="quality-icon-bg"></div>
+                    <i class="fas fa-leaf quality-icon"></i>
                 </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Premium Maize</h3>
-                        <span class="text-2xl">🌽</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">High-quality yellow and white maize varieties with excellent nutritional value. Grown using sustainable farming practices.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Non-GMO</span>
-                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Aflatoxin Free</span>
-                        <span class="px-2 py-1 bg-dark-green/10 text-dark-green rounded-full text-xs font-medium">Grade A</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Year-round
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
+                <div class="quality-content">
+                    <h3 class="quality-card-title">Organic Certified</h3>
+                    <p class="quality-card-description">
+                        Certified organic products grown without harmful chemicals or pesticides, promoting environmental sustainability and consumer health with full documentation.
+                    </p>
                 </div>
             </div>
-
-            <!-- Fresh Fish -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up" data-aos-delay="100">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/113898.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Fresh Fish">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">Fresh Daily</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Lake Victoria</span>
-                    </div>
+            
+            <div class="quality-card scroll-reveal">
+                <div class="quality-icon-container">
+                    <div class="quality-icon-bg"></div>
+                    <i class="fas fa-flask quality-icon"></i>
                 </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Fresh Fish</h3>
-                        <span class="text-2xl">🐟</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Fresh tilapia and other fish species from Lake Victoria, caught daily by local fishing communities using sustainable methods.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Sustainably Caught</span>
-                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Fresh Daily</span>
-                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Cold Chain</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Daily
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
+                <div class="quality-content">
+                    <h3 class="quality-card-title">Lab Tested</h3>
+                    <p class="quality-card-description">
+                        Rigorous laboratory testing ensures product safety, nutritional value, and compliance with international standards with detailed certificates available.
+                    </p>
                 </div>
-            </div>
-
-            <!-- Coffee -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="processed" data-aos="fade-up" data-aos-delay="200">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/416760.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Premium Coffee">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-bold">Single Origin</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Fair Trade</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Premium Coffee</h3>
-                        <span class="text-2xl">☕</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Arabica coffee beans from the highlands of East Africa, carefully processed and roasted to perfection.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Arabica</span>
-                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Organic</span>
-                        <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">Fair Trade</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Seasonal
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Vegetables -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="fresh" data-aos="fade-up" data-aos-delay="300">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/141689.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Fresh Vegetables">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">Farm Fresh</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Organic</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Fresh Vegetables</h3>
-                        <span class="text-2xl">🥬</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Wide variety of fresh vegetables including tomatoes, onions, cabbages, and leafy greens grown using organic methods.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Pesticide Free</span>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Locally Grown</span>
-                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Organic</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Year-round
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Farm Inputs -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="inputs" data-aos="fade-up" data-aos-delay="400">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/240173.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Farm Inputs">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-bold">Quality Assured</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Certified</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Farm Inputs</h3>
-                        <span class="text-2xl">🌱</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">High-quality seeds, fertilizers, and agricultural tools to help farmers maximize their yields and improve crop quality.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Certified Seeds</span>
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Quality Tools</span>
-                        <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">Organic Options</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Year-round
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dairy Products -->
-            <div class="product-card group bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/20 hover:border-gold/50 cursor-pointer transition-all duration-500 hover:transform hover:-translate-y-2 hover:scale-105" data-category="dairy" data-aos="fade-up" data-aos-delay="500">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="{{ url_for('static', filename='images/416767.jpg') }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Dairy Products">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">Farm Fresh</span>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-dark-green text-cream px-3 py-1 rounded-full text-sm font-bold">Pasteurized</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-bold text-dark-green group-hover:text-gold transition-colors duration-300">Dairy Products</h3>
-                        <span class="text-2xl">🥛</span>
-                    </div>
-                    <p class="text-gray-600 mb-4 leading-relaxed">Fresh milk, cheese, and other dairy products from local farms with the highest hygiene and quality standards.</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Hormone Free</span>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Quality Tested</span>
-                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">Fresh Daily</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            <span class="font-semibold">Available:</span> Daily
-                        </div>
-                        <button class="text-gold hover:text-dark-green font-semibold transition-colors duration-300">Learn More →</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Quality Assurance Section -->
-<section class="py-24 bg-gradient-to-br from-dark-green via-dark-green/98 to-dark-green text-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">QUALITY ASSURANCE</span>
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 font-poppins">Our Commitment to Excellence</h2>
-            <p class="text-lg text-cream/90 max-w-3xl mx-auto leading-relaxed">
-                Every product in our portfolio meets international quality standards through rigorous testing and certification processes.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="text-center group" data-aos="fade-up">
-                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold mb-3 font-poppins">ISO Certified</h3>
-                <p class="text-cream/80 leading-relaxed">All processes are ISO certified ensuring consistent quality and safety standards.</p>
-            </div>
-
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 104 0 2 2 0 012-2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold mb-3 font-poppins">Organic Certified</h3>
-                <p class="text-cream/80 leading-relaxed">Certified organic products grown without harmful chemicals or pesticides.</p>
-            </div>
-
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold mb-3 font-poppins">Lab Tested</h3>
-                <p class="text-cream/80 leading-relaxed">Rigorous laboratory testing ensures product safety and nutritional value.</p>
-            </div>
-
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <h3 class="text-xl font-bold mb-3 font-poppins">Export Ready</h3>
-                <p class="text-cream/80 leading-relaxed">Products meet international export standards and documentation requirements.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Call to Action Section -->
-<section class="py-24 bg-white">
-    <div class="container mx-auto px-4 text-center" data-aos="fade-up">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-dark-green font-poppins">Ready to Partner with Us?</h2>
-            <p class="text-xl text-gray-700 mb-8 leading-relaxed">
-                Join hundreds of satisfied customers who trust Africana Ventures for premium agricultural products. Contact us today to discuss your requirements.
-            </p>
-            <div class="flex flex-col md:flex-row justify-center gap-4">
-                <a href="{{ url_for('main.contact_page') }}" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Get Quote
-                </a>
-                <a href="{{ url_for('main.services_page') }}" class="inline-block bg-transparent border-2 border-dark-green text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-dark-green hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Our Services
-                </a>
-            </div>
+<!-- CTA Section with Organic Elements -->
+<section class="cta-section">
+    <div class="cta-overlay"></div>
+    <div class="cta-container">
+        <h2 class="cta-title" data-aos="fade-up">Ready to Partner with Us?</h2>
+        <p class="cta-description" data-aos="fade-up" data-aos-delay="200">
+            Join hundreds of satisfied customers who trust Africana Ventures for premium agricultural products. Contact us today to discuss your requirements and explore how our products can benefit your business with customized solutions.
+        </p>
+        <div class="cta-buttons" data-aos="fade-up" data-aos-delay="400">
+            <a href="{{ url_for('main.contact_page') }}" class="cta-button cta-button-primary">
+                Get Quote
+            </a>
+            <a href="{{ url_for('main.services_page') }}" class="cta-button cta-button-secondary">
+                Our Services
+            </a>
         </div>
     </div>
 </section>
+{% endblock %}
 
-<!-- JavaScript -->
+{% block scripts %}
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
 <script>
     // Initialize AOS
     AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
+        duration: 1000,
+        easing: 'ease-out-cubic',
         once: true,
         mirror: false,
-        offset: 120
+        offset: 100
     });
 
-    // Category Filter Functionality
     document.addEventListener('DOMContentLoaded', function() {
-        const categoryBtns = document.querySelectorAll('.category-btn');
+        // Category Filter Functionality
+        const morphCategories = document.querySelectorAll('.morph-category');
         const productCards = document.querySelectorAll('.product-card');
+        
+        // Add animation delay to product cards
+        productCards.forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.15}s`;
+        });
 
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const category = btn.dataset.category;
+        morphCategories.forEach(category => {
+            category.addEventListener('click', () => {
+                const selectedCategory = category.dataset.category;
                 
-                // Update active button
-                categoryBtns.forEach(b => {
-                    b.classList.remove('active', 'bg-gold', 'text-dark-green');
-                    b.classList.add('bg-white', 'text-gray-700');
-                });
-                
-                btn.classList.remove('bg-white', 'text-gray-700');
-                btn.classList.add('active', 'bg-gold', 'text-dark-green');
+                // Update active category
+                morphCategories.forEach(cat => cat.classList.remove('active'));
+                category.classList.add('active');
                 
                 // Filter products with animation
                 productCards.forEach(card => {
-                    if (category === 'all' || card.dataset.category === category) {
-                        card.style.display = 'block';
-                        card.style.opacity = '0';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                        }, 100);
+                    if (selectedCategory === 'all' || card.dataset.category === selectedCategory) {
+                        card.classList.add('visible');
                     } else {
-                        card.style.opacity = '0';
-                        setTimeout(() => {
-                            card.style.display = 'none';
-                        }, 300);
+                        card.classList.remove('visible');
                     }
                 });
             });
         });
-
+        
+        // Initialize product cards visibility
+        setTimeout(() => {
+            productCards.forEach(card => {
+                card.classList.add('visible');
+            });
+        }, 300);
+        
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -377,6 +873,26 @@
                 }
             });
         });
+        
+        // Scroll reveal effect for quality cards
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        };
+        
+        // Initial check
+        revealOnScroll();
+        
+        // Check on scroll
+        window.addEventListener('scroll', revealOnScroll);
     });
 </script>
 {% endblock %}

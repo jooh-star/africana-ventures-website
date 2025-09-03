@@ -13,6 +13,7 @@ from Backend.models.content import (
     WebsiteContent,
     FAQ,
 )
+from Backend.models.product import Product
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -20,6 +21,16 @@ from Backend.utils.helpers import allowed_file, save_uploaded_file
 from sqlalchemy import text
 
 admin = Blueprint('admin', __name__)
+
+def category_to_slug(category: str) -> str:
+    """Map human-friendly category to a frontend-friendly slug used for filtering."""
+    mapping = {
+        'Horticulture': 'horticulture',
+        'Cereals & Legumes': 'cereals',
+        'Oilseeds & Nuts': 'oilseeds',
+        'Farm Inputs': 'inputs',
+    }
+    return mapping.get(category, secure_filename((category or '').lower()))
 
 @admin.route('/system/management/access', methods=['GET', 'POST'])
 def admin_login():
@@ -225,8 +236,13 @@ def admin_images():
     
     # Get unique values for filter dropdowns
     pages = db.session.query(WebsiteImage.page_name).distinct().all()
-    sections = db.session.query(WebsiteImage.section_name).distinct().all()
-    types = db.session.query(WebsiteImage.image_type).distinct().all()
+    
+    if page_filter == 'products':
+        sections = [('product_cards',)]
+        types = [('product',)]
+    else:
+        sections = db.session.query(WebsiteImage.section_name).distinct().all()
+        types = db.session.query(WebsiteImage.image_type).distinct().all()
     
     # Handle POST request for adding new images
     if request.method == 'POST':
@@ -444,6 +460,11 @@ def admin_upload_page_photo(page_name):
     """Upload or replace a photo for a specific page"""
     if not current_user.is_admin:
         return redirect(url_for('admin.admin_login'))
+    
+    # Consolidation: products photos managed via Products CRUD only
+    if page_name == 'products':
+        flash('Manage product photos via Products. Page Photos for products is disabled.', 'info')
+        return redirect(url_for('admin.admin_products'))
     
     if request.method == 'POST':
         try:
@@ -985,6 +1006,186 @@ def delete_faq(faq_id):
     flash('FAQ deleted successfully!')
     return redirect(url_for('admin.admin_faqs'))
 
+
+# Product Management Routes
+@admin.route('/admin/products')
+@login_required
+def admin_products():
+    if not current_user.is_admin:
+        return redirect(url_for('admin.admin_login'))
+    
+    products = Product.query.filter_by(is_deleted=False).order_by(Product.category, Product.name).all()
+    return render_template('admin/products.html', products=products)
+
+@admin.route('/admin/products/add', methods=['GET', 'POST'])
+@login_required
+def add_product():
+    if not current_user.is_admin:
+        return redirect(url_for('admin.admin_login'))
+    
+    categories = ["Horticulture", "Cereals & Legumes", "Oilseeds & Nuts", "Farm Inputs"]
+    stock_statuses = ["In Stock", "Out of Stock"]
+
+    if request.method == 'POST':
+        name = request.form['name']
+        category = request.form['category']
+        short_description = request.form['short_description']
+        detailed_description = request.form.get('detailed_description')
+        price = request.form['price']
+        unit_of_measure = request.form['unit_of_measure']
+        stock_status = request.form['stock_status']
+        
+        image_file = request.files.get('image_file')
+        
+        product_image = None
+        if image_file and image_file.filename != '' and allowed_file(image_file.filename):
+            from Backend.utils.helpers import save_page_file
+            
+            # Define page and section for product images
+            page_name = 'products'
+            section_name = 'product_cards' # Or a more specific section if needed, e.g., category.lower()
+            
+            base_upload_folder = os.path.join(current_app.root_path, 'Frontend', 'static', 'uploads')
+            new_filename, relative_path = save_page_file(
+                image_file, 
+                base_upload_folder, 
+                page_name, 
+                section_name, 
+                f"{page_name}_{section_name}_{secure_filename(name)}" # Use product name for unique prefix
+            )
+            
+            if new_filename:
+                product_image = WebsiteImage(
+                    filename=new_filename,
+                    original_filename=image_file.filename,
+                    relative_path=relative_path,
+                    page_name=page_name,
+                    section_name=section_name,
+                    subsection_name=category_to_slug(category),
+                    description=name,
+                    alt_text=name,
+                    usage_context=short_description,
+                    image_type='product',
+                    section=section_name, # legacy compatibility
+                    display_order=0, # Can be improved later
+                    is_active=True
+                )
+                db.session.add(product_image)
+                db.session.flush() # Flush to get product_image.id before committing Product
+        
+        new_product = Product(
+            name=name,
+            category=category,
+            short_description=short_description,
+            detailed_description=detailed_description,
+            price=price,
+            unit_of_measure=unit_of_measure,
+            stock_status=stock_status,
+            image=product_image # Link the WebsiteImage object
+        )
+        
+        db.session.add(new_product)
+        db.session.commit()
+        flash('Product added successfully!', 'success')
+        return redirect(url_for('admin.admin_products'))
+    
+    return render_template('admin/add_product.html', categories=categories, stock_statuses=stock_statuses)
+
+@admin.route('/admin/products/<int:product_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_product(product_id):
+    if not current_user.is_admin:
+        return redirect(url_for('admin.admin_login'))
+    
+    product = Product.query.filter_by(id=product_id, is_deleted=False).first_or_404()
+    categories = ["Horticulture", "Cereals & Legumes", "Oilseeds & Nuts", "Farm Inputs"]
+    stock_statuses = ["In Stock", "Out of Stock"]
+
+    if request.method == 'POST':
+        product.name = request.form['name']
+        product.category = request.form['category']
+        product.short_description = request.form['short_description']
+        product.detailed_description = request.form.get('detailed_description')
+        product.price = request.form['price']
+        product.unit_of_measure = request.form['unit_of_measure']
+        product.stock_status = request.form['stock_status']
+        
+        image_file = request.files.get('image_file')
+        
+        if image_file and image_file.filename != '' and allowed_file(image_file.filename):
+            from Backend.utils.helpers import save_page_file
+            
+            page_name = 'products'
+            section_name = 'product_cards'
+            
+            base_upload_folder = os.path.join(current_app.root_path, 'Frontend', 'static', 'uploads')
+            
+            # Delete old image if it exists
+            if product.image:
+                old_file_path = product.image.get_file_path()
+                try:
+                    if os.path.exists(old_file_path):
+                        os.remove(old_file_path)
+                    db.session.delete(product.image) # Delete old WebsiteImage record
+                except Exception as e:
+                    current_app.logger.error(f"Error deleting old product image: {e}")
+            
+            new_filename, relative_path = save_page_file(
+                image_file, 
+                base_upload_folder, 
+                page_name, 
+                section_name, 
+                f"{page_name}_{section_name}_{secure_filename(product.name)}"
+            )
+            
+            if new_filename:
+                new_product_image = WebsiteImage(
+                    filename=new_filename,
+                    original_filename=image_file.filename,
+                    relative_path=relative_path,
+                    page_name=page_name,
+                    section_name=section_name,
+                    subsection_name=category_to_slug(product.category),
+                    description=product.name,
+                    alt_text=product.name,
+                    usage_context=product.short_description,
+                    image_type='product',
+                    section=section_name, # legacy compatibility
+                    display_order=0,
+                    is_active=True
+                )
+                db.session.add(new_product_image)
+                product.image = new_product_image # Link new WebsiteImage object
+        
+        db.session.commit()
+        flash('Product updated successfully!', 'success')
+        return redirect(url_for('admin.admin_products'))
+    
+    return render_template('admin/edit_product.html', product=product, categories=categories, stock_statuses=stock_statuses)
+
+@admin.route('/admin/products/<int:product_id>/delete', methods=['POST'])
+@login_required
+def delete_product(product_id):
+    if not current_user.is_admin:
+        return redirect(url_for('admin.admin_login'))
+    
+    product = Product.query.filter_by(id=product_id, is_deleted=False).first_or_404()
+    
+    # Delete associated image if it exists
+    if product.image:
+        file_path = product.image.get_file_path()
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            db.session.delete(product.image) # Delete WebsiteImage record
+        except Exception as e:
+            current_app.logger.error(f"Error deleting product image file: {e}")
+            
+    product.is_deleted = True
+    db.session.commit()
+    flash('Product deleted successfully!', 'success')
+    return redirect(url_for('admin.admin_products'))
+
 # Enhanced Image Management
 
 # Enhanced Image Management
@@ -1097,7 +1298,7 @@ def admin_pages():
     
     # Get page statistics
     page_stats = {}
-    pages = ['index', 'about', 'services', 'products', 'contact', 'solutions']
+    pages = ['index', 'about', 'services', 'contact', 'solutions']
     
     for page in pages:
         images = WebsiteImage.query.filter_by(page_name=page).all()
@@ -1122,8 +1323,13 @@ def admin_page_photos(page_name):
         flash(f'Invalid page: {page_name}', 'error')
         return redirect(url_for('admin.admin_pages'))
     
+    # Redirect products page photos to Admin Products to avoid duplicate management
+    if page_name == 'products':
+        flash('Manage product cards in Products. Page Photos for products has been consolidated.', 'info')
+        return redirect(url_for('admin.admin_products'))
+
     # Get images for this page
-    images = WebsiteImage.query.filter_by(page_name=page_name).order_by(
+    images = WebsiteImage.query.filter_by(page_name=page_name).filter(WebsiteImage.image_type != 'product').order_by(
         WebsiteImage.section_name, WebsiteImage.display_order, WebsiteImage.created_at.desc()
     ).all()
     
@@ -1131,6 +1337,8 @@ def admin_page_photos(page_name):
     sections = {}
     for image in images:
         section = image.section_name or 'uncategorized'
+        if page_name == 'products' and section != 'product_cards':
+            continue # Only show product_cards for products page
         if section not in sections:
             sections[section] = []
         sections[section].append(image)
@@ -1152,6 +1360,11 @@ def upload_page_photo(page_name):
         flash(f'Invalid page: {page_name}', 'error')
         return redirect(url_for('admin.admin_pages'))
     
+    # For products page, disallow uploads here and point to Products management
+    if page_name == 'products':
+        flash('Upload product photos via Products → Add Product to keep data consistent.', 'info')
+        return redirect(url_for('admin.admin_products'))
+
     if request.method == 'POST':
         title = request.form['title']
         section_name = request.form['section_name']
@@ -1159,9 +1372,19 @@ def upload_page_photo(page_name):
         description = request.form['description']
         alt_text = request.form.get('alt_text', '')
         usage_context = request.form.get('usage_context', '')
-        image_type = request.form['image_type']
+        image_type = request.form.get('image_type', 'static') # Changed to .get with default
         display_order = int(request.form.get('display_order', 0))
         is_featured = 'is_featured' in request.form
+        is_active = 'is_active' in request.form
+        
+        # Specific validation for products page images
+        if page_name == 'products':
+            if section_name != 'product_cards':
+                flash('For products page, section must be \'product_cards\'.', 'error')
+                return redirect(request.url)
+            if image_type != 'product':
+                flash('For products page images, type must be \'product\'.', 'error')
+                return redirect(request.url)
         
         if 'image_file' in request.files:
             file = request.files['image_file']
@@ -1195,6 +1418,7 @@ def upload_page_photo(page_name):
                     image_type=image_type,
                     display_order=display_order,
                     is_featured=is_featured,
+                    is_active=is_active, # Added is_active
                     file_size=len(file.read()),
                     section=section_name  # For legacy compatibility
                 )
@@ -1209,9 +1433,12 @@ def upload_page_photo(page_name):
             else:
                 flash('Please select a valid image file.', 'error')
     
-    # Get available sections for this page based on existing images and predefined structure
-    existing_sections = db.session.query(WebsiteImage.section_name).filter_by(page_name=page_name).distinct().all()
-    sections = [s[0] for s in existing_sections if s[0]]
+    # GET request - show upload form
+    if page_name == 'products':
+        sections = ['product_cards']
+    else:
+        existing_sections = db.session.query(WebsiteImage.section_name).filter_by(page_name=page_name).distinct().all()
+        sections = [s[0] for s in existing_sections if s[0]]
     
     return render_template('admin/upload_page_photo.html', 
                          page_name=page_name, 

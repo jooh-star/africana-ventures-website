@@ -1,3 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Env / secrets
+.env
+.env.*
+
+# Virtual envs
+venv/
+.envrc
+
+# Node
+node_modules/
+
+# Databases & backups
+*.sqlite
+*.sqlite3
+africana_ventures.db
+instance/africana_ventures.db
+instance/africana_ventures.db.*
+*.bak
+*.backup_*
+
+# Logs
+*.log
+instance/logs/
+
+# Local uploads (don’t version runtime content)
+Frontend/static/uploads/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build artifacts
+Frontend/static/css/dist/*.map
+**/*.swp
+
 
 # Environments
 .env

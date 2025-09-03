@@ -5,227 +5,374 @@
 {% block head %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .contact-hero-bg {
+            background-image: linear-gradient(rgba(1, 45, 24, 0.85), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/416767.jpg') }}');
+        }
+        
+        .contact-form-input:focus {
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2);
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(218, 165, 32, 0.3);
+        }
+        
+        .contact-info-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .contact-card:hover .contact-info-icon {
+            transform: scale(1.1);
+        }
+        
+        
+        /* Enhanced styles for the new design */
+        .hero-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+
+        .hero-wave svg {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 150px;
+        }
+
+        .hero-wave .shape-fill {
+            fill: #F8F8F5;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        /* Mobile tweaks */
+        @media (max-width: 640px){
+            .hero-wave svg { height: 90px; }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
-    <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: linear-gradient(rgba(1, 45, 24, 0.8), rgba(1, 45, 24, 0.9)), url('{{ url_for('static', filename='images/416767.jpg') }}')"></div>
+<!-- Hero Section with Enhanced Design -->
+<section class="relative md:min-h-screen min-h-[85vh] flex items-center justify-center text-white md:overflow-hidden">
+    <div class="absolute inset-0 w-full h-full bg-cover bg-center sm:bg-fixed contact-hero-bg"></div>
     
-    <div class="relative z-20 text-center px-4 max-w-6xl mx-auto" data-aos="fade-up">
-        <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">GET IN TOUCH</span>
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight font-poppins">Let's Transform<br><span class="text-gold">Agriculture Together</span></h1>
-        <p class="text-xl md:text-2xl text-cream/90 max-w-4xl mx-auto leading-relaxed mb-8">
-            Ready to revolutionize your agricultural operations? Connect with our experts and discover how we can help you achieve sustainable growth.
-        </p>
-        <div class="flex flex-col md:flex-row justify-center gap-4">
-            <a href="#contact-form" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Start Conversation
-            </a>
-            <a href="tel:+254712345678" class="inline-block bg-transparent border-2 border-gold text-gold font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
-                Call Now
-            </a>
+    <div class="relative z-20 container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right">
+                <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">CONNECT WITH US</span>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight font-poppins">Transform Your <span class="text-gold">Agricultural</span> Future</h1>
+                <p class="text-xl text-cream/90 max-w-2xl leading-relaxed mb-8">
+                    Partner with East Africa's leading agricultural solutions provider. Let's cultivate success together through innovative technology and sustainable practices.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#contact-form" class="inline-block bg-gold text-dark-green font-bold py-3 px-5 sm:py-4 sm:px-8 rounded-full text-base sm:text-lg uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg group">
+                        <span class="flex items-center">
+                            Get Started
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="tel:+255759437481" class="inline-flex items-center bg-transparent border-2 border-gold text-gold font-bold py-3 px-5 sm:py-4 sm:px-8 rounded-full text-base sm:text-lg uppercase tracking-wider hover:bg-gold hover:text-dark-green transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        Call Now
+                    </a>
+                    <a href="https://wa.me/255759437481?text=Hello%20Africana%20Ventures" target="_blank" rel="noopener" class="inline-flex items-center bg-green-600 border-2 border-green-600 text-white font-bold py-3 px-5 sm:py-4 sm:px-8 rounded-full text-base sm:text-lg uppercase tracking-wider hover:bg-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20.52 3.48A11.91 11.91 0 0012.06 0C5.46 0 .12 5.34.12 11.94a11.87 11.87 0 001.62 6l-1.7 6.23 6.38-1.67a11.93 11.93 0 005.64 1.45h.01c6.6 0 11.94-5.34 11.94-11.94a11.9 11.9 0 00-3.49-8.53zM12.06 21.5h-.01a9.6 9.6 0 01-4.89-1.34l-.35-.2-3.78.99 1-3.66-.23-.38A9.6 9.6 0 012.5 11.94c0-5.28 4.29-9.56 9.56-9.56 2.56 0 4.97 1 6.78 2.81a9.5 9.5 0 012.8 6.76c0 5.27-4.28 9.55-9.58 9.55zm5.51-7.16c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15s-.77.97-.94 1.17-.35.22-.65.07a7.84 7.84 0 01-2.31-1.42 8.68 8.68 0 01-1.6-1.98c-.17-.3 0-.46.13-.6.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.91-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.48 1.07 2.88 1.22 3.08c.15.2 2.11 3.22 5.11 4.52.71.31 1.26.5 1.69.64.71.23 1.36.2 1.87.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z"/>
+                        </svg>
+                        WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <div class="relative" data-aos="fade-left">
+                <div class="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 shadow-2xl">
+                    <div class="absolute -top-6 -right-6 w-24 h-24 bg-gold rounded-full flex items-center justify-center floating-element">
+                        <svg class="w-12 h-12 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-6">Why Contact Us?</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span class="ml-3 text-cream/90">Expert agricultural consultation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span class="ml-3 text-cream/90">Tailored farming solutions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span class="ml-3 text-cream/90">End-to-end supply chain support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-6 h-6 bg-gold rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span class="ml-3 text-cream/90">24/7 emergency agricultural support</span>
+                        </li>
+                    </ul>
+                    <div class="mt-8 pt-6 border-t border-white/20">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="bg-gold rounded-full w-12 h-12 flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-white font-semibold">Response Time</p>
+                                <p class="text-cream/80">Within 24 hours for all inquiries</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    
+    <div class="hero-wave pointer-events-none">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+        </svg>
     </div>
 </section>
 
-<!-- Contact Form Section -->
-<section id="contact-form" class="py-24 bg-cream">
+<!-- Enhanced Contact Form Section -->
+<section id="contact-form" class="py-24 bg-gradient-to-br from-cream to-cream/90 -mt-1">
     <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16" data-aos="fade-up">
-                <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">SEND US A MESSAGE</span>
-                <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Let's Start the Conversation</h2>
+                <span class="inline-block px-6 py-3 bg-dark-green/10 text-dark-green rounded-full text-sm font-bold tracking-wider mb-6">REACH OUT TO US</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-dark-green mb-6 font-poppins">Let's Cultivate Success Together</h2>
                 <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
-                    Have questions about our services? Ready to start a project? We're here to help you every step of the way.
+                    Fill out the form below and our agricultural experts will get back to you within 24 hours. We're excited to hear about your project!
                 </p>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gold/20" data-aos="fade-up" data-aos-delay="200">
-                <form method="POST" action="{{ url_for('main.contact_page') }}" class="space-y-8">
-                    <!-- Name Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div data-aos="fade-right" data-aos-delay="300">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">First Name *</label>
-                            <input type="text" name="first_name" required 
-                                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20"
-                                   placeholder="Your first name">
-                        </div>
-                        <div data-aos="fade-left" data-aos-delay="400">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">Last Name *</label>
-                            <input type="text" name="last_name" required 
-                                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20"
-                                   placeholder="Your last name">
-                        </div>
-                    </div>
-                    
-                    <!-- Contact Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div data-aos="fade-right" data-aos-delay="500">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">Email Address *</label>
-                            <input type="email" name="email" required 
-                                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20"
-                                   placeholder="your.email@example.com">
-                        </div>
-                        <div data-aos="fade-left" data-aos-delay="600">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">Phone Number</label>
-                            <input type="tel" name="phone" 
-                                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20"
-                                   placeholder="+254 712 345 678">
-                        </div>
-                    </div>
-                    
-                    <!-- Company & Service Row -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div data-aos="fade-right" data-aos-delay="700">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">Company/Organization</label>
-                            <input type="text" name="company" 
-                                   class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20"
-                                   placeholder="Your company name">
-                        </div>
-                        <div data-aos="fade-left" data-aos-delay="800">
-                            <label class="block text-dark-green text-lg font-semibold mb-3">Service of Interest *</label>
-                            <select name="service" required 
-                                    class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20">
-                                <option value="">Select a service</option>
-                                {% if services and services|length > 0 %}
-                                    {% for s in services %}
-                                    <option value="{{ s.title }}">{{ s.title }}</option>
-                                    {% endfor %}
-                                {% else %}
-                                    <option value="Smart Logistics & Distribution">Smart Logistics & Distribution</option>
-                                    <option value="Agri-Marketplace Platform">Agri-Marketplace Platform</option>
-                                    <option value="Advisory & Consulting Services">Advisory & Consulting Services</option>
-                                    <option value="Access to Inputs & Financing">Access to Inputs & Financing</option>
-                                    <option value="Training & Capacity Building">Training & Capacity Building</option>
-                                    <option value="General Inquiry">General Inquiry</option>
-                                {% endif %}
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Message Row -->
-                    <div data-aos="fade-up" data-aos-delay="900">
-                        <label class="block text-dark-green text-lg font-semibold mb-3">Message *</label>
-                        <textarea name="message" rows="6" required 
-                                  class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 resize-none"
-                                  placeholder="Tell us about your project, goals, or how we can help you achieve sustainable agricultural growth..."></textarea>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <div class="text-center pt-8" data-aos="fade-up" data-aos-delay="1000">
-                        <button type="submit" 
-                                class="bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg group">
-                            <span class="flex items-center justify-center">
-                                Send Message
-                                <svg class="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                                </svg>
-                            </span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Contact Information Section -->
-<section class="py-24 bg-gradient-to-br from-dark-green via-dark-green/98 to-dark-green text-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <span class="inline-block px-6 py-3 bg-gold/20 text-gold rounded-full text-sm font-bold tracking-wider mb-6 backdrop-blur-sm border border-gold/30">GET IN TOUCH</span>
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 font-poppins">Multiple Ways to Connect</h2>
-            <p class="text-lg text-cream/90 max-w-3xl mx-auto leading-relaxed">
-                Choose the most convenient way to reach out to us. We're here to support your agricultural journey.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Phone Card -->
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="100">
-                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
-                    <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-poppins">Call Us</h3>
-                    <p class="text-cream/80 leading-relaxed mb-4">Speak directly with our agricultural experts</p>
-                    <a href="tel:+254712345678" class="text-gold hover:text-yellow-300 font-semibold text-lg transition-colors">+254 712 345 678</a>
-                </div>
-            </div>
-            
-            <!-- Email Card -->
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="200">
-                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
-                    <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-poppins">Email Us</h3>
-                    <p class="text-cream/80 leading-relaxed mb-4">Send us detailed inquiries and proposals</p>
-                    <a href="mailto:info@africanaventures.com" class="text-gold hover:text-yellow-300 font-semibold text-lg transition-colors">info@africanaventures.com</a>
-                </div>
-            </div>
-            
-            <!-- Location Card -->
-            <div class="text-center group" data-aos="fade-up" data-aos-delay="300">
-                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-8 hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
-                    <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                        <svg class="w-10 h-10 text-dark-green" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 font-poppins">Visit Us</h3>
-                    <p class="text-cream/80 leading-relaxed mb-4">Meet us at our office in Nairobi</p>
-                    <p class="text-gold hover:text-yellow-300 font-semibold text-lg transition-colors">123 Agri-Lane<br>Nairobi, Kenya</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Office Hours & Additional Info -->
-<section class="py-24 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-dark-green font-poppins">Ready to Get Started?</h2>
-            <p class="text-xl text-gray-700 mb-12 leading-relaxed">
-                We're committed to transforming agriculture across East Africa. Let's discuss how we can help you achieve sustainable growth and maximize your agricultural potential.
-            </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-cream/50 rounded-2xl p-8" data-aos="fade-right">
-                    <h3 class="text-2xl font-bold text-dark-green mb-4">Office Hours</h3>
-                    <div class="space-y-2 text-gray-700">
-                        <p><strong>Monday - Friday:</strong> 8:00 AM - 6:00 PM</p>
-                        <p><strong>Saturday:</strong> 9:00 AM - 4:00 PM</p>
-                        <p><strong>Sunday:</strong> Closed</p>
-                        <p class="text-sm text-gray-600 mt-4">Emergency support available 24/7</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-10 border border-gold/30" data-aos="fade-up" data-aos-delay="200">
+                        <form method="POST" action="{{ url_for('main.contact_page') }}" class="space-y-8 custom-scrollbar">
+                            <!-- Name Row -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div data-aos="fade-right" data-aos-delay="300">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">First Name *</label>
+                                    <input type="text" name="first_name" required 
+                                           class="w-full px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg"
+                                           placeholder="Your first name">
+                                </div>
+                                <div data-aos="fade-left" data-aos-delay="400">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">Last Name *</label>
+                                    <input type="text" name="last_name" required 
+                                           class="w-full px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg"
+                                           placeholder="Your last name">
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Row -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div data-aos="fade-right" data-aos-delay="500">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">Email Address *</label>
+                                    <input type="email" name="email" required 
+                                           class="w-full px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg"
+                                           placeholder="your.email@example.com">
+                                </div>
+                                <div data-aos="fade-left" data-aos-delay="600">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">Phone Number</label>
+                                    <input type="tel" name="phone" id="phone" 
+                                           class="w-full px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg"
+                                           placeholder="+255 759 437 481">
+                                </div>
+                            </div>
+                            
+                            <!-- Company & Service Row -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div data-aos="fade-right" data-aos-delay="700">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">Company/Organization</label>
+                                    <input type="text" name="company" 
+                                           class="w-full px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg"
+                                           placeholder="Your company name">
+                                </div>
+                                <div data-aos="fade-left" data-aos-delay="800">
+                                    <label class="block text-dark-green text-lg font-semibold mb-3">Service of Interest *</label>
+                                    <select name="service" required 
+                                            class="w-full pr-10 px-5 py-3 sm:px-6 sm:py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input text-base sm:text-lg appearance-none">
+                                        <option value="">Select a service</option>
+                                        {% if services and services|length > 0 %}
+                                            {% for s in services %}
+                                            <option value="{{ s.title }}">{{ s.title }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option value="Smart Logistics & Distribution">Smart Logistics & Distribution</option>
+                                            <option value="Agri-Marketplace Platform">Agri-Marketplace Platform</option>
+                                            <option value="Advisory & Consulting Services">Advisory & Consulting Services</option>
+                                            <option value="Access to Inputs & Financing">Access to Inputs & Financing</option>
+                                            <option value="Training & Capacity Building">Training & Capacity Building</option>
+                                            <option value="General Inquiry">General Inquiry</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Message Row -->
+                            <div data-aos="fade-up" data-aos-delay="900">
+                                <label class="block text-dark-green text-lg font-semibold mb-3">Message *</label>
+                                <textarea name="message" rows="6" required 
+                                          class="w-full px-6 py-4 border-2 border-gray-200 rounded-xl text-dark-green bg-cream/30 placeholder-gray-500 focus:border-gold focus:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gold/20 contact-form-input resize-none text-lg custom-scrollbar"
+                                          placeholder="Tell us about your project, goals, or how we can help you achieve sustainable agricultural growth..."></textarea>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="text-center pt-8" data-aos="fade-up" data-aos-delay="1000">
+                                <button type="submit" 
+                                        class="bg-gold text-dark-green font-bold py-3 px-8 sm:py-4 sm:px-12 rounded-full text-lg sm:text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg group">
+                                    <span class="flex items-center justify-center">
+                                        Send Message
+                                        <svg class="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 
-                <div class="bg-cream/50 rounded-2xl p-8" data-aos="fade-left">
-                    <h3 class="text-2xl font-bold text-dark-green mb-4">Response Time</h3>
-                    <div class="space-y-2 text-gray-700">
-                        <p><strong>Email Inquiries:</strong> Within 24 hours</p>
-                        <p><strong>Phone Calls:</strong> Immediate response</p>
-                        <p><strong>Project Proposals:</strong> 2-3 business days</p>
-                        <p class="text-sm text-gray-600 mt-4">We prioritize urgent agricultural needs</p>
+                <div class="lg:col-span-1">
+                    <div class="lg:sticky lg:top-8">
+                        <div class="bg-gradient-to-br from-dark-green to-dark-green/90 rounded-3xl p-8 text-white shadow-2xl border border-gold/20" data-aos="fade-up">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <svg class="w-6 h-6 mr-3 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
+                                Contact Information
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold text-gold">Phone Numbers</h4>
+                                        <div class="mt-1 space-y-2">
+                                            <div>
+                                                <span class="block text-cream/90">+255 759 437 481</span>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <a href="tel:+255759437481" class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white text-xs hover:bg-white/20">Call</a>
+                                                    <a href="https://wa.me/255759437481?text=Hello%20Africana%20Ventures" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white text-xs hover:bg-green-700">WhatsApp</a>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span class="block text-cream/90">+255 716 66 3368</span>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <a href="tel:+255716663368" class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 text-white text-xs hover:bg-white/20">Call</a>
+                                                    <a href="https://wa.me/255716663368?text=Hello%20Africana%20Ventures" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-1 rounded-full bg-green-600 text-white text-xs hover:bg-green-700">WhatsApp</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold text-gold">Email Address</h4>
+                                        <a href="mailto:info@africanaventures.co.tz" class="block text-cream/90 hover:text-gold transition-colors mt-1">info@africanaventures.co.tz</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h4 class="font-semibold text-gold">Office Location</h4>
+                                        <p class="text-cream/90 mt-1">Ubungo, Contena,<br>Mloganzila Road,<br>Dar es Salaam, Tanzania</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 pt-6 border-t border-white/20">
+                                <h4 class="font-semibold text-gold mb-3">Office Hours</h4>
+                                <div class="space-y-2 text-cream/90">
+                                    <p class="flex justify-between"><span>Mon-Fri:</span> <span>8:00 AM - 6:00 PM</span></p>
+                                    <p class="flex justify-between"><span>Saturday:</span> <span>9:00 AM - 4:00 PM</span></p>
+                                    <p class="flex justify-between"><span>Sunday:</span> <span>Closed</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 bg-cream border-2 border-gold rounded-3xl p-6 text-center" data-aos="fade-up" data-aos-delay="200">
+                            <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-dark-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-dark-green mb-2">Quick Response</h4>
+                            <p class="text-gray-700">We guarantee a response to all inquiries within 24 hours</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="flex flex-col md:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
-                <a href="{{ url_for('main.services_page') }}" class="inline-block bg-gold text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    View Our Services
-                </a>
-                <a href="{{ url_for('main.products_page') }}" class="inline-block bg-transparent border-2 border-dark-green text-dark-green font-bold py-4 px-12 rounded-full text-xl uppercase tracking-wider hover:bg-dark-green hover:text-white transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    Explore Products
-                </a>
             </div>
         </div>
     </div>

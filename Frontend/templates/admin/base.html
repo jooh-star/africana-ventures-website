@@ -119,17 +119,10 @@
                     <i class="fas fa-users w-5 text-center mr-3"></i>
                     <span>Team Members</span>
                 </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_services' %}active{% endif %}" href="{{ url_for('admin.admin_services') }}">
-                    <i class="fas fa-cogs w-5 text-center mr-3"></i>
-                    <span>Services</span>
-                </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_content' %}active{% endif %}" href="{{ url_for('admin.admin_content') }}">
-                    <i class="fas fa-edit w-5 text-center mr-3"></i>
-                    <span>Website Content</span>
-                </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_faqs' %}active{% endif %}" href="{{ url_for('admin.admin_faqs') }}">
-                    <i class="fas fa-question-circle w-5 text-center mr-3"></i>
-                    <span>FAQs</span>
+                
+                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint in ['admin.admin_products', 'admin.add_product', 'admin.edit_product'] %}active{% endif %}" href="{{ url_for('admin.admin_products') }}">
+                    <i class="fas fa-box-open w-5 text-center mr-3"></i>
+                    <span>Products</span>
                 </a>
                 <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_company_info' %}active{% endif %}" href="{{ url_for('admin.admin_company_info') }}">
                     <i class="fas fa-building w-5 text-center mr-3"></i>
@@ -194,17 +187,10 @@
                     <i class="fas fa-users w-5 text-center mr-3"></i>
                     <span>Team Members</span>
                 </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_services' %}active{% endif %}" href="{{ url_for('admin.admin_services') }}">
-                    <i class="fas fa-cogs w-5 text-center mr-3"></i>
-                    <span>Services</span>
-                </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_content' %}active{% endif %}" href="{{ url_for('admin.admin_content') }}">
-                    <i class="fas fa-edit w-5 text-center mr-3"></i>
-                    <span>Website Content</span>
-                </a>
-                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_faqs' %}active{% endif %}" href="{{ url_for('admin.admin_faqs') }}">
-                    <i class="fas fa-question-circle w-5 text-center mr-3"></i>
-                    <span>FAQs</span>
+                
+                <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint in ['admin.admin_products', 'admin.add_product', 'admin.edit_product'] %}active{% endif %}" href="{{ url_for('admin.admin_products') }}">
+                    <i class="fas fa-box-open w-5 text-center mr-3"></i>
+                    <span>Products</span>
                 </a>
                 <a class="sidebar-link flex items-center px-6 py-3 text-sm font-medium {% if request.endpoint == 'admin.admin_company_info' %}active{% endif %}" href="{{ url_for('admin.admin_company_info') }}">
                     <i class="fas fa-building w-5 text-center mr-3"></i>

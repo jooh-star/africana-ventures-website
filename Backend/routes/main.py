@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from Backend.models import db
 from Backend.models.content import Contact, Testimonial, WebsiteContent, Service, CompanyInfo, TeamMember, WebsiteImage
+from Backend.models.product import Product
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -134,7 +135,7 @@ def services_page():
             'description': 'IoT, satellite, and field reporting tools collect farm-level data for insights and provide traceability services for local and export markets.'
         },
         {
-            'title': 'Value-Addition & Processing Linkages',
+            'title': 'Value-Added Services',
             'short_description': 'Connecting farmers to aggregation centers and processing facilities for improved quality and higher prices.',
             'description': 'Connecting farmers to aggregation centers and processing facilities for improved quality, grading, packaging, and preservation to fetch higher prices.'
         }
@@ -192,8 +193,72 @@ def services_page():
             'image_filename': '53401.jpg' # Community Empowerment
         }
     ]
+    
+    # Get admin-managed images for the services page
+    # Get the main expertise showcase image
+    expertise_showcase_main_image = WebsiteImage.query.filter_by(
+        page_name='services',
+        section_name='expertise_showcase',
+        subsection_name='main_photo',
+        is_active=True
+    ).first()
+    
+    # Get expertise node images
+    expertise_node_images = WebsiteImage.query.filter_by(
+        page_name='services',
+        section_name='expertise_nodes',
+        is_active=True
+    ).order_by(WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
+    
+    # Create a mapping of expertise node images by subsection
+    expertise_node_image_map = {}
+    for img in expertise_node_images:
+        if img.subsection_name:
+            expertise_node_image_map[img.subsection_name] = img
+    
+    # Update expertise_nodes with admin-managed images
+    for i, node in enumerate(expertise_nodes):
+        subsection_name = f'node_{i+1}'
+        if subsection_name in expertise_node_image_map:
+            node['image_filename'] = expertise_node_image_map[subsection_name].filename
+        elif i < len(expertise_node_images):
+            # Fallback to any available expertise node image
+            node['image_filename'] = expertise_node_images[i].filename
+    
+    # Get split-screen slideshow images
+    split_screen_images = WebsiteImage.query.filter_by(
+        page_name='services',
+        section_name='split_screen',
+        subsection_name='slideshow',
+        is_active=True
+    ).order_by(WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
+    
+    # Extract filenames for the template
+    split_screen_image_files = [img.filename for img in split_screen_images] if split_screen_images else [
+        '101678.jpg', '14494.jpg', '20250606_062331.jpg'
+    ]
+    
+    # Organize images by section and subsection for easy template access
+    admin_images = {}
+    all_images = WebsiteImage.query.filter_by(page_name='services', is_active=True).all()
+    for img in all_images:
+        section = img.section_name or img.section  # Support both new and legacy field names
+        subsection = img.subsection_name or 'default'
+        if section not in admin_images:
+            admin_images[section] = {}
+        if subsection not in admin_images[section]:
+            admin_images[section][subsection] = []
+        admin_images[section][subsection].append(img)
 
-    return render_template('services.html', preset_services=preset_services, company_info=company_info, services_images=services_images, testimonials=testimonials, expertise_nodes=expertise_nodes)
+    return render_template('services.html', 
+                          preset_services=preset_services, 
+                          company_info=company_info, 
+                          services_images=services_images, 
+                          testimonials=testimonials, 
+                          expertise_nodes=expertise_nodes,
+                          expertise_showcase_main_image=expertise_showcase_main_image,
+                          split_screen_image_files=split_screen_image_files,
+                          admin_images=admin_images)
 
 @main.route('/solutions')
 def solutions_page():
@@ -205,29 +270,75 @@ def products_page():
     # Get company info for the page
     company_info = CompanyInfo.query.first()
     
-    # Get product-related images from the database
-    product_images = WebsiteImage.query.filter_by(section='products', is_active=True).order_by(WebsiteImage.display_order, WebsiteImage.created_at.desc()).all()
+    # Prefer Product records (with linked WebsiteImage) so we can include stock status and other details
+    products = Product.query.filter_by(is_deleted=False).order_by(Product.category, Product.name).all()
+    product_images_data = []
+    for p in products:
+        img = p.image
+        # Skip products without an image to avoid blank cards
+        if not img:
+            continue
+        product_images_data.append({
+            'id': img.id,
+            'filename': img.filename,
+            'original_filename': img.original_filename,
+            'relative_path': img.relative_path,
+            'url_path': img.get_url_path() if hasattr(img, 'get_url_path') else None,
+            'page_name': img.page_name,
+            'section_name': img.section_name,
+            'subsection_name': img.subsection_name,  # category slug already set in admin
+            'description': p.name,
+            'alt_text': p.name,
+            'usage_context': p.short_description,
+            'image_type': 'product',
+            'display_order': img.display_order,
+            'is_active': img.is_active,
+            'is_featured': img.is_featured,
+            'created_at': img.created_at.isoformat() if img.created_at else None,
+            'stock_status': p.stock_status
+        })
     
     return render_template('products.html', 
                            company_info=company_info,
-                           product_images=product_images)
+                           product_images=product_images_data) # Pass the serializable data
 
 @main.route('/contact', methods=['GET', 'POST'])
 def contact_page():
     if request.method == 'POST':
-        contact = Contact(
-            first_name=request.form['first_name'],
-            last_name=request.form['last_name'],
-            email=request.form['email'],
-            phone=request.form.get('phone', ''),
-            company=request.form.get('company', ''),
-            service=request.form['service'],
-            message=request.form['message']
-        )
-        db.session.add(contact)
-        db.session.commit()
-        flash('Thank you for your message! We will get back to you soon.', 'success')
-        return redirect(url_for('main.contact_page'))
+        # Check if it's an AJAX request
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        
+        try:
+            contact = Contact(
+                first_name=request.form['first_name'],
+                last_name=request.form['last_name'],
+                email=request.form['email'],
+                phone=request.form.get('phone', ''),
+                company=request.form.get('company', ''),
+                service=request.form['service'],
+                message=request.form['message']
+            )
+            db.session.add(contact)
+            db.session.commit()
+            
+            if is_ajax:
+                return jsonify({
+                    'success': True, 
+                    'message': 'Thank you for your message! We will get back to you soon.'
+                })
+            else:
+                flash('Thank you for your message! We will get back to you soon.', 'success')
+                return redirect(url_for('main.contact_page'))
+        except Exception as e:
+            db.session.rollback()
+            if is_ajax:
+                return jsonify({
+                    'success': False, 
+                    'message': 'There was an error sending your message. Please try again.'
+                }), 500
+            else:
+                flash('There was an error sending your message. Please try again.', 'error')
+                return redirect(url_for('main.contact_page'))
     
     services = Service.query.filter_by(is_active=True).all()
     company_info = CompanyInfo.query.first()
@@ -255,34 +366,37 @@ def gallery_page():
 
 @main.route('/submit-testimonial', methods=['POST'])
 def submit_testimonial():
-    name = request.form['name']
-    location = request.form['location']
-    title = request.form.get('title', '')
-    testimonial_text = request.form['testimonial']
-    rating = int(request.form.get('rating', 5))
-    
-    photo_filename = None
-    if 'photo' in request.files:
-        photo = request.files['photo']
-        if photo.filename != '':
-            if photo and allowed_file(photo.filename):
-                filename = secure_filename(photo.filename)
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                photo_filename = f"testimonial_{timestamp}_{filename}"
-                photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_filename))
-    
-    testimonial = Testimonial(
-        name=name,
-        location=location,
-        title=title,
-        testimonial=testimonial_text,
-        photo_filename=photo_filename,
-        rating=rating,
-        is_approved=False  # Requires admin approval
-    )
-    
-    db.session.add(testimonial)
-    db.session.commit()
-    
-    flash('Thank you for your testimonial! It will be reviewed and published soon.', 'success')
-    return redirect(url_for('main.index'))
+    try:
+        name = request.form['name']
+        location = request.form['location']
+        title = request.form.get('title', '')
+        testimonial_text = request.form['testimonial']
+        rating = int(request.form.get('rating', 5))
+        
+        photo_filename = None
+        if 'photo' in request.files:
+            photo = request.files['photo']
+            if photo.filename != '':
+                if photo and allowed_file(photo.filename):
+                    filename = secure_filename(photo.filename)
+                    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                    photo_filename = f"testimonial_{timestamp}_{filename}"
+                    photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], photo_filename))
+        
+        testimonial = Testimonial(
+            name=name,
+            location=location,
+            title=title,
+            testimonial=testimonial_text,
+            photo_filename=photo_filename,
+            rating=rating,
+            is_approved=False  # Requires admin approval
+        )
+        
+        db.session.add(testimonial)
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Thank you for your testimonial! It will be reviewed and published soon.'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'message': 'There was an error submitting your testimonial. Please try again.'}), 500

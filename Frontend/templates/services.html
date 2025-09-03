@@ -494,9 +494,15 @@
                 <!-- Right Side: Photo -->
                 <div class="w-full lg:w-1/2" data-aos="fade-left" data-aos-delay="200">
                     <div class="relative rounded-2xl overflow-hidden shadow-2xl group">
+                        {% if expertise_showcase_main_image %}
+                        <img src="{{ url_for('static', filename='uploads/' + expertise_showcase_main_image.relative_path) }}" 
+                             alt="{{ expertise_showcase_main_image.alt_text or 'Agricultural expertise and farming solutions' }}" 
+                             class="w-full h-96 lg:h-[500px] object-cover transform transition-transform duration-500 group-hover:scale-105">
+                        {% else %}
                         <img src="{{ url_for('static', filename='images/20250606_062331.jpg') }}" 
                              alt="Agricultural expertise and farming solutions" 
                              class="w-full h-96 lg:h-[500px] object-cover transform transition-transform duration-500 group-hover:scale-105">
+                        {% endif %}
                         
                         <!-- Overlay -->
                         <div class="absolute inset-0 bg-gradient-to-t from-dark-green/60 via-transparent to-transparent group-hover:from-dark-green/40 transition-all duration-300"></div>
@@ -666,13 +672,15 @@
 
     <!-- Split-Screen Interactive Section -->
     <section id="split-screen" class="relative flex flex-col lg:flex-row bg-dark-green text-cream split-screen-section overflow-hidden">
-        <div class="split-screen-left w-full lg:w-1/2 relative" style="background-image: url({{ url_for('static', filename='images/101678.jpg') }});">
+        <div class="split-screen-left w-full lg:w-1/2 relative">
             <!-- Image/Video Slideshow - Swiper.js will be used here -->
             <div class="swiper-container split-screen-slider h-full">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/101678.jpg') }}" alt="Slide 1" class="w-full h-full object-cover"></div>
-                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/14494.jpg') }}" alt="Slide 2" class="w-full h-full object-cover"></div>
-                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/20250606_062331.jpg') }}" alt="Slide 3" class="w-full h-full object-cover"></div>
+                    {% for image_file in split_screen_image_files %}
+                    <div class="swiper-slide">
+                        <img src="{{ url_for('static', filename='images/' + image_file) }}" alt="Slide {{ loop.index }}" class="w-full h-full object-cover">
+                    </div>
+                    {% endfor %}
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
